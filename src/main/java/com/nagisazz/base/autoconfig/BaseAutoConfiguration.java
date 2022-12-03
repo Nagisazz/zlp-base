@@ -4,15 +4,16 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.nagisazz.base.config.rest.RestErrorHandler;
-import com.nagisazz.base.property.LogbackConfig;
-import com.nagisazz.base.property.RestTemplateConfig;
-import com.nagisazz.base.property.SystemConfig;
+import com.nagisazz.base.property.LogbackProperties;
+import com.nagisazz.base.property.RestTemplateProperties;
+import com.nagisazz.base.property.SystemProperties;
 import com.nagisazz.base.util.RestHelper;
 import com.nagisazz.base.util.SpringBeanUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -33,7 +34,8 @@ import java.util.List;
 @Slf4j
 @Configuration
 @ComponentScan({"com.nagisazz.base"})
-@EnableConfigurationProperties({SystemConfig.class, RestTemplateConfig.class, LogbackConfig.class})
+@MapperScan("com.nagisazz.base.dao")
+@EnableConfigurationProperties({SystemProperties.class, RestTemplateProperties.class, LogbackProperties.class})
 @ConditionalOnClass(SpringBeanUtil.class)
 public class BaseAutoConfiguration {
 
@@ -55,16 +57,16 @@ public class BaseAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean({ClientHttpRequestFactory.class})
-    public ClientHttpRequestFactory requestFactory(RestTemplateConfig config) {
+    public ClientHttpRequestFactory requestFactory(RestTemplateProperties properties) {
         PoolingHttpClientConnectionManager manager = new PoolingHttpClientConnectionManager();
-        manager.setMaxTotal(config.getHttpClient().getMaxTotal());
-        manager.setDefaultMaxPerRoute(config.getHttpClient().getMaxPreRoute());
+        manager.setMaxTotal(properties.getHttpClient().getMaxTotal());
+        manager.setDefaultMaxPerRoute(properties.getHttpClient().getMaxPreRoute());
         HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(
                 HttpClientBuilder.create().setConnectionManager(manager).setRetryHandler(
-                        new DefaultHttpRequestRetryHandler(config.getHttpClient().getRetryCount(), true)).build());
-        factory.setConnectTimeout(config.getConnectTimeout());
-        factory.setReadTimeout(config.getReadTimeout());
-        factory.setConnectionRequestTimeout(config.getHttpClient().getWaitTimeout());
+                        new DefaultHttpRequestRetryHandler(properties.getHttpClient().getRetryCount(), true)).build());
+        factory.setConnectTimeout(properties.getConnectTimeout());
+        factory.setReadTimeout(properties.getReadTimeout());
+        factory.setConnectionRequestTimeout(properties.getHttpClient().getWaitTimeout());
         return factory;
     }
 

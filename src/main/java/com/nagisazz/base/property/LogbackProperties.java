@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Getter
 @ToString
 @ConfigurationProperties("logback.level")
-public class LogbackConfig {
+public class LogbackProperties {
 
     /**
      * 日志输出根级别

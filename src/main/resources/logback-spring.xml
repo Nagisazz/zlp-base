@@ -13,7 +13,7 @@
 -->
 <configuration debug="false">
 	<include resource="org/springframework/boot/logging/logback/base.xml" />
-    <springProperty scope="context" name="appName" source="system.name" defaultValue="app" />
+    <springProperty scope="context" name="appName" source="spring.application.name" defaultValue="app" />
     <springProperty scope="context" name="rootLevel" source="logback.level.root" defaultValue="INFO" />
     <springProperty scope="context" name="sqlLevel" source="logback.level.sql" defaultValue="INFO" />
 

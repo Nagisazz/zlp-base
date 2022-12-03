@@ -13,7 +13,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @ConfigurationProperties("rest")
-public class RestTemplateConfig {
+public class RestTemplateProperties {
 
     /**
      * 连接超时时间, unit: ms
