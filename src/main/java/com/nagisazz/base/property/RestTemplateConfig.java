@@ -7,10 +7,10 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * RestTemplate相关配置
+ * RestTemplate配置
  */
-@Getter
 @Setter
+@Getter
 @ToString
 @ConfigurationProperties("rest")
 public class RestTemplateConfig {

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * system名称
+ * system配置
  */
 @Setter
 @Getter
