@@ -1,0 +1,68 @@
+{
+  "groups": [
+    {
+      "name": "rest",
+      "type": "com.nagisazz.base.property.RestTemplateConfig",
+      "sourceType": "com.nagisazz.base.property.RestTemplateConfig"
+    },
+    {
+      "name": "rest.http-client",
+      "type": "com.nagisazz.base.property.RestTemplateConfig$HttpClient",
+      "sourceType": "com.nagisazz.base.property.RestTemplateConfig"
+    },
+    {
+      "name": "system",
+      "type": "com.nagisazz.base.property.SystemConfig",
+      "sourceType": "com.nagisazz.base.property.SystemConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "rest.connect-timeout",
+      "type": "java.lang.Integer",
+      "description": "连接超时时间, unit: ms",
+      "sourceType": "com.nagisazz.base.property.RestTemplateConfig"
+    },
+    {
+      "name": "rest.http-client.max-pre-route",
+      "type": "java.lang.Integer",
+      "description": "同路由并发数",
+      "sourceType": "com.nagisazz.base.property.RestTemplateConfig$HttpClient",
+      "defaultValue": 20
+    },
+    {
+      "name": "rest.http-client.max-total",
+      "type": "java.lang.Integer",
+      "description": "最大连接数",
+      "sourceType": "com.nagisazz.base.property.RestTemplateConfig$HttpClient",
+      "defaultValue": 200
+    },
+    {
+      "name": "rest.http-client.retry-count",
+      "type": "java.lang.Integer",
+      "description": "连接重试次数",
+      "sourceType": "com.nagisazz.base.property.RestTemplateConfig$HttpClient",
+      "defaultValue": 2
+    },
+    {
+      "name": "rest.http-client.wait-timeout",
+      "type": "java.lang.Integer",
+      "description": "连接不够用的等待时间, unit: ms",
+      "sourceType": "com.nagisazz.base.property.RestTemplateConfig$HttpClient",
+      "defaultValue": 300
+    },
+    {
+      "name": "rest.read-timeout",
+      "type": "java.lang.Integer",
+      "description": "数据读取超时时间, unit: ms",
+      "sourceType": "com.nagisazz.base.property.RestTemplateConfig"
+    },
+    {
+      "name": "system.name",
+      "type": "java.lang.String",
+      "description": "系统名称",
+      "sourceType": "com.nagisazz.base.property.SystemConfig"
+    }
+  ],
+  "hints": []
+}
