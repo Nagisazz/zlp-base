@@ -1,5 +1,5 @@
 /*
- * @(#)SpringUtil.java 2018年9月9日下午1:10:39
+ * @(#)SpringBeanUtil.java 2018年9月9日下午1:10:39
  * message
  * Copyright 2018 Thuisoft, Inc. All rights reserved.
  * THUNISOFT PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
@@ -17,7 +17,7 @@ import org.springframework.context.ApplicationContextAware;
  *
  * @version 1.0
  */
-public class SpringUtil implements ApplicationContextAware {
+public class SpringBeanUtil implements ApplicationContextAware {
 
     /**
      * 上下文对象实例
@@ -25,7 +25,7 @@ public class SpringUtil implements ApplicationContextAware {
     private static ApplicationContext applicationContext;
 
     private static void initApplicationContext(ApplicationContext applicationContext) {
-        SpringUtil.applicationContext = applicationContext;
+        SpringBeanUtil.applicationContext = applicationContext;
     }
 
     /**
@@ -43,7 +43,9 @@ public class SpringUtil implements ApplicationContextAware {
      */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
-        SpringUtil.initApplicationContext(applicationContext);
+        if (SpringBeanUtil.applicationContext == null) {
+            SpringBeanUtil.initApplicationContext(applicationContext);
+        }
     }
 
     /**

@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nagisazz.base.util.SpringBeanUtil;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -27,7 +28,6 @@ import com.nagisazz.base.config.rest.RestErrorHandler;
 import com.nagisazz.base.property.RestTemplateConfig;
 import com.nagisazz.base.property.SystemConfig;
 import com.nagisazz.base.util.RestHelper;
-import com.nagisazz.base.util.SpringUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,18 +35,18 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @ComponentScan({"com.nagisazz.base"})
 @EnableConfigurationProperties({SystemConfig.class, RestTemplateConfig.class})
-@ConditionalOnClass(SpringUtil.class)
+@ConditionalOnClass(SpringBeanUtil.class)
 public class BaseAutoConfiguration {
 
     /**
      * spring 工具类
      *
-     * @return SpringUtil
+     * @return SpringBeanUtil
      */
     @Bean
-    @ConditionalOnMissingBean(SpringUtil.class)
-    public SpringUtil springUtil() {
-        return new SpringUtil();
+    @ConditionalOnMissingBean(SpringBeanUtil.class)
+    public SpringBeanUtil springBeanUtil() {
+        return new SpringBeanUtil();
     }
 
     /**
