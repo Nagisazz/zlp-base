@@ -18,7 +18,11 @@ public enum ResultEnum {
 
     TOKEN_NOT_FOUND(false, 400, "无token，请重新登录"),
 
+    TOKEN_REFRESH_NOT_FOUND(false, 400, "refresh_token校验失败"),
+
     TOKEN_DECODE_FAIL(false, 400, "token解密失败"),
+
+    TOKEN_REFRESH_FAIL(false, 400, "token刷新失败"),
     ;
 
     /**

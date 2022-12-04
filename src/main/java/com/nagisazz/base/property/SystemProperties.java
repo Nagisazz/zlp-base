@@ -41,15 +41,15 @@ public class SystemProperties {
         /**
          * 系统登录地址
          */
-        private String loginUrl;
+        private String loginUrl = "/base/login";
 
         /**
          * 系统登出地址
          */
-        private String logoutUrl;
+        private String logoutUrl = "/base/logout";
 
         /**
-         * 不校验登录地址
+         * 不校验登录地址，地址需包含context-path
          */
         private String permitUrl;
     }
@@ -60,13 +60,23 @@ public class SystemProperties {
     public static class JWTProperties {
 
         /**
-         * 签名密钥
+         * token签名密钥
          */
-        private String signature = "nagisazlp";
+        private String tokenSignature = "nagisazlp";
 
         /**
          * token过期时间, unit: min
          */
-        private Integer expireTime = 60;
+        private Integer tokenExpireTime = 60;
+
+        /**
+         * refresh_token签名密钥
+         */
+        private String refreshTokenSignature = "nagisazlprefresh";
+
+        /**
+         * refresh_token过期时间, unit: hour
+         */
+        private Integer refreshTokenExpireTime = 7 * 24;
     }
 }
