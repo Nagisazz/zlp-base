@@ -41,6 +41,11 @@ public class ZlpUser {
     private String mail;
 
     /**
+     * 头像url
+     */
+    private String avatarurl;
+
+    /**
      * 注册系统
      */
     private String registerSystem;

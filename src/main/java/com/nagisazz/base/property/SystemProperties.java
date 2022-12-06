@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @Setter
 @Getter
-@ConfigurationProperties("system")
+@ConfigurationProperties("zlp")
 public class SystemProperties {
 
     /**
