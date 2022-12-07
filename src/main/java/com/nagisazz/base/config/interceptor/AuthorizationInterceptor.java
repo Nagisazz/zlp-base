@@ -33,11 +33,6 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        // 不校验登录地址
-        if (StringUtils.contains(servletRequest.getRequestURI(), systemProperties.getLogin().getLoginUrl())) {
-            return true;
-        }
-
         // 不校验放开的地址
         if (StringUtils.contains(systemProperties.getLogin().getPermitUrl(), servletRequest.getRequestURI())) {
             return true;

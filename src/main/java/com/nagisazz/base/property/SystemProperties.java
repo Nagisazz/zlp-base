@@ -34,22 +34,12 @@ public class SystemProperties {
         private Boolean enabled = true;
 
         /**
-         * 系统首页地址
+         * sso系统地址
          */
-        private String indexUrl;
+        private String ssoUrl;
 
         /**
-         * 系统登录地址
-         */
-        private String loginUrl = "/base/login";
-
-        /**
-         * 系统登出地址
-         */
-        private String logoutUrl = "/base/logout";
-
-        /**
-         * 不校验登录地址，地址需包含context-path
+         * 不校验登录的地址，地址需包含context-path
          */
         private String permitUrl;
     }
