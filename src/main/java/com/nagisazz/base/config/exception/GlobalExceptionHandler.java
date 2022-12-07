@@ -1,9 +1,3 @@
-/**
- * @projectName 一码通
- * @package com.thunisoft.ymt.advice
- * @className com.thunisoft.ymt.advice.GlobalExceptionHandler
- * @copyright Copyright 2022 Thunisoft, Inc. All rights reserved.
- */
 package com.nagisazz.base.config.exception;
 
 import com.nagisazz.base.pojo.OperationResult;

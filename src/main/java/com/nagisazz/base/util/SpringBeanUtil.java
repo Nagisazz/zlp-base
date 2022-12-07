@@ -1,9 +1,3 @@
-/*
- * @(#)SpringBeanUtil.java 2018年9月9日下午1:10:39
- * message
- * Copyright 2018 Thuisoft, Inc. All rights reserved.
- * THUNISOFT PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
 package com.nagisazz.base.util;
 
 import java.util.Map;
