@@ -1,4 +1,4 @@
-package com.nagisazz.base.entity;
+package com.nagisazz.platform.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

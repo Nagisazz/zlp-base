@@ -1,4 +1,4 @@
-package com.nagisazz.base.pojo;
+package com.nagisazz.platform.pojo;
 
 /**
  * LoginParam

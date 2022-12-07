@@ -1,4 +1,4 @@
-package com.nagisazz.base.entity;
+package com.nagisazz.platform.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,46 +9,36 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LogRecord {
+public class SystemRegister {
     /**
      * 主键
      */
     private Long id;
 
     /**
-     * 用户ID
+     * 系统标识
      */
-    private Long userId;
+    private String identifier;
 
     /**
-     * 日志类型，1：登录，2：操作，3：连接
+     * 系统名称
      */
-    private Integer classify;
+    private String name;
 
     /**
-     * 请求系统
+     * 系统描述
      */
-    private String requestSystem;
+    private String description;
 
     /**
-     * 请求地址
+     * 系统首页地址
      */
-    private String requestUrl;
+    private String indexUrl;
 
     /**
-     * 请求参数
+     * 是否有效
      */
-    private String requestParam;
-
-    /**
-     * 请求ip
-     */
-    private String requestIp;
-
-    /**
-     * 日志内容
-     */
-    private String content;
+    private Integer valid;
 
     /**
      * 扩展字段
