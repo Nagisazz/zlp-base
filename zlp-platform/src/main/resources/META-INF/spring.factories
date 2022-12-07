@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.nagisazz.base.autoconfig.BaseAutoConfiguration,com.nagisazz.base.autoconfig.LoginConfiguration
