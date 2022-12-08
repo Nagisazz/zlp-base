@@ -1,6 +1,6 @@
-package com.nagisazz.platform.dao.base;
+package com.nagisazz.base.dao.base;
 
-import com.nagisazz.platform.entity.WxUser;
+import com.nagisazz.base.entity.WxUser;
 import java.util.List;
 
 public interface WxUserMapper {

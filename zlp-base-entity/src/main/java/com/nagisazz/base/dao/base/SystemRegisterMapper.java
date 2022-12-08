@@ -1,6 +1,6 @@
-package com.nagisazz.platform.dao.base;
+package com.nagisazz.base.dao.base;
 
-import com.nagisazz.platform.entity.SystemRegister;
+import com.nagisazz.base.entity.SystemRegister;
 import java.util.List;
 
 public interface SystemRegisterMapper {

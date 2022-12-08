@@ -1,6 +1,6 @@
-package com.nagisazz.platform.dao.base;
+package com.nagisazz.base.dao.base;
 
-import com.nagisazz.platform.entity.ZlpUser;
+import com.nagisazz.base.entity.ZlpUser;
 import java.util.List;
 
 public interface ZlpUserMapper {
