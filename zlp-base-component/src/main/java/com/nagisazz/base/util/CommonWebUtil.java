@@ -2,6 +2,7 @@ package com.nagisazz.base.util;
 
 import com.alibaba.fastjson.JSON;
 import com.nagisazz.base.entity.ZlpUser;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -11,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * 获取token解析数据
  */
-@Slf4j
+@UtilityClass
 public class CommonWebUtil {
 
     /**

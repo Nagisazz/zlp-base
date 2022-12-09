@@ -1,36 +1,35 @@
 package com.nagisazz.platform.service;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONValidator;
+import com.nagisazz.base.dao.WechatUserExtendMapper;
 import com.nagisazz.base.dao.ZlpUserExtendMapper;
 import com.nagisazz.base.dao.base.SystemRegisterMapper;
-import com.nagisazz.base.dao.base.WechatUserMapper;
 import com.nagisazz.base.entity.SystemRegister;
 import com.nagisazz.base.entity.WechatUser;
 import com.nagisazz.base.entity.ZlpUser;
 import com.nagisazz.base.enums.ValidEnum;
 import com.nagisazz.base.pojo.OperationResult;
+import com.nagisazz.base.util.CommonWebUtil;
 import com.nagisazz.base.util.JWTUtil;
 import com.nagisazz.base.util.RequestUtil;
 import com.nagisazz.base.util.RestHelper;
 import com.nagisazz.platform.enums.LoginResultEnum;
 import com.nagisazz.platform.pojo.dto.LoginParam;
+import com.nagisazz.platform.pojo.dto.UserParam;
 import com.nagisazz.platform.pojo.dto.WeChatLoginResult;
 import com.nagisazz.platform.pojo.vo.UserInfoVo;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * ZlpLoginService
@@ -49,7 +48,7 @@ public class ZlpLoginService {
     private SystemRegisterMapper systemRegisterMapper;
 
     @Resource
-    private WechatUserMapper wechatUserMapper;
+    private WechatUserExtendMapper wechatUserMapper;
 
     @Resource
     private RestHelper restHelper;
@@ -61,45 +60,35 @@ public class ZlpLoginService {
      * @return
      */
     public OperationResult login(LoginParam loginParam) {
-        ZlpUser zlpUser = zlpUserMapper.selectOne(ZlpUser.builder()
-                .loginid(loginParam.getLoginId())
-                .password(loginParam.getPassword())
-                .build());
-        if (Objects.isNull(zlpUser)) {
-            return OperationResult.buildFailureResult("用户名或者密码错误");
-        } else if (ValidEnum.INVALID.getCode().equals(zlpUser.getValid())) {
-            return OperationResult.buildFailureResult("用户被禁用，请联系微信号：NagisaZC解锁");
+        Object res = judgeUser(loginParam.getLoginId(), loginParam.getPassword());
+        if (res instanceof OperationResult) {
+            return (OperationResult) res;
+        } else {
+            ZlpUser zlpUser = (ZlpUser) res;
+            // 更新用户登录次数、最后登录时间、最后登录ip和最后登录系统
+            zlpUserMapper.updateByPrimaryKeySelective(ZlpUser.builder()
+                    .id(zlpUser.getId())
+                    .loginNumber(zlpUser.getLoginNumber() + 1)
+                    .lastLoginTime(LocalDateTime.now())
+                    .lastIp(RequestUtil.getIp())
+                    .lastSystem(loginParam.getSystemId())
+                    .updateTime(LocalDateTime.now())
+                    .build());
+
+            // 生成token
+            String token = genToken(zlpUser);
+            return buildUserVO(token, zlpUser);
         }
-
-        // 更新用户登录次数、最后登录时间、最后登录ip和最后登录系统
-        zlpUserMapper.updateByPrimaryKeySelective(ZlpUser.builder()
-                .id(zlpUser.getId())
-                .loginNumber(zlpUser.getLoginNumber() + 1)
-                .lastLoginTime(LocalDateTime.now())
-                .lastIp(RequestUtil.getIp())
-                .lastSystem(loginParam.getSystemId())
-                .updateTime(LocalDateTime.now())
-                .build());
-
-        // 生成token
-        String token = genToken(zlpUser);
-
-        return buildUserVO(token, zlpUser);
     }
 
     /**
-     * 小程序登录
+     * WX小程序登录
      *
      * @param loginParam
      * @return
      */
     public OperationResult loginApp(LoginParam loginParam) {
-        SystemRegister systemRegister = systemRegisterMapper.selectOne(SystemRegister.builder().identifier(loginParam.getSystemId()).build());
-        if (StringUtils.isBlank(systemRegister.getWxAppid()) || StringUtils.isBlank(systemRegister.getWxSecret())) {
-            return OperationResult.buildFailureResult(LoginResultEnum.NOT_REGISTER.getMessage());
-        }
-
-        final WeChatLoginResult weChatLoginResult = weChatLogin(systemRegister, loginParam);
+        final WeChatLoginResult weChatLoginResult = weChatLogin(loginParam.getSystemId(), loginParam.getCode());
         if (Objects.isNull(weChatLoginResult)) {
             return OperationResult.buildFailureResult(LoginResultEnum.WX_LOGIN_FAIL.getMessage());
         }
@@ -109,17 +98,6 @@ public class ZlpLoginService {
         LocalDateTime now = LocalDateTime.now();
         // 微信数据为空，说明第一次登录，需插入微信用户数据，并返回前端用户未绑定
         if (Objects.isNull(wechatUser)) {
-//            ZlpUser newUser = ZlpUser.builder()
-//                    .registerSystem(loginParam.getSystemId())
-//                    .lastIp(RequestUtil.getIp())
-//                    .lastSystem(loginParam.getSystemId())
-//                    .loginNumber(1)
-//                    .valid(ValidEnum.VALID.getCode())
-//                    .createTime(now)
-//                    .updateTime(now)
-//                    .lastLoginTime(now)
-//                    .build();
-//            zlpUserMapper.insertForId(newUser);
             wechatUserMapper.insertSelective(WechatUser.builder()
                     .openid(openid)
                     .unionid(weChatLoginResult.getUnionId())
@@ -130,56 +108,138 @@ public class ZlpLoginService {
             return OperationResult.buildSuccessResult(LoginResultEnum.NOT_BOUND.getCode(), LoginResultEnum.NOT_BOUND.getMessage(), null);
         } else if (Objects.isNull(wechatUser.getUserId())) {
             // 返回前端用户未绑定
+            wechatUserMapper.updateByPrimaryKey(WechatUser.builder()
+                    .loginNumber(wechatUser.getLoginNumber() + 1)
+                    .updateTime(now)
+                    .build());
             return OperationResult.buildSuccessResult(LoginResultEnum.NOT_BOUND.getCode(), LoginResultEnum.NOT_BOUND.getMessage(), null);
         } else {
             ZlpUser zlpUser = zlpUserMapper.selectByPrimaryKey(wechatUser.getUserId());
 
             // 生成token
             String token = genToken(zlpUser);
-
             return buildUserVO(token, zlpUser);
         }
     }
 
     /**
-     * 小程序绑定PC端账号
+     * WX小程序绑定PC端账号
      *
      * @param loginParam
      * @return
      */
     public OperationResult bound(LoginParam loginParam) {
-        SystemRegister systemRegister = systemRegisterMapper.selectOne(SystemRegister.builder().identifier(loginParam.getSystemId()).build());
-        if (StringUtils.isBlank(systemRegister.getWxAppid()) || StringUtils.isBlank(systemRegister.getWxSecret())) {
-            return OperationResult.buildFailureResult(LoginResultEnum.NOT_REGISTER.getMessage());
-        }
-
-        final WeChatLoginResult weChatLoginResult = weChatLogin(systemRegister, loginParam);
+        final WeChatLoginResult weChatLoginResult = weChatLogin(loginParam.getSystemId(), loginParam.getCode());
         if (Objects.isNull(weChatLoginResult)) {
             return OperationResult.buildFailureResult(LoginResultEnum.WX_LOGIN_FAIL.getMessage());
         }
 
+        Object res = judgeUser(loginParam.getLoginId(), loginParam.getPassword());
+        if (res instanceof OperationResult) {
+            return (OperationResult) res;
+        } else {
+            ZlpUser zlpUser = (ZlpUser) res;
+            LocalDateTime now = LocalDateTime.now();
+            // 绑定用户
+            wechatUserMapper.updateByOpenId(WechatUser.builder()
+                    .openid(weChatLoginResult.getOpenid())
+                    .userId(zlpUser.getId())
+                    .updateTime(now)
+                    .build());
+            // 更新user
+            zlpUser.setLastIp(RequestUtil.getIp());
+            zlpUser.setLastLoginTime(now);
+            zlpUser.setLastSystem(loginParam.getSystemId());
+            zlpUser.setUpdateTime(now);
+            zlpUserMapper.updateByPrimaryKeySelective(zlpUser);
+            // 生成token
+            String token = genToken(zlpUser);
+            return buildUserVO(token, zlpUser);
+        }
+    }
+
+    /**
+     * PC端用户注册
+     *
+     * @param userParam
+     * @return
+     */
+    public OperationResult register(UserParam userParam) {
+        if (!Objects.isNull(zlpUserMapper.selectOne(ZlpUser.builder().loginId(userParam.getLoginId()).build()))) {
+            return OperationResult.buildFailureResult("该账号已被注册");
+        }
+        // 注册用户
+        final ZlpUser zlpUser = registerUser(userParam);
+        // 生成token
+        String token = genToken(zlpUser);
+        return buildUserVO(token, zlpUser);
+    }
+
+    /**
+     * WX小程序用户注册
+     *
+     * @param userParam
+     * @return
+     */
+    public OperationResult registerApp(UserParam userParam) {
+        if (!Objects.isNull(zlpUserMapper.selectOne(ZlpUser.builder().loginId(userParam.getLoginId()).build()))) {
+            return OperationResult.buildFailureResult("该账号已被注册");
+        }
+        // 微信登录
+        final WeChatLoginResult weChatLoginResult = weChatLogin(userParam.getSystemId(), userParam.getCode());
+        if (Objects.isNull(weChatLoginResult)) {
+            return OperationResult.buildFailureResult(LoginResultEnum.WX_LOGIN_FAIL.getMessage());
+        }
+        // 注册用户
+        final ZlpUser zlpUser = registerUser(userParam);
+        // 绑定用户
+        wechatUserMapper.updateByOpenId(WechatUser.builder()
+                .openid(weChatLoginResult.getOpenid())
+                .userId(zlpUser.getId())
+                .updateTime(LocalDateTime.now())
+                .build());
+        // 生成token
+        String token = genToken(zlpUser);
+        return buildUserVO(token, zlpUser);
+    }
+
+    private ZlpUser registerUser(UserParam userParam) {
+        LocalDateTime now = LocalDateTime.now();
+
+        ZlpUser zlpUser = ZlpUser.builder().build();
+        BeanUtils.copyProperties(userParam, zlpUser);
+        zlpUser.setLastIp(RequestUtil.getIp());
+        zlpUser.setLastLoginTime(now);
+        zlpUser.setLastSystem(userParam.getSystemId());
+        zlpUser.setRegisterSystem(userParam.getSystemId());
+        zlpUser.setLoginNumber(1);
+        zlpUser.setValid(ValidEnum.VALID.getCode());
+        zlpUser.setCreateTime(now);
+        zlpUser.setUpdateTime(now);
+
+        zlpUserMapper.insertForId(zlpUser);
+        return zlpUser;
+    }
+
+    private Object judgeUser(String loginId, String password) {
         ZlpUser zlpUser = zlpUserMapper.selectOne(ZlpUser.builder()
-                .loginid(loginParam.getLoginId())
-                .password(loginParam.getPassword())
+                .loginId(loginId)
+                .password(password)
                 .build());
         if (Objects.isNull(zlpUser)) {
             return OperationResult.buildFailureResult("用户名或者密码错误");
         } else if (ValidEnum.INVALID.getCode().equals(zlpUser.getValid())) {
             return OperationResult.buildFailureResult("用户被禁用，请联系微信号：NagisaZC解锁");
         }
-
-        // todo 绑定用户
-        return null;
+        return zlpUser;
     }
 
-    /**
-     * 微信登录
-     *
-     * @param loginParam 登陆参数
-     * @return 登录返回值
-     */
-    private WeChatLoginResult weChatLogin(SystemRegister systemRegister, LoginParam loginParam) {
-        final String code = loginParam.getCode();
+    private WeChatLoginResult weChatLogin(String systemId, String code) {
+        SystemRegister systemRegister = systemRegisterMapper.selectOne(SystemRegister.builder().identifier(systemId).build());
+        if (StringUtils.isBlank(systemRegister.getWxAppid()) || StringUtils.isBlank(systemRegister.getWxSecret())) {
+            return null;
+        }
+
         final String result = restHelper.get(String.format(loginUrl, systemRegister.getWxAppid(), systemRegister.getWxSecret(), code));
         if (Objects.isNull(result) || !JSONValidator.from(result).validate()) {
             return null;
@@ -206,5 +266,4 @@ public class ZlpLoginService {
         userInfoVo.setToken(token);
         return OperationResult.buildSuccessResult(userInfoVo);
     }
-
 }

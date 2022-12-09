@@ -10,11 +10,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum LoginResultEnum {
     /**
-     * 微信小程序未注册
-     */
-    NOT_REGISTER(400, "微信小程序未注册"),
-
-    /**
      * 微信小程序登录失败
      */
     WX_LOGIN_FAIL(400, "微信小程序登录失败"),

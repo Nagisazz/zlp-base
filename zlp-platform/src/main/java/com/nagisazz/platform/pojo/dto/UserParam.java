@@ -15,8 +15,22 @@ import lombok.ToString;
 @NoArgsConstructor
 public class UserParam {
 
-    private String avatarUrl;
+    private Integer type;
 
-    private String nickName;
+    private String code;
+
+    private String systemId;
+
+    private String loginId;
+
+    private String name;
+
+    private String password;
+
+    private String phone;
+
+    private String mail;
+
+    private String avatarUrl;
 
 }

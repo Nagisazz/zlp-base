@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 
 import com.auth0.jwt.JWT;
@@ -18,6 +19,7 @@ import com.nagisazz.base.property.SystemProperties;
 /**
  * JWT工具类
  */
+@UtilityClass
 public class JWTUtil {
 
     private static SystemProperties.JWTProperties jwtProperties;
