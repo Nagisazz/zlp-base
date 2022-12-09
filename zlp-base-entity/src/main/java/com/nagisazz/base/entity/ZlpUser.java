@@ -18,7 +18,7 @@ public class ZlpUser {
     /**
      * 登录名
      */
-    private String loginid;
+    private String loginId;
 
     /**
      * 用户名
