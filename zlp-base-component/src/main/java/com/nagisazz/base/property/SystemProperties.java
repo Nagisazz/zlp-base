@@ -1,9 +1,10 @@
 package com.nagisazz.base.property;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * system配置
@@ -22,6 +23,11 @@ public class SystemProperties {
      * JWT配置
      */
     private JWTProperties jwt = new JWTProperties();
+
+    /**
+     * 微信小程序配置
+     */
+    private WxProperties wx = new WxProperties();
 
     @Getter
     @Setter
@@ -68,5 +74,21 @@ public class SystemProperties {
          * refresh_token过期时间, unit: hour
          */
         private Integer refreshTokenExpireTime = 7 * 24;
+    }
+
+    @Getter
+    @Setter
+    @ToString
+    public static class WxProperties {
+
+        /**
+         * 微信小程序appid
+         */
+        private String appid;
+
+        /**
+         * 微信小程序secret
+         */
+        private String secret;
     }
 }

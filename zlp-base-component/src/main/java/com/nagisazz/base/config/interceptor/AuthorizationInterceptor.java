@@ -1,20 +1,23 @@
 package com.nagisazz.base.config.interceptor;
 
-import com.nagisazz.base.config.constants.BaseUrlConstant;
-import com.nagisazz.base.config.exception.CustomException;
-import com.nagisazz.base.config.exception.ResultEnum;
-import com.nagisazz.base.property.SystemProperties;
-import com.nagisazz.base.util.JWTUtil;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
+import com.nagisazz.base.config.constants.BaseUrlConstant;
+import com.nagisazz.base.config.exception.CustomException;
+import com.nagisazz.base.enums.ResultEnum;
+import com.nagisazz.base.property.SystemProperties;
+import com.nagisazz.base.util.JWTUtil;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * token验证

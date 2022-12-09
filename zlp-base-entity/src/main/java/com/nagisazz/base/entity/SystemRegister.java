@@ -46,6 +46,16 @@ public class SystemRegister {
     private String ext;
 
     /**
+     * 微信小程序appid
+     */
+    private String wxAppid;
+
+    /**
+     * 微信小程序secret
+     */
+    private String wxSecret;
+
+    /**
      * 创建时间
      */
     private LocalDateTime createTime;

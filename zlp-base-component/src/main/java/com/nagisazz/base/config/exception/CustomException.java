@@ -1,5 +1,7 @@
 package com.nagisazz.base.config.exception;
 
+import com.nagisazz.base.enums.ResultEnum;
+
 import lombok.Getter;
 import lombok.ToString;
 

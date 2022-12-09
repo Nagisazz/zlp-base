@@ -1,18 +1,19 @@
 package com.nagisazz.base.util;
 
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.nagisazz.base.config.exception.CustomException;
-import com.nagisazz.base.config.exception.ResultEnum;
+import com.nagisazz.base.enums.ResultEnum;
 import com.nagisazz.base.property.SystemProperties;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * JWT工具类

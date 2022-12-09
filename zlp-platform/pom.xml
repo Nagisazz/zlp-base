@@ -20,11 +20,6 @@
             <artifactId>zlp-base-component</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.nagisazz</groupId>
-            <artifactId>zlp-base-entity</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
     <repositories>
