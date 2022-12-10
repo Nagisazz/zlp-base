@@ -6,6 +6,7 @@ import com.nagisazz.base.pojo.OperationResult;
 import com.nagisazz.base.util.CommonWebUtil;
 import com.nagisazz.base.util.RequestUtil;
 import com.nagisazz.platform.pojo.dto.UserParam;
+import com.nagisazz.platform.pojo.vo.UserInfoVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 public class AccountService {
 
     @Resource
-    private ZlpUserExtendMapper zlpUserMapper;
+    private ZlpUserExtendMapper zlpUserExtendMapper;
 
     /**
      * 获取用户信息
@@ -26,7 +27,10 @@ public class AccountService {
      * @return
      */
     public OperationResult info() {
-        return OperationResult.buildSuccessResult(CommonWebUtil.getUser());
+        // 封装userinfo
+        UserInfoVo userInfoVo = UserInfoVo.builder().build();
+        BeanUtils.copyProperties(CommonWebUtil.getUser(), userInfoVo);
+        return OperationResult.buildSuccessResult(userInfoVo);
     }
 
     /**
@@ -44,8 +48,11 @@ public class AccountService {
         zlpUser.setLastLoginTime(now);
         zlpUser.setLastSystem(userParam.getSystemId());
         zlpUser.setUpdateTime(now);
-        zlpUserMapper.updateByPrimaryKeySelective(zlpUser);
-        return OperationResult.buildSuccessResult(zlpUser);
+        zlpUserExtendMapper.updateByPrimaryKeySelective(zlpUser);
+        // 封装userinfo
+        UserInfoVo userInfoVo = UserInfoVo.builder().build();
+        BeanUtils.copyProperties(CommonWebUtil.getUser(), userInfoVo);
+        return OperationResult.buildSuccessResult(userInfoVo);
     }
 
 }

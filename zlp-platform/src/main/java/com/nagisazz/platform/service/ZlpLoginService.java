@@ -10,7 +10,6 @@ import com.nagisazz.base.entity.WechatUser;
 import com.nagisazz.base.entity.ZlpUser;
 import com.nagisazz.base.enums.ValidEnum;
 import com.nagisazz.base.pojo.OperationResult;
-import com.nagisazz.base.util.CommonWebUtil;
 import com.nagisazz.base.util.JWTUtil;
 import com.nagisazz.base.util.RequestUtil;
 import com.nagisazz.base.util.RestHelper;
@@ -22,6 +21,7 @@ import com.nagisazz.platform.pojo.vo.UserInfoVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -42,13 +42,13 @@ public class ZlpLoginService {
     private String loginUrl;
 
     @Resource
-    private ZlpUserExtendMapper zlpUserMapper;
+    private ZlpUserExtendMapper zlpUserExtendMapper;
 
     @Resource
     private SystemRegisterMapper systemRegisterMapper;
 
     @Resource
-    private WechatUserExtendMapper wechatUserMapper;
+    private WechatUserExtendMapper wechatUserExtendMapper;
 
     @Resource
     private RestHelper restHelper;
@@ -66,7 +66,7 @@ public class ZlpLoginService {
         } else {
             ZlpUser zlpUser = (ZlpUser) res;
             // 更新用户登录次数、最后登录时间、最后登录ip和最后登录系统
-            zlpUserMapper.updateByPrimaryKeySelective(ZlpUser.builder()
+            zlpUserExtendMapper.updateByPrimaryKeySelective(ZlpUser.builder()
                     .id(zlpUser.getId())
                     .loginNumber(zlpUser.getLoginNumber() + 1)
                     .lastLoginTime(LocalDateTime.now())
@@ -75,9 +75,8 @@ public class ZlpLoginService {
                     .updateTime(LocalDateTime.now())
                     .build());
 
-            // 生成token
-            String token = genToken(zlpUser);
-            return buildUserVO(token, zlpUser);
+            // 生成token并返回
+            return buildUserRes(zlpUser);
         }
     }
 
@@ -94,11 +93,11 @@ public class ZlpLoginService {
         }
 
         final String openid = weChatLoginResult.getOpenid();
-        final WechatUser wechatUser = wechatUserMapper.selectOne(WechatUser.builder().openid(openid).build());
+        final WechatUser wechatUser = wechatUserExtendMapper.selectOne(WechatUser.builder().openid(openid).build());
         LocalDateTime now = LocalDateTime.now();
         // 微信数据为空，说明第一次登录，需插入微信用户数据，并返回前端用户未绑定
         if (Objects.isNull(wechatUser)) {
-            wechatUserMapper.insertSelective(WechatUser.builder()
+            wechatUserExtendMapper.insertSelective(WechatUser.builder()
                     .openid(openid)
                     .unionid(weChatLoginResult.getUnionId())
                     .loginNumber(1)
@@ -108,17 +107,15 @@ public class ZlpLoginService {
             return OperationResult.buildSuccessResult(LoginResultEnum.NOT_BOUND.getCode(), LoginResultEnum.NOT_BOUND.getMessage(), null);
         } else if (Objects.isNull(wechatUser.getUserId())) {
             // 返回前端用户未绑定
-            wechatUserMapper.updateByPrimaryKey(WechatUser.builder()
+            wechatUserExtendMapper.updateByPrimaryKey(WechatUser.builder()
                     .loginNumber(wechatUser.getLoginNumber() + 1)
                     .updateTime(now)
                     .build());
             return OperationResult.buildSuccessResult(LoginResultEnum.NOT_BOUND.getCode(), LoginResultEnum.NOT_BOUND.getMessage(), null);
         } else {
-            ZlpUser zlpUser = zlpUserMapper.selectByPrimaryKey(wechatUser.getUserId());
-
-            // 生成token
-            String token = genToken(zlpUser);
-            return buildUserVO(token, zlpUser);
+            ZlpUser zlpUser = zlpUserExtendMapper.selectByPrimaryKey(wechatUser.getUserId());
+            // 生成token并返回
+            return buildUserRes(zlpUser);
         }
     }
 
@@ -141,7 +138,7 @@ public class ZlpLoginService {
             ZlpUser zlpUser = (ZlpUser) res;
             LocalDateTime now = LocalDateTime.now();
             // 绑定用户
-            wechatUserMapper.updateByOpenId(WechatUser.builder()
+            wechatUserExtendMapper.updateByOpenId(WechatUser.builder()
                     .openid(weChatLoginResult.getOpenid())
                     .userId(zlpUser.getId())
                     .updateTime(now)
@@ -151,10 +148,9 @@ public class ZlpLoginService {
             zlpUser.setLastLoginTime(now);
             zlpUser.setLastSystem(loginParam.getSystemId());
             zlpUser.setUpdateTime(now);
-            zlpUserMapper.updateByPrimaryKeySelective(zlpUser);
-            // 生成token
-            String token = genToken(zlpUser);
-            return buildUserVO(token, zlpUser);
+            zlpUserExtendMapper.updateByPrimaryKeySelective(zlpUser);
+            // 生成token并返回
+            return buildUserRes(zlpUser);
         }
     }
 
@@ -165,14 +161,13 @@ public class ZlpLoginService {
      * @return
      */
     public OperationResult register(UserParam userParam) {
-        if (!Objects.isNull(zlpUserMapper.selectOne(ZlpUser.builder().loginId(userParam.getLoginId()).build()))) {
+        if (!Objects.isNull(zlpUserExtendMapper.selectOne(ZlpUser.builder().loginId(userParam.getLoginId()).build()))) {
             return OperationResult.buildFailureResult("该账号已被注册");
         }
         // 注册用户
         final ZlpUser zlpUser = registerUser(userParam);
-        // 生成token
-        String token = genToken(zlpUser);
-        return buildUserVO(token, zlpUser);
+        // 生成token并返回
+        return buildUserRes(zlpUser);
     }
 
     /**
@@ -182,7 +177,7 @@ public class ZlpLoginService {
      * @return
      */
     public OperationResult registerApp(UserParam userParam) {
-        if (!Objects.isNull(zlpUserMapper.selectOne(ZlpUser.builder().loginId(userParam.getLoginId()).build()))) {
+        if (!Objects.isNull(zlpUserExtendMapper.selectOne(ZlpUser.builder().loginId(userParam.getLoginId()).build()))) {
             return OperationResult.buildFailureResult("该账号已被注册");
         }
         // 微信登录
@@ -193,14 +188,13 @@ public class ZlpLoginService {
         // 注册用户
         final ZlpUser zlpUser = registerUser(userParam);
         // 绑定用户
-        wechatUserMapper.updateByOpenId(WechatUser.builder()
+        wechatUserExtendMapper.updateByOpenId(WechatUser.builder()
                 .openid(weChatLoginResult.getOpenid())
                 .userId(zlpUser.getId())
                 .updateTime(LocalDateTime.now())
                 .build());
-        // 生成token
-        String token = genToken(zlpUser);
-        return buildUserVO(token, zlpUser);
+        // 生成token并返回
+        return buildUserRes(zlpUser);
     }
 
     private ZlpUser registerUser(UserParam userParam) {
@@ -217,12 +211,12 @@ public class ZlpLoginService {
         zlpUser.setCreateTime(now);
         zlpUser.setUpdateTime(now);
 
-        zlpUserMapper.insertForId(zlpUser);
+        zlpUserExtendMapper.insertForId(zlpUser);
         return zlpUser;
     }
 
     private Object judgeUser(String loginId, String password) {
-        ZlpUser zlpUser = zlpUserMapper.selectOne(ZlpUser.builder()
+        ZlpUser zlpUser = zlpUserExtendMapper.selectOne(ZlpUser.builder()
                 .loginId(loginId)
                 .password(password)
                 .build());
@@ -260,10 +254,23 @@ public class ZlpLoginService {
         return JWTUtil.getToken(map, String.valueOf(zlpUser.getId()));
     }
 
-    private OperationResult buildUserVO(String token, ZlpUser zlpUser) {
+    private String genRefreshToken(ZlpUser zlpUser) {
+        // key为userId,map包含user对象
+        Map<String, String> map = new HashMap<>(4);
+        map.put("user", JSON.toJSONString(zlpUser));
+        // 生成token
+        return JWTUtil.getRefreshToken(map, String.valueOf(zlpUser.getId()));
+    }
+
+    private OperationResult buildUserRes(ZlpUser zlpUser) {
+        // 生成token
+        String token = genToken(zlpUser);
+        String refreshToken = genRefreshToken(zlpUser);
+        // 封装userinfo
         UserInfoVo userInfoVo = UserInfoVo.builder().build();
         BeanUtils.copyProperties(zlpUser, userInfoVo);
         userInfoVo.setToken(token);
+        userInfoVo.setRefreshToken(refreshToken);
         return OperationResult.buildSuccessResult(userInfoVo);
     }
 }

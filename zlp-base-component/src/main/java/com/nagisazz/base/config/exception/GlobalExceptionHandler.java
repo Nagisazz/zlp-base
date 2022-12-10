@@ -32,14 +32,6 @@ public class GlobalExceptionHandler {
         return OperationResult.buildFailureResult(exception.getCode(), exception.getMessage());
     }
 
-    @ExceptionHandler(value = NullPointerException.class)
-    @ResponseBody
-    public OperationResult nullPointerExceptionHandler(final NullPointerException ex) {
-        log.error(ex.getMessage(), ex);
-        return OperationResult.buildFailureResult(500, ex.getMessage());
-    }
-
-
     @ExceptionHandler(value = IllegalArgumentException.class)
     @ResponseBody
     public OperationResult illegalArgumentExceptionHandler(final IllegalArgumentException ex) {
@@ -47,11 +39,11 @@ public class GlobalExceptionHandler {
         return OperationResult.buildFailureResult(ex.getMessage());
     }
 
-    @ExceptionHandler(value = Exception.class)
+    @ExceptionHandler(value = Throwable.class)
     @ResponseBody
-    public OperationResult exceptionHandler(final Exception ex) {
+    public OperationResult exceptionHandler(final Throwable ex) {
         log.error(ex.getMessage(), ex);
-        return OperationResult.buildFailureResult(500, ex.getMessage());
+        return OperationResult.buildFailureResult(ResultEnum.FAIL.getCode(), ResultEnum.FAIL.getMessage());
     }
 
 }

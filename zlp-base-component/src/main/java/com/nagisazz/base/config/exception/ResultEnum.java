@@ -14,7 +14,7 @@ public enum ResultEnum {
      */
     SUCCESS(true, 200, "操作成功！"),
 
-    FAIL(false, 500, "操作失败！"),
+    FAIL(false, 500, "系统错误"),
 
     TOKEN_NOT_FOUND(false, 401, "无token，请重新登录"),
 

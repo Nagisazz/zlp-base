@@ -22,17 +22,22 @@ public class UserInfoVo {
 
     private String token;
 
+    private String refreshToken;
+
     private String name;
 
     private String phone;
 
-    private String avatarurl;
+    private String avatarUrl;
 
     private Integer valid;
+
+    private String lastIp;
 
     private String lastSystem;
 
     private LocalDateTime createTime;
 
     private LocalDateTime lastLoginTime;
+
 }

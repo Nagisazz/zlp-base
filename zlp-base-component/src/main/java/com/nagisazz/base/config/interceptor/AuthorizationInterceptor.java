@@ -1,23 +1,23 @@
 package com.nagisazz.base.config.interceptor;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.nagisazz.base.config.constants.BaseUrlConstant;
 import com.nagisazz.base.config.exception.CustomException;
 import com.nagisazz.base.enums.ResultEnum;
 import com.nagisazz.base.property.SystemProperties;
 import com.nagisazz.base.util.JWTUtil;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * token验证
@@ -37,8 +37,12 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         }
 
         // 不校验放开的地址
-        if (StringUtils.contains(systemProperties.getLogin().getPermitUrl(), servletRequest.getRequestURI())) {
-            return true;
+        final List<String> urlAnons = Arrays.stream(StringUtils.split(systemProperties.getLogin().getPermitUrl(), ","))
+                .map(String::trim).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+        for (String urlAnon : urlAnons) {
+            if (StringUtils.contains(servletRequest.getRequestURI(), urlAnon)) {
+                return true;
+            }
         }
 
         // 验证token
@@ -51,9 +55,9 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
         // refresh接口校验
         if (StringUtils.contains(servletRequest.getRequestURI(), BaseUrlConstant.REFRESH_URL)) {
-            try{
+            try {
                 JWTUtil.verifyRefreshToken(token);
-            }catch (Exception e){
+            } catch (Exception e) {
                 throw new CustomException(ResultEnum.TOKEN_REFRESH_NOT_FOUND, e);
             }
             return true;

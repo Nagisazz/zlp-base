@@ -14,7 +14,7 @@ spring:
       max-request-size: 500MB
 
 server:
-  port: 6000
+  port: 7000
   servlet:
     context-path: /base
 
