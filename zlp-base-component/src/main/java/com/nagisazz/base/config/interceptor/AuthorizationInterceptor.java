@@ -1,5 +1,6 @@
 package com.nagisazz.base.config.interceptor;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.nagisazz.base.config.constants.BaseUrlConstant;
 import com.nagisazz.base.config.exception.CustomException;
 import com.nagisazz.base.enums.ResultEnum;
@@ -47,7 +48,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
         // 验证token
         // 从http请求头中取出 token
-        String token = servletRequest.getHeader("authorization");
+        String token = servletRequest.getHeader("Authorization");
         // 执行认证
         if (StringUtils.isBlank(token)) {
             throw new CustomException(ResultEnum.TOKEN_NOT_FOUND);
@@ -55,24 +56,20 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
         // refresh接口校验
         if (StringUtils.contains(servletRequest.getRequestURI(), BaseUrlConstant.REFRESH_URL)) {
-            try {
-                JWTUtil.verifyRefreshToken(token);
-            } catch (Exception e) {
-                throw new CustomException(ResultEnum.TOKEN_REFRESH_NOT_FOUND, e);
-            }
+            // 校验并获取token，失败返回异常
+            final Map<String, String> map = JWTUtil.getRefreshMap(token);
+            // 添加request参数
+            servletRequest.setAttribute("userId", map.get("userId"));
+            servletRequest.setAttribute("user", map.get("user"));
             return true;
         }
 
         // 普通需校验的接口
-        try {
-            // 校验获取token
-            final Map<String, String> map = JWTUtil.getMap(token);
-            // 添加request参数
-            servletRequest.setAttribute("userId", map.get("userId"));
-            servletRequest.setAttribute("user", map.get("user"));
-        } catch (Exception e) {
-            throw new CustomException(ResultEnum.TOKEN_DECODE_FAIL, e);
-        }
+        // 校验并获取token参数，失败返回异常
+        final Map<String, String> map = JWTUtil.getMap(token);
+        // 添加request参数
+        servletRequest.setAttribute("userId", map.get("userId"));
+        servletRequest.setAttribute("user", map.get("user"));
         return true;
     }
 

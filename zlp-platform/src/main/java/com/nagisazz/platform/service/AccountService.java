@@ -7,6 +7,7 @@ import com.nagisazz.base.util.CommonWebUtil;
 import com.nagisazz.base.util.RequestUtil;
 import com.nagisazz.platform.pojo.dto.UserParam;
 import com.nagisazz.platform.pojo.vo.UserInfoVo;
+import com.nagisazz.platform.util.GenerateTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -55,4 +56,17 @@ public class AccountService {
         return OperationResult.buildSuccessResult(userInfoVo);
     }
 
+    /**
+     * 刷新Token
+     *
+     * @return
+     */
+    public OperationResult refresh() {
+        final ZlpUser user = CommonWebUtil.getUser();
+        UserInfoVo userInfoVo = UserInfoVo.builder()
+                .token(GenerateTokenUtil.genToken(user))
+                .refreshToken(GenerateTokenUtil.genRefreshToken(user))
+                .build();
+        return OperationResult.buildSuccessResult(userInfoVo);
+    }
 }

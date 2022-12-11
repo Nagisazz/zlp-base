@@ -35,4 +35,13 @@ public class AccountInfoController {
         return accountService.update(userParam);
     }
 
+    /**
+     * 刷新Token
+     *
+     * @return
+     */
+    @GetMapping("refresh")
+    public OperationResult refresh() {
+        return accountService.refresh();
+    }
 }

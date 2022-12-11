@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.annotation.PostConstruct;
+
 /**
  * system配置
  */
@@ -13,6 +15,8 @@ import lombok.ToString;
 @Getter
 @ConfigurationProperties("zlp")
 public class SystemProperties {
+
+    public static JWTProperties jwtStatic;
 
     /**
      * 登录配置
@@ -28,6 +32,11 @@ public class SystemProperties {
      * 微信小程序配置
      */
     private WxProperties wx = new WxProperties();
+
+    @PostConstruct
+    public void setJwtStatic(){
+        jwtStatic = jwt;
+    }
 
     @Getter
     @Setter
@@ -63,7 +72,7 @@ public class SystemProperties {
         /**
          * token过期时间, unit: min
          */
-        private Integer tokenExpireTime = 60;
+        private Integer tokenExpireTime = 1;
 
         /**
          * refresh_token签名密钥

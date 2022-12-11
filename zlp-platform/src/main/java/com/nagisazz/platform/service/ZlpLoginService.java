@@ -10,7 +10,6 @@ import com.nagisazz.base.entity.WechatUser;
 import com.nagisazz.base.entity.ZlpUser;
 import com.nagisazz.base.enums.ValidEnum;
 import com.nagisazz.base.pojo.OperationResult;
-import com.nagisazz.base.util.JWTUtil;
 import com.nagisazz.base.util.RequestUtil;
 import com.nagisazz.base.util.RestHelper;
 import com.nagisazz.platform.enums.LoginResultEnum;
@@ -18,17 +17,15 @@ import com.nagisazz.platform.pojo.dto.LoginParam;
 import com.nagisazz.platform.pojo.dto.UserParam;
 import com.nagisazz.platform.pojo.dto.WeChatLoginResult;
 import com.nagisazz.platform.pojo.vo.UserInfoVo;
+import com.nagisazz.platform.util.GenerateTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -246,26 +243,10 @@ public class ZlpLoginService {
         return null;
     }
 
-    private String genToken(ZlpUser zlpUser) {
-        // key为userId,map包含user对象
-        Map<String, String> map = new HashMap<>(4);
-        map.put("user", JSON.toJSONString(zlpUser));
-        // 生成token
-        return JWTUtil.getToken(map, String.valueOf(zlpUser.getId()));
-    }
-
-    private String genRefreshToken(ZlpUser zlpUser) {
-        // key为userId,map包含user对象
-        Map<String, String> map = new HashMap<>(4);
-        map.put("user", JSON.toJSONString(zlpUser));
-        // 生成token
-        return JWTUtil.getRefreshToken(map, String.valueOf(zlpUser.getId()));
-    }
-
     private OperationResult buildUserRes(ZlpUser zlpUser) {
         // 生成token
-        String token = genToken(zlpUser);
-        String refreshToken = genRefreshToken(zlpUser);
+        String token = GenerateTokenUtil.genToken(zlpUser);
+        String refreshToken = GenerateTokenUtil.genRefreshToken(zlpUser);
         // 封装userinfo
         UserInfoVo userInfoVo = UserInfoVo.builder().build();
         BeanUtils.copyProperties(zlpUser, userInfoVo);
