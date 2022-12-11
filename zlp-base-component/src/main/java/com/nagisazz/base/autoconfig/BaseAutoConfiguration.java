@@ -41,8 +41,6 @@ public class BaseAutoConfiguration {
 
     /**
      * spring 工具类
-     *
-     * @return SpringBeanUtil
      */
     @Bean
     @ConditionalOnMissingBean(SpringBeanUtil.class)
@@ -52,8 +50,6 @@ public class BaseAutoConfiguration {
 
     /**
      * rest工厂类
-     *
-     * @return 工厂类
      */
     @Bean
     @ConditionalOnMissingBean({ClientHttpRequestFactory.class})
@@ -74,7 +70,6 @@ public class BaseAutoConfiguration {
      * 构建RestTemplate实例
      *
      * @param factory rest工厂方法
-     * @return 实例
      */
     @Bean
     @ConditionalOnClass(FastJsonHttpMessageConverter.class)
@@ -116,7 +111,6 @@ public class BaseAutoConfiguration {
      * 没有FastJsonHttpMessageConverter的restTemplate
      *
      * @param factory
-     * @return
      */
     @Bean("baseRestTemplate")
     @ConditionalOnMissingBean(name = "baseRestTemplate")
@@ -129,10 +123,9 @@ public class BaseAutoConfiguration {
     }
 
     /**
-     * 请求帮助类
+     * 请求工具类
      *
      * @param restTemplate restTemplate
-     * @return IStorageService
      */
     @Bean
     @ConditionalOnMissingBean(RestHelper.class)
