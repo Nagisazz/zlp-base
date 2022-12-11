@@ -7,8 +7,8 @@
       <if test="id != null">
         n_id,
       </if>
-      <if test="loginid != null">
-        c_loginid,
+      <if test="loginId != null">
+        c_login_id,
       </if>
       <if test="name != null">
         c_name,
@@ -57,8 +57,8 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="loginid != null">
-        #{loginid,jdbcType=VARCHAR},
+      <if test="loginId != null">
+        #{loginId,jdbcType=VARCHAR},
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},

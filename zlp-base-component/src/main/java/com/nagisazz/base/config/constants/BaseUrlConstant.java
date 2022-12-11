@@ -5,5 +5,5 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class BaseUrlConstant {
 
-    public String REFRESH_URL = "/base/account/refresh";
+    public String REFRESH_URL = "/platform/account/refresh";
 }
