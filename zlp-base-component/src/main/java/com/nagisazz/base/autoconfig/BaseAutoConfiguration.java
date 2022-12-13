@@ -3,13 +3,16 @@ package com.nagisazz.base.autoconfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.nagisazz.base.config.cache.InitHolderRunner;
 import com.nagisazz.base.config.rest.RestErrorHandler;
 import com.nagisazz.base.property.LogbackProperties;
 import com.nagisazz.base.property.RestTemplateProperties;
 import com.nagisazz.base.property.SystemProperties;
 import com.nagisazz.base.util.RestHelper;
 import com.nagisazz.base.util.SpringBeanUtil;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -131,5 +134,11 @@ public class BaseAutoConfiguration {
     @ConditionalOnMissingBean(RestHelper.class)
     public RestHelper restHelper(RestTemplate restTemplate, RestTemplate baseRestTemplate) {
         return new RestHelper(restTemplate, baseRestTemplate);
+    }
+
+    @Bean(initMethod = "init")
+    @ConditionalOnMissingBean(name = "initHolderRunner")
+    public InitHolderRunner initHolderRunner() {
+        return new InitHolderRunner();
     }
 }

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONValidator;
 import com.nagisazz.base.dao.WechatUserExtendMapper;
 import com.nagisazz.base.dao.ZlpUserExtendMapper;
-import com.nagisazz.base.dao.base.SystemRegisterMapper;
 import com.nagisazz.base.entity.SystemRegister;
 import com.nagisazz.base.entity.WechatUser;
 import com.nagisazz.base.entity.ZlpUser;
@@ -12,6 +11,7 @@ import com.nagisazz.base.enums.ValidEnum;
 import com.nagisazz.base.pojo.OperationResult;
 import com.nagisazz.base.util.RequestUtil;
 import com.nagisazz.base.util.RestHelper;
+import com.nagisazz.platform.cache.SystemRegisterCache;
 import com.nagisazz.platform.enums.LoginResultEnum;
 import com.nagisazz.platform.pojo.dto.LoginParam;
 import com.nagisazz.platform.pojo.dto.UserParam;
@@ -42,7 +42,7 @@ public class ZlpLoginService {
     private ZlpUserExtendMapper zlpUserExtendMapper;
 
     @Resource
-    private SystemRegisterMapper systemRegisterMapper;
+    private SystemRegisterCache systemRegisterCache;
 
     @Resource
     private WechatUserExtendMapper wechatUserExtendMapper;
@@ -226,7 +226,7 @@ public class ZlpLoginService {
     }
 
     private WeChatLoginResult weChatLogin(String systemId, String code) {
-        SystemRegister systemRegister = systemRegisterMapper.selectOne(SystemRegister.builder().identifier(systemId).build());
+        SystemRegister systemRegister = systemRegisterCache.get(systemId);
         if (StringUtils.isBlank(systemRegister.getWxAppid()) || StringUtils.isBlank(systemRegister.getWxSecret())) {
             return null;
         }
