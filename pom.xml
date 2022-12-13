@@ -9,6 +9,20 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <developers>
+        <developer>
+            <name>Nagisazz</name>
+            <email>597306107@qq.com</email>
+            <url>https://github.com/Nagisazz</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git@github.com:Nagisazz/zlp-base.git</connection>
+        <developerConnection>scm:git@github.com:Nagisazz/zlp-base.git</developerConnection>
+        <url>https://github.com/Nagisazz/zlp-base</url>
+    </scm>
+
     <modules>
         <!-- 基础组件-->
         <module>zlp-base-component</module>
