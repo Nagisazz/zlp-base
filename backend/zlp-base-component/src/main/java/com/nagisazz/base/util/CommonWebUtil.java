@@ -1,6 +1,7 @@
 package com.nagisazz.base.util;
 
 import com.alibaba.fastjson.JSON;
+import com.nagisazz.base.config.constants.BaseConstant;
 import com.nagisazz.base.entity.ZlpUser;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ public class CommonWebUtil {
      * @return
      */
     public static Long getUserId() {
-        return (Long) getRequest().getAttribute("userId");
+        return (Long) getRequest().getAttribute(BaseConstant.USER_ID_STR);
     }
 
     /**
@@ -30,7 +31,7 @@ public class CommonWebUtil {
      * @return
      */
     public static ZlpUser getUser() {
-        final String userStr = (String) getRequest().getAttribute("user");
+        final String userStr = (String) getRequest().getAttribute(BaseConstant.USER_STR);
         return JSON.parseObject(userStr, ZlpUser.class);
     }
 
@@ -49,7 +50,7 @@ public class CommonWebUtil {
      * @return
      */
     public static String getToken() {
-        return getRequest().getHeader("authorization");
+        return getRequest().getHeader(BaseConstant.TOKEN_HEAD);
     }
 
 }

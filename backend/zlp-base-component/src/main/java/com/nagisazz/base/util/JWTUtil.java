@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.nagisazz.base.config.constants.BaseConstant;
 import com.nagisazz.base.config.exception.CustomException;
 import com.nagisazz.base.enums.ResultEnum;
 import com.nagisazz.base.property.SystemProperties;
@@ -109,7 +110,7 @@ public class JWTUtil {
             // 解密
             DecodedJWT decode = JWT.decode(token);
             String userId = decode.getKeyId();
-            map.put("userId", userId);
+            map.put(BaseConstant.USER_ID_STR, userId);
             final Map<String, Claim> claims = decode.getClaims();
             claims.forEach((k, v) -> map.put(k, v.asString()));
             return map;
@@ -137,7 +138,7 @@ public class JWTUtil {
             // 解密
             DecodedJWT decode = JWT.decode(token);
             String userId = decode.getKeyId();
-            map.put("userId", userId);
+            map.put(BaseConstant.USER_ID_STR, userId);
             final Map<String, Claim> claims = decode.getClaims();
             claims.forEach((k, v) -> map.put(k, v.asString()));
             return map;

@@ -1,7 +1,6 @@
 package com.nagisazz.base.config.interceptor;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.nagisazz.base.config.constants.BaseUrlConstant;
+import com.nagisazz.base.config.constants.BaseConstant;
 import com.nagisazz.base.config.exception.CustomException;
 import com.nagisazz.base.enums.ResultEnum;
 import com.nagisazz.base.property.SystemProperties;
@@ -48,19 +47,19 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
         // 验证token
         // 从http请求头中取出 token
-        String token = servletRequest.getHeader("Authorization");
+        String token = servletRequest.getHeader(BaseConstant.TOKEN_HEAD);
         // 执行认证
         if (StringUtils.isBlank(token)) {
             throw new CustomException(ResultEnum.TOKEN_NOT_FOUND);
         }
 
         // refresh接口校验
-        if (StringUtils.contains(servletRequest.getRequestURI(), BaseUrlConstant.REFRESH_URL)) {
+        if (StringUtils.contains(servletRequest.getRequestURI(), BaseConstant.REFRESH_URL)) {
             // 校验并获取token，失败返回异常
             final Map<String, String> map = JWTUtil.getRefreshMap(token);
             // 添加request参数
-            servletRequest.setAttribute("userId", map.get("userId"));
-            servletRequest.setAttribute("user", map.get("user"));
+            servletRequest.setAttribute(BaseConstant.USER_ID_STR, map.get(BaseConstant.USER_ID_STR));
+            servletRequest.setAttribute(BaseConstant.USER_STR, map.get(BaseConstant.USER_STR));
             return true;
         }
 
@@ -68,8 +67,8 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         // 校验并获取token参数，失败返回异常
         final Map<String, String> map = JWTUtil.getMap(token);
         // 添加request参数
-        servletRequest.setAttribute("userId", map.get("userId"));
-        servletRequest.setAttribute("user", map.get("user"));
+        servletRequest.setAttribute(BaseConstant.USER_ID_STR, map.get(BaseConstant.USER_ID_STR));
+        servletRequest.setAttribute(BaseConstant.USER_STR, map.get(BaseConstant.USER_STR));
         return true;
     }
 
