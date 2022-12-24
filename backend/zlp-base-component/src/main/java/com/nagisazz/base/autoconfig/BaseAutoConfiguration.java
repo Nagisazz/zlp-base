@@ -5,9 +5,7 @@ import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.nagisazz.base.config.cache.InitHolderRunner;
 import com.nagisazz.base.config.rest.RestErrorHandler;
-import com.nagisazz.base.property.LogbackProperties;
-import com.nagisazz.base.property.RestTemplateProperties;
-import com.nagisazz.base.property.SystemProperties;
+import com.nagisazz.base.property.*;
 import com.nagisazz.base.util.RestHelper;
 import com.nagisazz.base.util.SpringBeanUtil;
 
@@ -38,7 +36,8 @@ import java.util.List;
 @Configuration
 @ComponentScan({"com.nagisazz.base"})
 @MapperScan("com.nagisazz.base.dao")
-@EnableConfigurationProperties({SystemProperties.class, RestTemplateProperties.class, LogbackProperties.class})
+@EnableConfigurationProperties({SystemProperties.class, RestTemplateProperties.class, LogbackProperties.class,
+        MinioProperties.class, JobProperties.class})
 @ConditionalOnClass(SpringBeanUtil.class)
 public class BaseAutoConfiguration {
 
