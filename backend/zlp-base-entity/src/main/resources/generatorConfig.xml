@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<!--    1、classPathEntry: 指定代码自动生成过程中需要的依赖包或者其所在的路径。
+        2、context: 该元素的属性targetRuntime指定生成的代码的运行时目标。该属性值有MyBatis3、MyBatis3Simple、
+        Ibatis2Java2和Ibatis2Java5。MyBatis3模式默认生成的对象将包含很多"by Example"的方法，如果不想生成这些，
+        可以在后续的table元素中配置取消；MyBatis3Simple模式默认每个表生成一个实体对象，生成的Mapper接口仅包含必须的5个方法：
+        deleteByPrimaryKey、insert、selectByPrimaryKey、selectAll、updateByPrimaryKey。下面发两张图，
+        分别表示MyBatis3模式生成的Mapper对象和MyBatis3Simple模式生成的Mapper对象。
+        3、commentGenerator: 该元素不能和后面的jdbcConnection元素交换位置，注释设置必须context其他子元素之前，否则配置文件报错。
+        4、table:该元素的*ByExample属性，默认是true，即默认生成"by Example"的许多方法。在说明context元素的时候提到如何禁止这些方法的生成，
+        在此，将所有的*ByExample属性值设置为false。
+-->
+<generatorConfiguration>
+    <!-- 配置mysql 驱动jar包路径.用了绝对路径 -->
+    <classPathEntry location="D:\worktools\maven\repository\mysql\mysql-connector-java\8.0.22\mysql-connector-java-8.0.22.jar" />
+
+    <context id="nagisazz" targetRuntime="MyBatis3">
+        <!--		自定义插件，包含
+         selectOne、selectList、
+         deleteSelective、
+         batchUpdate、batchUpdateSelective、batchInsert、batchDelete、batchSelect方法-->
+        <plugin type="com.nagisazz.mybatis.plugins.CustomPlugin"></plugin>
+
+        <!--		生成自定义注释，读取数据库注释-->
+        <commentGenerator type="com.nagisazz.mybatis.plugins.CustomCommentGenerator">
+        </commentGenerator>
+
+        <!-- 数据库连接 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/base"
+                        userId="root"
+                        password="123456">
+        </jdbcConnection>
+
+        <!--		将TIMESTAMP映射成LocalDateTime，将Date映射成LocalDate，将符合标准的浮点数正确映射成Double-->
+        <javaTypeResolver type="com.nagisazz.mybatis.plugins.CustomJavaTypeResolverImpl">
+        </javaTypeResolver>
+
+        <!-- 数据表对应的model层  -->
+        <javaModelGenerator targetPackage="com.nagisazz.base.entity" targetProject="src/main/java">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false" />
+            <!-- 从数据库返回的值被清理前后的空格  -->
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <!-- sql mapper 映射配置文件 -->
+        <sqlMapGenerator targetPackage="com.nagisazz.base.dao.base" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="false" />
+        </sqlMapGenerator>
+
+        <!-- mybatis3中的mapper接口 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.nagisazz.base.dao.base" targetProject="src/main/java">
+            <property name="enableSubPackages" value="false" />
+        </javaClientGenerator>
+
+        <table tableName="t_file_info" domainObjectName="FileInfo"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <columnRenamingRule searchString="^(c|dt|n)_" replaceString=""/>
+        </table>
+
+    </context>
+</generatorConfiguration>
