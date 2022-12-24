@@ -1,6 +1,7 @@
 package com.nagisazz.base.autoconfig;
 
 import com.nagisazz.base.property.MinioProperties;
+import com.nagisazz.base.util.MinioHelper;
 import io.minio.MinioClient;
 import io.minio.errors.InvalidEndpointException;
 import io.minio.errors.InvalidPortException;
@@ -30,4 +31,18 @@ public class MinioAutoConfiguration {
         return new MinioClient(minioProperties.getEndpoint(), minioProperties.getAccessKeyId(),
                 minioProperties.getAccessKeySecret());
     }
+
+    /**
+     * 初始化minio工具类
+     *
+     * @param minioClient
+     * @param minioProperties
+     * @return
+     */
+    @Bean
+    @ConditionalOnMissingBean(MinioHelper.class)
+    public MinioHelper minioHelper(MinioClient minioClient, MinioProperties minioProperties) {
+        return new MinioHelper(minioClient, minioProperties);
+    }
+
 }
