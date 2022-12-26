@@ -31,6 +31,11 @@ public class SystemRegister {
     private String description;
 
     /**
+     * minio桶名
+     */
+    private String minioBucket;
+
+    /**
      * 系统首页地址
      */
     private String indexUrl;
