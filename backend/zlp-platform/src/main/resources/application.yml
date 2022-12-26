@@ -23,4 +23,9 @@ wx:
 
 zlp:
   login:
-    permit-url: /platform/sso
+    permit-url: /platform/sso,/platform/file
+
+minio:
+  endpoint: http://127.0.0.1:9000
+  accessKeyId: root
+  accessKeySecret: 123456

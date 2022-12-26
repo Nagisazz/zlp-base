@@ -20,6 +20,10 @@
             <artifactId>zlp-base-component</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+        </dependency>
     </dependencies>
 
     <repositories>
