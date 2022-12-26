@@ -36,13 +36,12 @@ public class MinioAutoConfiguration {
      * 初始化minio工具类
      *
      * @param minioClient
-     * @param minioProperties
      * @return
      */
     @Bean
     @ConditionalOnMissingBean(MinioHelper.class)
-    public MinioHelper minioHelper(MinioClient minioClient, MinioProperties minioProperties) {
-        return new MinioHelper(minioClient, minioProperties);
+    public MinioHelper minioHelper(MinioClient minioClient) {
+        return new MinioHelper(minioClient);
     }
 
 }

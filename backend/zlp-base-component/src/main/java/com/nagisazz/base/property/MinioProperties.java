@@ -29,8 +29,4 @@ public class MinioProperties {
      */
     private String accessKeySecret;
 
-    /**
-     * 桶名
-     */
-    private String bucketName;
 }

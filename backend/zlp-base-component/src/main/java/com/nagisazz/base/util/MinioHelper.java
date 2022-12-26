@@ -16,36 +16,36 @@ public class MinioHelper {
 
     private final MinioClient minioClient;
 
-    private final MinioProperties minioProperties;
-
     /**
      * 上传文件
      *
+     * @param bucketName
      * @param objectPath
      * @param inputStream
      */
-    public void upload(String objectPath, InputStream inputStream) {
+    public void upload(String bucketName, String objectPath, InputStream inputStream) {
         try {
-            minioClient.putObject(minioProperties.getBucketName(), objectPath, inputStream, inputStream.available(),
+            minioClient.putObject(bucketName, objectPath, inputStream, inputStream.available(),
                     "application/octet-stream");
         } catch (Exception e) {
-            log.error("minio上传文件失败，bucketName：{}，objectPath：{}", minioProperties.getBucketName(), objectPath);
+            log.error("minio上传文件失败，bucketName：{}，objectPath：{}", bucketName, objectPath);
         }
     }
 
     /**
      * 上传文件
      *
+     * @param bucketName
      * @param userLoginId
      * @param file
      * @return
      */
-    public String upload(String userLoginId, MultipartFile file) {
+    public String upload(String bucketName, String userLoginId, MultipartFile file) {
         String path = getNowPath(userLoginId) + file.getOriginalFilename();
         try {
-            upload(path, file.getInputStream());
+            upload(bucketName, path, file.getInputStream());
         } catch (Exception e) {
-            log.error("minio上传文件失败，bucketName：{}，objectPath：{}", minioProperties.getBucketName(), path);
+            log.error("minio上传文件失败，bucketName：{}，objectPath：{}", bucketName, path);
         }
         return path;
     }
@@ -53,14 +53,15 @@ public class MinioHelper {
     /**
      * 获取文件
      *
+     * @param bucketName
      * @param objectPath
      * @return
      */
-    public InputStream getStream(String objectPath) {
+    public InputStream getStream(String bucketName, String objectPath) {
         try {
-            return minioClient.getObject(minioProperties.getBucketName(), objectPath);
+            return minioClient.getObject(bucketName, objectPath);
         } catch (Exception e) {
-            log.error("minio下载文件失败，bucketName：{}，objectPath：{}", minioProperties.getBucketName(), objectPath);
+            log.error("minio下载文件失败，bucketName：{}，objectPath：{}", bucketName, objectPath);
         }
         return null;
     }
@@ -68,26 +69,28 @@ public class MinioHelper {
     /**
      * 删除文件
      *
+     * @param bucketName
      * @param objectPath
      */
-    public void delete(String objectPath) {
+    public void delete(String bucketName, String objectPath) {
         try {
-            minioClient.removeObject(minioProperties.getBucketName(), objectPath);
+            minioClient.removeObject(bucketName, objectPath);
         } catch (Exception e) {
-            log.error("minio删除文件失败，bucketName：{}，objectPath：{}", minioProperties.getBucketName(), objectPath);
+            log.error("minio删除文件失败，bucketName：{}，objectPath：{}", bucketName, objectPath);
         }
     }
 
     /**
      * 批量删除文件
      *
+     * @param bucketName
      * @param objectPath
      */
-    public void delete(List<String> objectPath) {
+    public void delete(String bucketName, List<String> objectPath) {
         try {
-            minioClient.removeObject(minioProperties.getBucketName(), objectPath);
+            minioClient.removeObject(bucketName, objectPath);
         } catch (Exception e) {
-            log.error("minio批量删除文件失败，bucketName：{}，objectPath：{}", minioProperties.getBucketName(), objectPath);
+            log.error("minio批量删除文件失败，bucketName：{}，objectPath：{}", bucketName, objectPath);
         }
     }
 
