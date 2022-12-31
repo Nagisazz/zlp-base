@@ -1,9 +1,12 @@
 package com.nagisazz.platform.controller;
 
 import com.google.common.base.Preconditions;
+import com.nagisazz.base.entity.FileInfo;
 import com.nagisazz.base.pojo.OperationResult;
 import com.nagisazz.platform.pojo.dto.FileParam;
 import com.nagisazz.platform.service.FileService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
@@ -11,9 +14,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+@Slf4j
 @Controller
 @RequestMapping("file")
 public class FileController {
@@ -44,10 +52,20 @@ public class FileController {
      * @return
      */
     @GetMapping("get")
-    public InputStream get(@RequestParam("systemId") String systemId, @RequestParam("fileId") Long fileId) {
+    public void get(@RequestParam("systemId") String systemId, @RequestParam("fileId") Long fileId, HttpServletResponse response) {
         Preconditions.checkArgument(StringUtils.isNotBlank(systemId), "系统标识为空");
         Preconditions.checkArgument(!Objects.isNull(fileId), "文件为空");
-        return fileService.get(systemId, fileId);
+        FileInfo fileInfo = fileService.getFileInfo(fileId);
+        try (InputStream inputStream = fileService.get(systemId, fileInfo.getPath());
+             OutputStream outputStream = response.getOutputStream()) {
+            response.addHeader("Content-Disposition", "attachment;filename=" +
+                    URLEncoder.encode(fileInfo.getName(), StandardCharsets.UTF_8.name()));
+            response.setContentType("application/octet-stream");
+            IOUtils.copy(inputStream, outputStream);
+            outputStream.flush();
+        } catch (Exception e) {
+            log.info("获取文件流失败", e);
+        }
     }
 
     /**

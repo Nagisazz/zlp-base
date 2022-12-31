@@ -72,16 +72,25 @@ public class FileService {
     }
 
     /**
-     * 获取文件
+     * 获取文件对象
      *
-     * @param systemId
      * @param fileId
      * @return
      */
-    public InputStream get(String systemId, Long fileId) {
+    public FileInfo getFileInfo(Long fileId) {
+        return fileInfoExtendMapper.selectByPrimaryKey(fileId);
+    }
+
+    /**
+     * 获取文件
+     *
+     * @param systemId
+     * @param filePath
+     * @return
+     */
+    public InputStream get(String systemId, String filePath) {
         SystemRegister systemRegister = systemRegisterCache.get(systemId);
-        final FileInfo fileInfo = fileInfoExtendMapper.selectByPrimaryKey(fileId);
-        return minioHelper.getStream(systemRegister.getMinioBucket(), fileInfo.getPath());
+        return minioHelper.getStream(systemRegister.getMinioBucket(), filePath);
     }
 
     /**
