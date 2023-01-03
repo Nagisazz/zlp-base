@@ -72,7 +72,7 @@ public class SystemProperties {
         /**
          * token过期时间, unit: min
          */
-        private Integer tokenExpireTime = 1;
+        private Integer tokenExpireTime = 60;
 
         /**
          * refresh_token签名密钥

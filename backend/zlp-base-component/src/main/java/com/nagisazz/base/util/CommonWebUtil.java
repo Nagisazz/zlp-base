@@ -22,7 +22,7 @@ public class CommonWebUtil {
      * @return
      */
     public static Long getUserId() {
-        return (Long) getRequest().getAttribute(BaseConstant.USER_ID_STR);
+        return Long.valueOf(String.valueOf(getRequest().getAttribute(BaseConstant.USER_ID_STR)));
     }
 
     /**

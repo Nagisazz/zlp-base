@@ -35,7 +35,6 @@ import java.util.List;
 @Slf4j
 @Configuration
 @ComponentScan({"com.nagisazz.base"})
-@MapperScan("com.nagisazz.base.dao")
 @EnableConfigurationProperties({SystemProperties.class, RestTemplateProperties.class, LogbackProperties.class,
         MinioProperties.class, JobProperties.class})
 @ConditionalOnClass(SpringBeanUtil.class)
