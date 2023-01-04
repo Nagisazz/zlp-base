@@ -36,18 +36,19 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        // 不校验放开的地址
+        // 从http请求头中取出 token
+        String token = servletRequest.getHeader(BaseConstant.TOKEN_HEAD);
+
+        // 不校验放开且没有token的地址
         final List<String> urlAnons = Arrays.stream(StringUtils.split(systemProperties.getLogin().getPermitUrl(), ","))
                 .map(String::trim).filter(StringUtils::isNotBlank).collect(Collectors.toList());
         for (String urlAnon : urlAnons) {
-            if (StringUtils.contains(servletRequest.getRequestURI(), urlAnon)) {
+            if (StringUtils.contains(servletRequest.getRequestURI(), urlAnon) && StringUtils.isBlank(token)) {
                 return true;
             }
         }
 
         // 验证token
-        // 从http请求头中取出 token
-        String token = servletRequest.getHeader(BaseConstant.TOKEN_HEAD);
         // 执行认证
         if (StringUtils.isBlank(token)) {
             throw new CustomException(ResultEnum.TOKEN_NOT_FOUND);
