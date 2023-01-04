@@ -4,11 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.nagisazz.base.config.constants.BaseConstant;
 import com.nagisazz.base.entity.ZlpUser;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 /**
  * 获取token解析数据
@@ -22,7 +23,8 @@ public class CommonWebUtil {
      * @return
      */
     public static Long getUserId() {
-        return Long.valueOf(String.valueOf(getRequest().getAttribute(BaseConstant.USER_ID_STR)));
+        final String userIdStr = Objects.toString(getRequest().getAttribute(BaseConstant.USER_ID_STR), "");
+        return StringUtils.isBlank(userIdStr) ? null : Long.valueOf(userIdStr);
     }
 
     /**
