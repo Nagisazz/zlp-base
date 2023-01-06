@@ -6,6 +6,7 @@ import com.nagisazz.base.pojo.OperationResult;
 import com.nagisazz.platform.pojo.dto.FileParam;
 import com.nagisazz.platform.service.FileService;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -62,6 +63,28 @@ public class FileController {
                     URLEncoder.encode(fileInfo.getName(), StandardCharsets.UTF_8.name()));
             response.setContentType("application/octet-stream");
             IOUtils.copy(inputStream, outputStream);
+            outputStream.flush();
+        } catch (Exception e) {
+            log.info("获取文件流失败", e);
+        }
+    }
+
+    /**
+     * 预览缩略图
+     *
+     * @param systemId
+     * @param fileId
+     * @return
+     */
+    @GetMapping("preview")
+    public void preview(@RequestParam("systemId") String systemId, @RequestParam("fileId") Long fileId, HttpServletResponse response) {
+        Preconditions.checkArgument(StringUtils.isNotBlank(systemId), "系统标识为空");
+        Preconditions.checkArgument(!Objects.isNull(fileId), "文件为空");
+        FileInfo fileInfo = fileService.getFileInfo(fileId);
+        try (InputStream inputStream = fileService.get(systemId, fileInfo.getPath());
+             OutputStream outputStream = response.getOutputStream()) {
+            Thumbnails.of(inputStream).scale(0.25).toOutputStream(outputStream);
+            response.setContentType("image/jpeg");
             outputStream.flush();
         } catch (Exception e) {
             log.info("获取文件流失败", e);

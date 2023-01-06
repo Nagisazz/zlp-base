@@ -22,9 +22,6 @@
       <if test="ownerId != null">
         n_owner_id,
       </if>
-      <if test="wxId != null">
-        n_wx_id,
-      </if>
       <if test="uploaderIp != null">
         c_uploader_ip,
       </if>
@@ -62,9 +59,6 @@
       </if>
       <if test="ownerId != null">
         #{ownerId,jdbcType=BIGINT},
-      </if>
-      <if test="wxId != null">
-        #{wxId,jdbcType=BIGINT},
       </if>
       <if test="uploaderIp != null">
         #{uploaderIp,jdbcType=VARCHAR},
