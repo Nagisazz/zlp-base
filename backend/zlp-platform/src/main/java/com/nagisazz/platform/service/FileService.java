@@ -43,7 +43,7 @@ public class FileService {
      * @param file
      * @return
      */
-    public Long upload(String systemId, MultipartFile file) {
+    public FileInfo upload(String systemId, MultipartFile file) {
         SystemRegister systemRegister = systemRegisterCache.get(systemId);
         final ZlpUser user = CommonWebUtil.getUser();
         String path;
@@ -68,7 +68,7 @@ public class FileService {
                 .updateTime(now)
                 .build();
         fileInfoExtendMapper.insertForId(fileInfo);
-        return fileInfo.getId();
+        return fileInfo;
     }
 
     /**
