@@ -36,6 +36,8 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        log.info("接口调用：{}", servletRequest.getRequestURI());
+
         // 从http请求头中取出 token
         String token = servletRequest.getHeader(BaseConstant.TOKEN_HEAD);
 

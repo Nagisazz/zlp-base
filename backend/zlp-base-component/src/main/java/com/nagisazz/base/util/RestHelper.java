@@ -1,15 +1,13 @@
 package com.nagisazz.base.util;
 
+import com.alibaba.fastjson.JSON;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
-
-import com.alibaba.fastjson.JSON;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 请求通用封装类
@@ -145,7 +143,10 @@ public class RestHelper {
      * @return 返回值
      */
     public <T> String excute(String uri, T body, HttpMethod method) {
-        return excute(uri, body, method, String.class);
+        final String res = excute(uri, body, method, String.class);
+        log.info("请求服务，接口[{}]请求方式[{}]\n请求体[{}]\n返回[{}]", uri,
+                method, body, res);
+        return res;
     }
 
     /**
@@ -210,13 +211,13 @@ public class RestHelper {
                             Class<V> res, RestTemplate trueRestTemplate, Object... uriVariables) {
         if (this.baseRestTemplate == trueRestTemplate) {
             if (!(body instanceof byte[] || body instanceof String)) {
-                log.info("请求服务，接口[{}]请求方式[{}]路径参数[{}]\n请求头[{}]\n请求体[{}]", uri,
+                log.info("请求服务，接口[{}]请求方式[{}]\n路径参数[{}]\n请求头[{}]\n请求体[{}]", uri,
                         method, uriVariables, headers, body);
                 return trueRestTemplate.exchange(uri, method, new HttpEntity<>(JSON.toJSONString(body), headers), res, uriVariables).getBody();
             }
         }
         HttpEntity<T> entity = new HttpEntity<>(body, headers);
-        log.info("请求服务，接口[{}]请求方式[{}]路径参数[{}]\n请求头[{}]\n请求体[{}]", uri,
+        log.info("请求服务，接口[{}]请求方式[{}]\n路径参数[{}]\n请求头[{}]\n请求体[{}]", uri,
                 method, uriVariables, headers, body instanceof byte[] ? "二进制" : body);
         return trueRestTemplate.exchange(uri, method, entity, res, uriVariables).getBody();
     }
