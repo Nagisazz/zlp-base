@@ -4,6 +4,11 @@
 - 前端
     - 基于 [qiankun](https://qiankun.umijs.org/zh) 实现的微前端基础方案
     - 主应用基于Vue3.0+Element-plus
+    - 子应用1(zp-project)基于vue2+Element
+    - 子应用2(pricefile-project)基于react18+antd4.24.2+react-router6+
+        - 子应用2中包含两个项目：通过路由切换
+            - 猜价攻略（/price）默认进这个路由
+            - 享到（/file）
 - 后端
     - 基于Spring boot2.3.6，划分多module
     - 登录验证采用JWT，适配多端登录
