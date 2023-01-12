@@ -7,8 +7,8 @@
     - 子应用1(zp-project)基于Vue2+Element
     - 子应用2(pricefile-project)基于React18+Antd4+React-router6
         - 子应用2中包含两个项目：通过路由切换
-            - 猜价攻略（/price）默认进这个路由
-            - 享到（/file）
+        - 猜价攻略（/price）默认进这个路由
+        - 享到（/file）
 - 后端
     - 基于Spring boot2.3.6，划分多module
     - 登录验证采用JWT，适配多端登录
