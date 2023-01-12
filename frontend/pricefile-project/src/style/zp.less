@@ -1,0 +1,63 @@
+@import '@/style/variable.less';
+
+li,
+ol,
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+a {
+    text-decoration: none;
+}
+a, a:hover, a:link {
+    color: #fff;
+} 
+
+.zp-layout{
+    width: 100%;
+    height: 100%;
+    overflow-y: hidden;
+    font-size: @font-size-base;
+}
+.zp-layout-content{
+    width: 100%;
+    height: calc(100vh - @layout-head);
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.zp-modal{
+    padding: @layout-padding;
+    box-sizing: border-box;
+}
+
+
+.zp-no-page{
+    width: 100%;
+    text-align: center;
+    padding-top: 25vh;
+    box-sizing: border-box;
+    .zp-ku{
+        font-size: 100px !important;
+    }
+    .zp-txt{
+        span{
+            color: @link-color;
+            cursor: pointer;
+        }
+    }
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+/* 滚动槽 */
+::-webkit-scrollbar-track {
+    border-radius: 8px;
+}
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background:#ccc;
+}
