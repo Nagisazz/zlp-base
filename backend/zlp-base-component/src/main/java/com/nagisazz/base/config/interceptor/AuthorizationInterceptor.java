@@ -45,11 +45,13 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         String token = servletRequest.getHeader(BaseConstant.TOKEN_HEAD);
 
         // 不校验放开且没有token的地址
-        final List<String> urlAnons = Arrays.stream(StringUtils.split(zlpProperties.getLogin().getPermitUrl(), ","))
-                .map(String::trim).filter(StringUtils::isNotBlank).collect(Collectors.toList());
-        for (String urlAnon : urlAnons) {
-            if (StringUtils.contains(servletRequest.getRequestURI(), urlAnon) && StringUtils.isBlank(token)) {
-                return true;
+        if (StringUtils.isNotBlank(zlpProperties.getLogin().getPermitUrl())) {
+            final List<String> urlAnons = Arrays.stream(StringUtils.split(zlpProperties.getLogin().getPermitUrl(), ","))
+                    .map(String::trim).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+            for (String urlAnon : urlAnons) {
+                if (StringUtils.contains(servletRequest.getRequestURI(), urlAnon) && StringUtils.isBlank(token)) {
+                    return true;
+                }
             }
         }
 

@@ -62,12 +62,14 @@ public class LogRecordFilter implements Filter {
 
         // 不记录放开的地址
         boolean flag = true;
-        final List<String> urlAnons = Arrays.stream(StringUtils.split(zlpProperties.getLog().getPermitUrl(), ","))
-                .map(String::trim).filter(StringUtils::isNotBlank).collect(Collectors.toList());
-        for (String urlAnon : urlAnons) {
-            if (StringUtils.contains(url, urlAnon)) {
-                flag = false;
-                break;
+        if (StringUtils.isNotBlank(zlpProperties.getLog().getPermitUrl())) {
+            final List<String> urlAnons = Arrays.stream(StringUtils.split(zlpProperties.getLog().getPermitUrl(), ","))
+                    .map(String::trim).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+            for (String urlAnon : urlAnons) {
+                if (StringUtils.contains(url, urlAnon)) {
+                    flag = false;
+                    break;
+                }
             }
         }
         // 提取请求body
