@@ -12,6 +12,7 @@ import com.nagisazz.platform.cache.SystemRegisterCache;
 import com.nagisazz.platform.pojo.dto.FileParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,10 +41,11 @@ public class FileService {
      * 上传文件
      *
      * @param systemId
+     * @param name
      * @param file
      * @return
      */
-    public FileInfo upload(String systemId, MultipartFile file) {
+    public FileInfo upload(String systemId, String name, MultipartFile file) {
         SystemRegister systemRegister = systemRegisterCache.get(systemId);
         final ZlpUser user = CommonWebUtil.getUser();
         String path;
@@ -56,7 +58,7 @@ public class FileService {
         // 插入file数据
         LocalDateTime now = LocalDateTime.now();
         final FileInfo fileInfo = FileInfo.builder()
-                .name(file.getOriginalFilename())
+                .name(StringUtils.isNoneBlank(name) ? name : file.getOriginalFilename())
                 .path(path)
                 .size(file.getSize())
                 .suffix(FilenameUtils.getExtension(file.getOriginalFilename()))
@@ -74,11 +76,12 @@ public class FileService {
     /**
      * 获取文件对象
      *
+     * @param systemId
      * @param fileId
      * @return
      */
-    public FileInfo getFileInfo(Long fileId) {
-        return fileInfoExtendMapper.selectByPrimaryKey(fileId);
+    public FileInfo getFileInfo(String systemId, Long fileId) {
+        return fileInfoExtendMapper.selectOne(FileInfo.builder().systemId(systemId).id(fileId).build());
     }
 
     /**

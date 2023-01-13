@@ -34,15 +34,33 @@ public class FileController {
      * 上传文件
      *
      * @param systemId
+     * @param name
      * @param file
      * @return
      */
     @PostMapping("upload")
     @ResponseBody
-    public OperationResult upload(@RequestParam("systemId") String systemId, MultipartFile file) {
+    public OperationResult upload(@RequestParam("systemId") String systemId, @RequestParam("name") String name,
+                                  @RequestParam("file") MultipartFile file) {
         Preconditions.checkArgument(StringUtils.isNotBlank(systemId), "系统标识为空");
+        Preconditions.checkArgument(StringUtils.isNotBlank(name), "文件名称为空");
         Preconditions.checkArgument(!Objects.isNull(file), "文件为空");
-        return OperationResult.buildSuccessResult(fileService.upload(systemId, file));
+        return OperationResult.buildSuccessResult(fileService.upload(systemId, name, file));
+    }
+
+    /**
+     * 获取文件详细信息
+     *
+     * @param systemId
+     * @param fileId
+     * @return
+     */
+    @GetMapping("get")
+    @ResponseBody
+    public OperationResult get(@RequestParam("systemId") String systemId, @RequestParam("fileId") Long fileId) {
+        Preconditions.checkArgument(StringUtils.isNotBlank(systemId), "系统标识为空");
+        Preconditions.checkArgument(!Objects.isNull(fileId), "文件编号为空");
+        return OperationResult.buildSuccessResult(fileService.getFileInfo(systemId, fileId));
     }
 
     /**
@@ -52,11 +70,11 @@ public class FileController {
      * @param fileId
      * @return
      */
-    @GetMapping("get")
-    public void get(@RequestParam("systemId") String systemId, @RequestParam("fileId") Long fileId, HttpServletResponse response) {
+    @GetMapping("stream")
+    public void stream(@RequestParam("systemId") String systemId, @RequestParam("fileId") Long fileId, HttpServletResponse response) {
         Preconditions.checkArgument(StringUtils.isNotBlank(systemId), "系统标识为空");
         Preconditions.checkArgument(!Objects.isNull(fileId), "文件为空");
-        FileInfo fileInfo = fileService.getFileInfo(fileId);
+        FileInfo fileInfo = fileService.getFileInfo(systemId, fileId);
         try (InputStream inputStream = fileService.get(systemId, fileInfo.getPath());
              OutputStream outputStream = response.getOutputStream()) {
             response.addHeader("Content-Disposition", "attachment;filename=" +
@@ -80,7 +98,7 @@ public class FileController {
     public void preview(@RequestParam("systemId") String systemId, @RequestParam("fileId") Long fileId, HttpServletResponse response) {
         Preconditions.checkArgument(StringUtils.isNotBlank(systemId), "系统标识为空");
         Preconditions.checkArgument(!Objects.isNull(fileId), "文件为空");
-        FileInfo fileInfo = fileService.getFileInfo(fileId);
+        FileInfo fileInfo = fileService.getFileInfo(systemId, fileId);
         try (InputStream inputStream = fileService.get(systemId, fileInfo.getPath());
              OutputStream outputStream = response.getOutputStream()) {
             Thumbnails.of(inputStream).scale(0.25).toOutputStream(outputStream);

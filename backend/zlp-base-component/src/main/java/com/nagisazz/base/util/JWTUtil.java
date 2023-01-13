@@ -50,7 +50,7 @@ public class JWTUtil {
         JWTCreator.Builder builder = JWT.create().withKeyId(keyId);
         map.forEach(builder::withClaim);
         Calendar instance = Calendar.getInstance();
-        instance.add(Calendar.MINUTE, SystemProperties.jwtStatic.getRefreshTokenExpireTime());
+        instance.add(Calendar.HOUR, SystemProperties.jwtStatic.getRefreshTokenExpireTime());
         builder.withExpiresAt(instance.getTime());
         return builder.sign(Algorithm.HMAC256(SystemProperties.jwtStatic.getRefreshTokenSignature()));
     }
