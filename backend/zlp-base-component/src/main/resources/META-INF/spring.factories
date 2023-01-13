@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.nagisazz.base.autoconfig.BaseAutoConfiguration,com.nagisazz.base.autoconfig.LoginConfiguration,\
-  com.nagisazz.base.autoconfig.MinioAutoConfiguration,com.nagisazz.base.autoconfig.JobAutoConfiguration
+  com.nagisazz.base.autoconfig.MinioAutoConfiguration,com.nagisazz.base.autoconfig.JobAutoConfiguration,\
+  com.nagisazz.base.autoconfig.MinioAutoConfiguration,com.nagisazz.base.autoconfig.LogAutoConfiguration

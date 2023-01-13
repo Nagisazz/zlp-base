@@ -12,43 +12,46 @@
     limitations under the License.
 -->
 <configuration debug="false">
-	<include resource="org/springframework/boot/logging/logback/base.xml" />
-    <springProperty scope="context" name="appName" source="spring.application.name" defaultValue="app" />
-    <springProperty scope="context" name="rootLevel" source="logback.level.root" defaultValue="INFO" />
-    <springProperty scope="context" name="sqlLevel" source="logback.level.sql" defaultValue="INFO" />
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <springProperty scope="context" name="appName" source="zlp.system.name" defaultValue="app"/>
+    <springProperty scope="context" name="rootLevel" source="logback.level.root" defaultValue="INFO"/>
+    <springProperty scope="context" name="sqlLevel" source="logback.level.sql" defaultValue="INFO"/>
 
-	<contextName>${appName}</contextName>
-	
+    <contextName>${appName}</contextName>
+
     <!--定义日志文件的存储地址 -->
-    <property name="LOG_HOME" value="/nagisa/logs/" />
+    <property name="LOG_HOME" value="/nagisa/logs/"/>
     <!-- 控制台输出 -->
-    <!--<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">-->
-        <!--<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"> -->
-             <!--&lt;!&ndash;格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符&ndash;&gt; -->
-            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>   -->
-        <!--</encoder> -->
-    <!--</appender>-->
-    <!-- 按照每天生成日志文件,定义默认日志文件 -->   
+    <!--    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">-->
+    <!--        <Target>System.out</Target>-->
+    <!--        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
+    <!--             &lt;!&ndash;格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符&ndash;&gt;-->
+    <!--            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5level] [%-5thread] [traceId-%X{traceId}] [%X{requestUrl}] %logger{20} - %msg%n</pattern>-->
+    <!--        </encoder>-->
+    <!--    </appender>-->
+    <!-- 按照每天生成日志文件,定义默认日志文件 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${LOG_HOME}${appName}/stdout.log</File>
-    	 <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-    	 	<FileNamePattern>${LOG_HOME}${appName}/system.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}${appName}/system.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
             <!--日志文件保留天数-->
             <MaxHistory>20</MaxHistory>
             <maxFileSize>200MB</maxFileSize>
-    	 </rollingPolicy>
+        </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5level] [%-5thread] [%X{request.url}] %logger{20} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5level] [%-5thread] [traceId-%X{traceId}] [%X{requestUrl}] %logger{20} -
+                %msg%n
+            </pattern>
         </encoder>
     </appender>
     <!-- log4jdbc sql日志打印配置 -->
-<!--    <logger name="jdbc.audit" level="ERROR"/>-->
-<!--    <logger name="jdbc.connection" level="ERROR"/>-->
-<!--    <logger name="jdbc.sqlonly" level="ERROR"/>-->
-<!--    <logger name="jdbc.resultset" level="ERROR"/>-->
-<!--    <logger name="jdbc.sqltiming" level="${sqlLevel}" additivity="true">-->
-<!--        <appender-ref ref="FILE" />-->
-<!--    </logger>-->
+    <!--    <logger name="jdbc.audit" level="ERROR"/>-->
+    <!--    <logger name="jdbc.connection" level="ERROR"/>-->
+    <!--    <logger name="jdbc.sqlonly" level="ERROR"/>-->
+    <!--    <logger name="jdbc.resultset" level="ERROR"/>-->
+    <!--    <logger name="jdbc.sqltiming" level="${sqlLevel}" additivity="true">-->
+    <!--        <appender-ref ref="FILE" />-->
+    <!--    </logger>-->
 
     <!-- mybatis sql日志打印配置 -->
     <logger name="com.nagisazz" level="DEBUG"/>
@@ -62,10 +65,10 @@
     <!-- 如果特定包或类的日志需要单独的日志文件，在再次定义新的logger和appender-->
     <!-- 日志输出级别  root定义默认日志级别，只有INFO、WARN和ERROR日志才会被默认生成-->
     <root level="${rootLevel}">
-<!--        <appender-ref ref="STDOUT" />-->
-        <appender-ref ref="FILE" />
-    </root> 
-    <!--日志异步到数据库 -->  
+        <!--        <appender-ref ref="STDOUT" />-->
+        <appender-ref ref="FILE"/>
+    </root>
+    <!--日志异步到数据库 -->
     <!--<appender name="DB" class="ch.qos.logback.classic.db.DBAppender">     
         <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">           
            <dataSource class="com.mchange.v2.c3p0.ComboPooledDataSource">
