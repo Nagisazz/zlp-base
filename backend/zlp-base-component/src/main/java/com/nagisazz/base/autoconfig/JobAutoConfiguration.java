@@ -1,15 +1,17 @@
 package com.nagisazz.base.autoconfig;
 
-import com.nagisazz.base.property.JobProperties;
-import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+
+import com.nagisazz.base.property.JobProperties;
+import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Configuration
+@AutoConfiguration(after = BaseAutoConfiguration.class)
 @ConditionalOnProperty(name = "job.addresses")
 public class JobAutoConfiguration {
 

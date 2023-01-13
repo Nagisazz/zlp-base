@@ -1,5 +1,12 @@
 package com.nagisazz.base.util;
 
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -9,13 +16,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.nagisazz.base.config.constants.BaseConstant;
 import com.nagisazz.base.config.exception.CustomException;
 import com.nagisazz.base.enums.ResultEnum;
-import com.nagisazz.base.property.SystemProperties;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
-
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import com.nagisazz.base.property.ZlpProperties;
 
 /**
  * JWT工具类
@@ -34,9 +35,9 @@ public class JWTUtil {
         JWTCreator.Builder builder = JWT.create().withKeyId(keyId);
         map.forEach(builder::withClaim);
         Calendar instance = Calendar.getInstance();
-        instance.add(Calendar.MINUTE, SystemProperties.jwtStatic.getTokenExpireTime());
+        instance.add(Calendar.MINUTE, ZlpProperties.jwtStatic.getTokenExpireTime());
         builder.withExpiresAt(instance.getTime());
-        return builder.sign(Algorithm.HMAC256(SystemProperties.jwtStatic.getTokenSignature()));
+        return builder.sign(Algorithm.HMAC256(ZlpProperties.jwtStatic.getTokenSignature()));
     }
 
     /**
@@ -50,9 +51,9 @@ public class JWTUtil {
         JWTCreator.Builder builder = JWT.create().withKeyId(keyId);
         map.forEach(builder::withClaim);
         Calendar instance = Calendar.getInstance();
-        instance.add(Calendar.HOUR, SystemProperties.jwtStatic.getRefreshTokenExpireTime());
+        instance.add(Calendar.HOUR, ZlpProperties.jwtStatic.getRefreshTokenExpireTime());
         builder.withExpiresAt(instance.getTime());
-        return builder.sign(Algorithm.HMAC256(SystemProperties.jwtStatic.getRefreshTokenSignature()));
+        return builder.sign(Algorithm.HMAC256(ZlpProperties.jwtStatic.getRefreshTokenSignature()));
     }
 
     /**
@@ -61,7 +62,7 @@ public class JWTUtil {
      * @param token 前端传输的token
      */
     public static void verifyToken(String token) {
-        JWT.require(Algorithm.HMAC256(SystemProperties.jwtStatic.getTokenSignature())).build().verify(token);
+        JWT.require(Algorithm.HMAC256(ZlpProperties.jwtStatic.getTokenSignature())).build().verify(token);
     }
 
     /**
@@ -70,7 +71,7 @@ public class JWTUtil {
      * @param token 前端传输的token
      */
     public static void verifyRefreshToken(String token) {
-        JWT.require(Algorithm.HMAC256(SystemProperties.jwtStatic.getRefreshTokenSignature())).build().verify(token);
+        JWT.require(Algorithm.HMAC256(ZlpProperties.jwtStatic.getRefreshTokenSignature())).build().verify(token);
     }
 
     /**
@@ -80,7 +81,7 @@ public class JWTUtil {
      * @return token数据
      */
     public static DecodedJWT decodeToken(String token) {
-        return JWT.require(Algorithm.HMAC256(SystemProperties.jwtStatic.getTokenSignature())).build().verify(token);
+        return JWT.require(Algorithm.HMAC256(ZlpProperties.jwtStatic.getTokenSignature())).build().verify(token);
     }
 
     /**
@@ -90,7 +91,7 @@ public class JWTUtil {
      * @return token数据
      */
     public static DecodedJWT decodeRefreshToken(String token) {
-        return JWT.require(Algorithm.HMAC256(SystemProperties.jwtStatic.getRefreshTokenSignature())).build().verify(token);
+        return JWT.require(Algorithm.HMAC256(ZlpProperties.jwtStatic.getRefreshTokenSignature())).build().verify(token);
     }
 
     /**

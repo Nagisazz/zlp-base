@@ -22,8 +22,13 @@ wx:
   loginurl: https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code
 
 zlp:
+  system:
+    name: platform
+    platform-url: http://127.0.0.1:7000
   login:
-    permit-url: /platform/sso,/platform/file
+    permit-url: /platform/sso,/platform/file,/platform/log/record
+  log:
+    permit-url: /platform/log/record
 
 minio:
   endpoint: http://127.0.0.1:9000

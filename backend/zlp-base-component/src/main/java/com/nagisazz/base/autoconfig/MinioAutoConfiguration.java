@@ -1,18 +1,19 @@
 package com.nagisazz.base.autoconfig;
 
-import com.nagisazz.base.property.MinioProperties;
-import com.nagisazz.base.util.MinioHelper;
-import io.minio.MinioClient;
-import io.minio.errors.InvalidEndpointException;
-import io.minio.errors.InvalidPortException;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+
+import com.nagisazz.base.property.MinioProperties;
+import com.nagisazz.base.util.MinioHelper;
+
+import io.minio.MinioClient;
+import lombok.extern.slf4j.Slf4j;
+import okhttp3.HttpUrl;
 
 @Slf4j
-@Configuration
+@AutoConfiguration(after = BaseAutoConfiguration.class)
 @ConditionalOnProperty(name = "minio.endpoint")
 public class MinioAutoConfiguration {
 
@@ -21,15 +22,15 @@ public class MinioAutoConfiguration {
      *
      * @param minioProperties
      * @return
-     * @throws InvalidPortException
-     * @throws InvalidEndpointException
      */
     @Bean
     @ConditionalOnMissingBean(MinioClient.class)
-    public MinioClient minioClient(MinioProperties minioProperties) throws InvalidPortException, InvalidEndpointException {
+    public MinioClient minioClient(MinioProperties minioProperties) {
         log.info("minio初始化");
-        return new MinioClient(minioProperties.getEndpoint(), minioProperties.getAccessKeyId(),
-                minioProperties.getAccessKeySecret());
+        return MinioClient.builder()
+                .endpoint(HttpUrl.parse(minioProperties.getEndpoint()))
+                .credentials(minioProperties.getAccessKeyId(), minioProperties.getAccessKeySecret())
+                .build();
     }
 
     /**

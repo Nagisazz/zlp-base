@@ -1,14 +1,23 @@
 package com.nagisazz.base.util;
 
-import com.nagisazz.base.property.MinioProperties;
-import io.minio.MinioClient;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.google.common.collect.Lists;
+
+import io.minio.GetObjectArgs;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
+import io.minio.RemoveObjectsArgs;
+import io.minio.Result;
+import io.minio.messages.DeleteError;
+import io.minio.messages.DeleteObject;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,8 +34,12 @@ public class MinioHelper {
      */
     public void upload(String bucketName, String objectPath, InputStream inputStream) {
         try {
-            minioClient.putObject(bucketName, objectPath, inputStream, inputStream.available(),
-                    "application/octet-stream");
+            minioClient.putObject(PutObjectArgs.builder()
+                    .bucket(bucketName)
+                    .object(objectPath)
+                    .stream(inputStream, inputStream.available(), -1)
+                    .contentType("application/octet-stream")
+                    .build());
         } catch (Exception e) {
             log.error("minio上传文件失败，bucketName：{}，objectPath：{}", bucketName, objectPath);
         }
@@ -59,7 +72,10 @@ public class MinioHelper {
      */
     public InputStream getStream(String bucketName, String objectPath) {
         try {
-            return minioClient.getObject(bucketName, objectPath);
+            return minioClient.getObject(GetObjectArgs.builder()
+                    .bucket(bucketName)
+                    .object(objectPath)
+                    .build());
         } catch (Exception e) {
             log.error("minio下载文件失败，bucketName：{}，objectPath：{}", bucketName, objectPath);
         }
@@ -74,7 +90,10 @@ public class MinioHelper {
      */
     public void delete(String bucketName, String objectPath) {
         try {
-            minioClient.removeObject(bucketName, objectPath);
+            minioClient.removeObject(RemoveObjectArgs.builder()
+                    .bucket(bucketName)
+                    .object(objectPath)
+                    .build());
         } catch (Exception e) {
             log.error("minio删除文件失败，bucketName：{}，objectPath：{}", bucketName, objectPath);
         }
@@ -88,7 +107,15 @@ public class MinioHelper {
      */
     public void delete(String bucketName, List<String> objectPath) {
         try {
-            minioClient.removeObject(bucketName, objectPath);
+            List<DeleteObject> objects = Lists.newArrayList();
+            objectPath.forEach(e -> objects.add(new DeleteObject(e)));
+            Iterable<Result<DeleteError>> results =
+                    minioClient.removeObjects(
+                            RemoveObjectsArgs.builder().bucket(bucketName).objects(objects).build());
+            for (Result<DeleteError> result : results) {
+                DeleteError error = result.get();
+                log.error("minio批量删除文件失败，bucketName：{}，DeleteError：{}", bucketName, error);
+            }
         } catch (Exception e) {
             log.error("minio批量删除文件失败，bucketName：{}，objectPath：{}", bucketName, objectPath);
         }

@@ -1,23 +1,26 @@
 package com.nagisazz.base.config.interceptor;
 
-import com.nagisazz.base.config.constants.BaseConstant;
-import com.nagisazz.base.config.exception.CustomException;
-import com.nagisazz.base.enums.ResultEnum;
-import com.nagisazz.base.property.SystemProperties;
-import com.nagisazz.base.util.JWTUtil;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.nagisazz.base.config.constants.BaseConstant;
+import com.nagisazz.base.config.exception.CustomException;
+import com.nagisazz.base.enums.ResultEnum;
+import com.nagisazz.base.property.ZlpProperties;
+import com.nagisazz.base.util.JWTUtil;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * token验证
@@ -26,7 +29,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AuthorizationInterceptor implements HandlerInterceptor {
 
-    private final SystemProperties systemProperties;
+    private final ZlpProperties zlpProperties;
 
     @Override
     public boolean preHandle(HttpServletRequest servletRequest, HttpServletResponse servletResponse,
@@ -42,7 +45,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         String token = servletRequest.getHeader(BaseConstant.TOKEN_HEAD);
 
         // 不校验放开且没有token的地址
-        final List<String> urlAnons = Arrays.stream(StringUtils.split(systemProperties.getLogin().getPermitUrl(), ","))
+        final List<String> urlAnons = Arrays.stream(StringUtils.split(zlpProperties.getLogin().getPermitUrl(), ","))
                 .map(String::trim).filter(StringUtils::isNotBlank).collect(Collectors.toList());
         for (String urlAnon : urlAnons) {
             if (StringUtils.contains(servletRequest.getRequestURI(), urlAnon) && StringUtils.isBlank(token)) {
