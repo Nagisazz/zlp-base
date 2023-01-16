@@ -7,7 +7,7 @@
     - 子应用1(zp-project)基于Vue2+Element
     - 子应用2(price-project)基于React18+Antd4+React-router6
     - 子应用3(file-project)基于React18+Antd4+React-router6
-    - 子应用4(fund-project)基于Angular12+NG-ZORRO12,*注意组件库一定要和框架版本匹配
+    - 子应用4(fund-project)基于Angular12+NG-ZORRO12，*注意组件库一定要和框架版本匹配
 
 - 后端
     - 基于Spring boot2.7.5，划分多module
