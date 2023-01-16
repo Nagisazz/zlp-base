@@ -5,10 +5,10 @@
     - 基于 [qiankun](https://qiankun.umijs.org/zh) 实现的微前端基础方案
     - 主应用(main-project)基于Vue3.0+Element-plus
     - 子应用1(zp-project)基于Vue2+Element
-    - 子应用2(pricefile-project)基于React18+Antd4+React-router6
-        - 子应用2中包含两个项目：通过路由切换
-            - 猜价攻略（/price）默认进这个路由
-            - 享到（/file）
+    - 子应用2(price-project)基于React18+Antd4+React-router6
+    - 子应用3(file-project)基于React18+Antd4+React-router6
+    - 子应用4(fund-project)基于Angular12+NG-ZORRO12,*注意组件库一定要和框架版本匹配
+
 - 后端
     - 基于Spring boot2.7.5，划分多module
     - 登录验证采用JWT，适配多端登录
