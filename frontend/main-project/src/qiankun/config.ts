@@ -20,6 +20,9 @@ actions.onGlobalStateChange((state, prevState) => {
   if (state.showSign) {
     store.commit("Security/SHOWSIGN", { showSign: true, signType: 'in' });
   }
+  if (store.state.Security.authorizedUser && store.state.Security.authorizedUser.token !== state.token) {
+    store.commit("Security/LOGIN", state);
+  }
 })
 
 actions.setGlobalState(state);
@@ -33,24 +36,25 @@ registerMicroApps([
     props: { actions, mainAppRouter: router }, // 传给微应用的数据
   },
   {
-      name: 'pricefile',
-      entry: process.env.NODE_ENV === 'development' ? '//localhost:7002' : '/platform',
-      container: '#micro',
-      activeRule: '/platform/pricefile',
-      props: { actions }, // 传给微应用的数据
+    name: 'price',
+    entry: process.env.NODE_ENV === 'development' ? '//localhost:7002' : '/platform',
+    container: '#micro',
+    activeRule: '/platform/price',
+    props: { actions }, // 传给微应用的数据
   },
-  // {
-  //     name: 'angular-demo',
-  //     entry: process.env.NODE_ENV === 'development' ? '//localhost:7003' : '/platform',
-  //     container: '#micro',
-  //     activeRule: '/platform/angular-demo',
-  // },
-  // {
-  //     name: 'fund',
-  //     entry: process.env.NODE_ENV === 'development' ? '//localhost:7004' : '/platform',
-  //     container: '#micro',
-  //     activeRule: '/platform/fund',
-  // },
+  {
+    name: 'file',
+    entry: process.env.NODE_ENV === 'development' ? '//localhost:7003' : '/platform',
+    container: '#micro',
+    activeRule: '/platform/file',
+    props: { actions }, // 传给微应用的数据
+  },
+  {
+      name: 'fund',
+      entry: process.env.NODE_ENV === 'development' ? '//localhost:7004' : '/platform',
+      container: '#micro',
+      activeRule: '/platform/fund', 
+  },
 ]);
 
 // start();

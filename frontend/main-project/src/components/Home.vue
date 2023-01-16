@@ -1,11 +1,10 @@
 <template>
     <div class="home">
       <div class="applition">
-        <div class="menu" @click="onChangeRoute('/platform/zp')">子应用1</div>
-        <div class="menu" @click="onChangeRoute('/platform/pricefile/price')">子应用2--猜价</div>
-        <div class="menu" @click="onChangeRoute('/platform/pricefile/file')">子应用2--共享文件</div>
-        <div class="menu" @click="onChangeRoute('/platform/angular-demo')">子应用3</div>
-        <div class="menu" @click="onChangeRoute('/platform/fund')">子应用4</div>
+        <div class="menu" @click="onChangeRoute('/platform/zp')">子应用1-博客</div>
+        <div class="menu" @click="onChangeRoute('/platform/price')">子应用2--猜价</div>
+        <div class="menu" @click="onChangeRoute('/platform/file')">子应用3--共享文件</div>
+        <div class="menu" @click="onChangeRoute('/platform/fund')">子应用4--基金</div>
       </div>
     </div>
 </template>

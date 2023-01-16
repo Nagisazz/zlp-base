@@ -1,0 +1,118 @@
+.fund-container{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    padding: 14px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.list-info{
+    width: 90%;
+    padding: 15px;
+    box-sizing: border-box;
+    background-color: #fff;
+    border-radius: 10px;
+    border: 1px solid #d9d9d9;
+    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.2);
+    margin: 20px auto 0;
+    color: #333;
+}
+
+.operation{
+    color: #3a57b6;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.modal{
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99999;
+    display: none;
+}
+.modal-content{
+    width: 60%;
+    height: 70vh;
+    margin-left: 20%;
+    margin-top: 15vh;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.modal-title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+.modal-title span:nth-child(2){
+    cursor: pointer;
+}
+.modal-container{
+    height: calc(100% - 20px);
+    overflow: hidden;
+}
+.more-info{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+}
+.btns{
+    display: flex;
+}
+.edit-btn{
+    width: 100px;
+    padding: 0 16px;
+    height: 28px;
+    line-height: 26px;
+    border-radius: 4px;
+    background-color: #3a57b6;
+    border: 1px solid #3a57b6;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.edit-btn img{
+    width: 14px;
+    height: 14px;
+    margin-right: 8px;
+}
+.save-btn{
+    margin-left: 20px;
+}
+.info-item{
+    width: 50%;
+    line-height: 240%;
+    color: #666;
+    display: flex;
+}
+.info-item div{
+    flex: 1;
+}
+.info-name{
+    width: 120px;
+    flex: 0 0 120px;
+    text-align: right;
+    color: #000;
+}
+.no-data{
+    width: 100%;
+    text-align: center;
+    margin: 100px auto;
+}
+.ant-select, .ant-input-number, .ant-picker{
+    width: 100%;
+}
+

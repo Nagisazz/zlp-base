@@ -1,0 +1,160 @@
+<div class="fund-container">
+    <div class="list-info">
+        <nz-table #detailTable [nzData]="fundList" nzFrontPagination="false">
+            <thead>
+              <tr>
+                <th>基金编号</th>
+                <th>账户资产(元)</th>
+                <th>收益率(%)</th>
+                <th>总收益(元)</th>
+                <th>开始时间</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of detailTable.data">
+                <td>{{data.name}}</td>
+                <td>{{data.balance}}</td>
+                <td>{{calcRate(data.yields)}}</td>
+                <td>{{data.profileAmount}}</td>
+                <td>{{tranformShowTime(data.createTime)}}</td>
+                <td>
+                  <a (click)="showMore(data)">显示更多</a>
+                  <nz-divider nzType="vertical"></nz-divider>
+                  <a (click)="onStop(data)">停止执行</a>
+                  <nz-divider nzType="vertical"></nz-divider>
+                  <a (click)="toDetail(data)">查看详情</a>
+                </td>
+              </tr>
+            </tbody>
+        </nz-table>
+    </div>
+
+
+    <nz-modal [(nzVisible)]="moreModal" nzWidth="900px" nzTitle="显示更多" (nzOnCancel)="handleCancel('more')">
+        <ng-container *nzModalContent>
+            <div class="modal-container">
+                <div class="btns">
+                    <div class="edit-btn" (click)="onEdit()">
+                        <img src="http://1.15.87.105:11000/file/edit.png" alt="">
+                        编辑
+                    </div>
+                    <div class="edit-btn save-btn" (click)="onSave()">
+                        <img src="http://1.15.87.105:11000/file/save.png" alt="">
+                        保存
+                    </div>
+                </div>
+                <div class="more-info">
+                    <div class="info-item">
+                        <span class="info-name">基金名称：</span>
+                        <div>{{fundInfo.name}}({{fundInfo.code}})</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">账号资产：</span>
+                        <div>{{fundInfo.balance}}</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">净值：</span>
+                        <div>{{fundInfo.worth}}</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">收益率：</span>
+                        <div>{{calcRate(fundInfo.yields)}}</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">总收益：</span>
+                        <div>{{fundInfo.profileAmount}}</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">总买入金额：</span>
+                        <div>{{fundInfo.buyAmount}}</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">总卖出金额：</span>
+                        <div>{{fundInfo.saleAmount}}</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">总投资金额：</span>
+                        <div>{{fundInfo.investAmount}}</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">定投次数：</span>
+                        <div>{{fundInfo.investNum}}</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">定投频率：</span>
+                        <div *ngIf="!moreEdit">{{fundInfo.frequence}}</div>
+                        <div *ngIf="moreEdit">
+                            <nz-input-number [(ngModel)]="fundInfo.frequence" [nzMin]="1" [nzStep]="1"></nz-input-number>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">定投基准金额：</span>
+                        <div *ngIf="!moreEdit">{{fundInfo.investMoney}}</div>
+                        <div *ngIf="moreEdit">
+                            <nz-input-group nzSuffix="元">
+                                <input type="text" nz-input [(ngModel)]="fundInfo.investMoney"/>
+                            </nz-input-group>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">参考均线天数：</span>
+                        <div *ngIf="!moreEdit">{{fundInfo.mean}}</div>
+                        <div *ngIf="moreEdit">
+                            <nz-input-number [(ngModel)]="fundInfo.mean" [nzMin]="1" [nzStep]="1"></nz-input-number>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">参考振幅天数：</span>
+                        <div *ngIf="!moreEdit">{{fundInfo.wave}}</div>
+                        <div *ngIf="moreEdit">
+                            <nz-input-number [(ngModel)]="fundInfo.wave" [nzMin]="1" [nzStep]="1"></nz-input-number>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">策略类型：</span>
+                        <div *ngIf="!moreEdit && fundInfo.type == 1">按照定投金额卖</div>
+                        <div *ngIf="!moreEdit && fundInfo.type == 2">按照总资产卖</div>
+                        <div *ngIf="!moreEdit && fundInfo.type == 3">简单定投</div>
+                        <div *ngIf="moreEdit">
+                            <nz-select [(ngModel)]="fundInfo.type">
+                                <nz-option nzValue="1" nzLabel="按照定投金额卖"></nz-option>
+                                <nz-option nzValue="2" nzLabel="按照总资产卖"></nz-option>
+                                <nz-option nzValue="3" nzLabel="简单的定投"></nz-option>
+                            </nz-select>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">创建时间：</span>
+                        <div>{{tranformShowTime(fundInfo.createTime)}}</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">更新时间：</span>
+                        <div>{{tranformShowTime(fundInfo.updateTime)}}</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">上次定投日期：</span>
+                        <div *ngIf="!moreEdit">{{tranformShowTime(fundInfo.lastInvestTime)}}</div>
+                        <div *ngIf="moreEdit">
+                            <nz-date-picker [(ngModel)]="fundInfo.lastInvestTime" [nzFormat]="'yyyyMMdd'"></nz-date-picker>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <div *nzModalFooter>
+            <button nz-button nzType="default" (click)="handleCancel('more')">关闭</button>
+        </div>
+    </nz-modal>
+
+    
+    <nz-modal [(nzVisible)]="detailModal" nzTitle="详情" nzWidth="900px" (nzOnCancel)="handleCancel('detail')">
+        <ng-container *nzModalContent>
+          <div class="modal-container" id="fundEcharts" *ngIf="noEchartData"></div>
+          <div class="modal-container no-data" *ngIf="!noEchartData">暂无数据</div>
+        </ng-container>
+        <div *nzModalFooter>
+            <button nz-button nzType="default" (click)="handleCancel('detail')">关闭</button>
+        </div>
+    </nz-modal>
+</div>

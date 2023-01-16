@@ -1,0 +1,115 @@
+<div class="fund-container">
+    <div class="fund-info">
+        <div class="fund-tabs">
+            <div class="fund-tab" [ngClass]="{'select-tab': tabType === '1'}" (click)="onTab('1')">单次</div>
+            <div class="fund-tab" [ngClass]="{'select-tab': tabType === '2'}" (click)="onTab('2')">持续</div>
+        </div>
+        <div class="fund-fields">
+            <div class="left">
+                <div class="input-txt" >
+                    <span class="input-name">基金编号：</span>
+                    <div class="input-box">
+                        <input nz-input [(ngModel)]="fundData.code" />
+                        <div class="del-icon" *ngIf="fundData.code" (click)="onSingleClear('code')"> <span class="icon">X</span> </div>
+                    </div>
+                </div>
+                <div class="input-txt">
+                    <span class="input-name">定投频率：</span>
+                    <div class="input-box">
+                        <nz-input-number [(ngModel)]="fundData.pinglv" [nzMin]="1" [nzStep]="1"></nz-input-number>
+                    </div>
+                </div>
+                
+                <div class="input-txt">
+                    <span class="input-name">账户资产：</span>
+                    <div class="input-box">
+                        <nz-input-group nzSuffix="元">
+                            <input type="text" nz-input [(ngModel)]="fundData.asset"/>
+                        </nz-input-group>
+                        <div class="del-icon" (click)="onSingleClear('asset')"> <span class="icon">X</span> </div>
+                    </div>
+                </div>
+                <div class="input-txt">
+                    <span class="input-name">净值：</span>
+                    <div class="input-box">
+                        <nz-input-group nzSuffix="元">
+                            <input type="text" nz-input [(ngModel)]="fundData.netValue"/>
+                        </nz-input-group>
+                        <div class="del-icon" (click)="onSingleClear('netValue')"> <span class="icon">X</span> </div>
+                    </div>
+                </div>
+                <div class="input-txt">
+                    <span class="input-name">参考振幅天数：</span>
+                    <div class="input-box">
+                        <nz-input-number [(ngModel)]="fundData.zhenfuDay" [nzMin]="1" [nzStep]="1"></nz-input-number>
+                    </div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="input-txt">
+                    <span class="input-name" *ngIf="tabType === '1'">时间：</span>
+                    <span class="input-name" *ngIf="tabType === '2'">持有收益：</span>
+                    <div class="input-box" *ngIf="tabType === '1'">
+                        <nz-date-picker [(ngModel)]="fundData.time" [nzFormat]="'yyyyMMdd'"></nz-date-picker>
+                    </div>
+                    <div class="input-box" *ngIf="tabType === '2'">
+                        <nz-input-group nzSuffix="元">
+                            <input type="text" nz-input [(ngModel)]="fundData.ownAssets"/>
+                        </nz-input-group>
+                        <div class="del-icon" (click)="onSingleClear('ownAssets')"> <span class="icon">X</span> </div>
+                    </div>
+                </div>
+
+                <div class="input-txt">
+                    <span class="input-name">每次定投金额：</span>
+                    <div class="input-box">
+                        <nz-input-group nzSuffix="元">
+                            <input type="text" nz-input [(ngModel)]="fundData.investMoney"/>
+                        </nz-input-group>
+                        <div class="del-icon" (click)="onSingleClear('investMoney')"> <span class="icon">X</span> </div>
+                    </div>
+                </div>
+
+                <div class="input-txt">
+                    <span class="input-name">收益率：</span>
+                    <div class="input-box">
+                        <nz-input-group nzSuffix="%">
+                            <input type="text" nz-input [(ngModel)]="fundData.earnRatio"/>
+                        </nz-input-group>
+                        <div class="del-icon" (click)="onSingleClear('earnRatio')"> <span class="icon">X</span> </div>
+                    </div>
+                </div>
+                <div class="input-txt">
+                    <span class="input-name">参考均线天数：</span>
+                    <div class="input-box">
+                        <nz-input-number [(ngModel)]="fundData.lineDay" [nzMin]="1" [nzStep]="1"></nz-input-number>
+                    </div>
+                </div>
+                <div class="input-txt">
+                    <span class="input-name">策略类型：</span>
+                    <div class="input-box">
+                        <nz-select [(ngModel)]="fundData.type">
+                            <nz-option nzValue="1" nzLabel="按照定投金额卖"></nz-option>
+                            <nz-option nzValue="2" nzLabel="按照总资产卖"></nz-option>
+                            <nz-option nzValue="3" nzLabel="简单的定投"></nz-option>
+                        </nz-select>
+                    </div>
+                </div>
+                <div class="btn-box">
+                    <button class="btn" *ngIf="tabType === '2'" (click)="onSearch('start')">开始持续计算</button>
+                    <button class="btn" *ngIf="tabType === '1'" (click)="onSearch('search')">查询</button>
+                    <button class="btn clear" (click)="onClear()">清除</button>
+                    <button class="btn clear" (click)="toFundDetail()">查看基金详情</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="fund-info fund-res">
+        <div>是否卖全部: <span>{{fundReault.all}}</span> </div>
+        <div>卖出比率: <span>{{fundReault.rate}}</span> </div>
+        <div>卖出金额: <span>{{fundReault.price}}</span> </div>
+        <div>均线金额: <span>{{fundReault.mean}}</span> </div>
+        <div>振幅比率: <span>{{fundReault.wave}}</span> </div>
+        <div>上一个定投日收益率: <span>{{fundReault.lastYield}}</span> </div>
+    </div>
+</div>
