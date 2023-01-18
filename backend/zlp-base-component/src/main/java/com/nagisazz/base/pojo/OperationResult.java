@@ -1,7 +1,6 @@
 package com.nagisazz.base.pojo;
 
 import com.nagisazz.base.enums.ResultEnum;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

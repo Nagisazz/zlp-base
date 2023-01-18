@@ -1,11 +1,5 @@
 package com.nagisazz.base.config.log;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.nagisazz.base.config.constants.BaseConstant;
@@ -14,10 +8,14 @@ import com.nagisazz.base.enums.ResultEnum;
 import com.nagisazz.base.pojo.OperationResult;
 import com.nagisazz.base.property.ZlpProperties;
 import com.nagisazz.base.util.RestHelper;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * AsyncSendLogHandler

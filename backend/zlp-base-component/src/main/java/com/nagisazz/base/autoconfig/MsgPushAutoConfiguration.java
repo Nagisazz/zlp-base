@@ -1,6 +1,7 @@
 package com.nagisazz.base.autoconfig;
 
 import com.nagisazz.base.property.MsgPushProperties;
+import com.nagisazz.base.property.ZlpProperties;
 import com.nagisazz.base.util.MsgPushHelper;
 import com.nagisazz.base.util.RestHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +26,8 @@ public class MsgPushAutoConfiguration {
     @Bean
     @DependsOn("restHelper")
     @ConditionalOnMissingBean(MsgPushHelper.class)
-    public MsgPushHelper msgPushHelper(RestHelper restHelper, MsgPushProperties msgPushProperties) {
+    public MsgPushHelper msgPushHelper(RestHelper restHelper, MsgPushProperties msgPushProperties, ZlpProperties zlpProperties) {
         log.info("MsgPushHelper初始化");
-        return new MsgPushHelper(restHelper, msgPushProperties);
+        return new MsgPushHelper(restHelper, msgPushProperties, zlpProperties.getSystem());
     }
 }

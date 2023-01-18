@@ -26,7 +26,7 @@ zlp:
     name: platform
     platform-url: http://127.0.0.1:7000
   login:
-    permit-url: /platform/sso,/platform/file,/platform/log/record
+    permit-url: /platform/sso,/platform/file,/platform/log/record,/platform/msg
   log:
     permit-url: /platform/log/record
 
@@ -34,3 +34,6 @@ minio:
   endpoint: http://127.0.0.1:9000
   accessKeyId: root
   accessKeySecret: 123456
+
+msg:
+  token: 11

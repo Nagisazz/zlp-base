@@ -1,27 +1,25 @@
-package com.nagisazz.base.property;
+package com.nagisazz.base.config.msg;
 
-import com.nagisazz.base.config.msg.MsgPushEnum;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import lombok.*;
 
 /**
- * 微信消息推送配置
+ * MsgPushVo
  */
+@Builder
 @Setter
 @Getter
 @ToString
-@ConfigurationProperties("msg")
-public class MsgPushProperties {
+@AllArgsConstructor
+@NoArgsConstructor
+public class MsgPushVo {
 
     /**
-     * url
+     * 发送系统标识
      */
-    private String url = "http://www.pushplus.plus/send";
+    private String system;
 
     /**
-     * 默认消息类型
+     * 消息类型
      */
     private Integer msgType;
 
@@ -29,6 +27,16 @@ public class MsgPushProperties {
      * token
      */
     private String token;
+
+    /**
+     * 标题
+     */
+    private String title;
+
+    /**
+     * 内容
+     */
+    private String content;
 
     /**
      * 群组Id
