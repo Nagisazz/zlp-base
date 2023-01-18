@@ -7,10 +7,10 @@ import com.nagisazz.platform.pojo.dto.FileParam;
 import com.nagisazz.platform.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -120,7 +120,7 @@ public class FileController {
     public OperationResult delete(@RequestBody FileParam fileParam) {
         Preconditions.checkArgument(StringUtils.isNotBlank(fileParam.getSystemId()), "系统标识为空");
         Preconditions.checkArgument(!Objects.isNull(fileParam.getFileId()) ||
-                !CollectionUtils.isEmpty(fileParam.getFileIds()), "文件编号为空");
+                CollectionUtils.isNotEmpty(fileParam.getFileIds()), "文件编号为空");
         fileService.delete(fileParam);
         return OperationResult.buildSuccessResult("删除成功");
     }

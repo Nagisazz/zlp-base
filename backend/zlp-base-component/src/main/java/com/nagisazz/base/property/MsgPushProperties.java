@@ -28,4 +28,6 @@ public class MsgPushProperties {
      * 群组Id
      */
     private String groupId;
+
+    private String template;
 }
