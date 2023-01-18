@@ -1,9 +1,14 @@
 package com.nagisazz.base.autoconfig;
 
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.support.config.FastJsonConfig;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.nagisazz.base.config.cache.InitHolderRunner;
+import com.nagisazz.base.config.rest.RestErrorHandler;
+import com.nagisazz.base.property.*;
+import com.nagisazz.base.util.RestHelper;
+import com.nagisazz.base.util.SpringBeanUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -20,26 +25,15 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.alibaba.fastjson.support.config.FastJsonConfig;
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import com.nagisazz.base.config.cache.InitHolderRunner;
-import com.nagisazz.base.config.rest.RestErrorHandler;
-import com.nagisazz.base.property.JobProperties;
-import com.nagisazz.base.property.LogbackProperties;
-import com.nagisazz.base.property.MinioProperties;
-import com.nagisazz.base.property.RestTemplateProperties;
-import com.nagisazz.base.property.ZlpProperties;
-import com.nagisazz.base.util.RestHelper;
-import com.nagisazz.base.util.SpringBeanUtil;
-
-import lombok.extern.slf4j.Slf4j;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @AutoConfiguration
 @ComponentScan({"com.nagisazz.base"})
 @EnableConfigurationProperties({ZlpProperties.class, RestTemplateProperties.class, LogbackProperties.class,
-        MinioProperties.class, JobProperties.class})
+        MinioProperties.class, JobProperties.class, MsgPushProperties.class})
 @ConditionalOnClass(SpringBeanUtil.class)
 public class BaseAutoConfiguration {
 
