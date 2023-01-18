@@ -1,15 +1,15 @@
 package com.nagisazz.base.util;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.web.client.RestTemplate;
-
 import com.alibaba.fastjson.JSON;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.core.io.InputStreamSource;
+import org.springframework.http.*;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.stream.Collectors;
 
 /**
  * 请求通用封装类
@@ -185,21 +185,6 @@ public class RestHelper {
      * @param method 请求方法
      * @return 返回值
      */
-    public <T, V> V excuteSimple(String uri, T body, HttpMethod method, Class<V> res,
-                                 Object... uriVariables) {
-        HttpHeaders headers = new HttpHeaders();
-        return excute(uri, body, method, headers, res, baseRestTemplate,
-                uriVariables);
-    }
-
-    /**
-     * 执行 有请求体
-     *
-     * @param uri    路径
-     * @param body   请求体
-     * @param method 请求方法
-     * @return 返回值
-     */
     public <T, V> V excuteSimple(String uri, T body, HttpMethod method, HttpHeaders headers,
                                  Class<V> res, Object... uriVariables) {
         return excute(uri, body, method, headers, res, baseRestTemplate,
@@ -208,18 +193,52 @@ public class RestHelper {
 
     private <T, V> V excute(String uri, T body, HttpMethod method, HttpHeaders headers,
                             Class<V> res, RestTemplate trueRestTemplate, Object... uriVariables) {
-        if (this.baseRestTemplate == trueRestTemplate) {
-            if (!(body instanceof byte[] || body instanceof String)) {
-                V result = trueRestTemplate.exchange(uri, method, new HttpEntity<>(JSON.toJSONString(body), headers), res, uriVariables).getBody();
-                log.info("请求服务，接口[{}]请求方式[{}]\n路径参数[{}]\n请求头[{}]\n请求体[{}]\n返回值[{}]", uri,
-                        method, uriVariables, headers, JSON.toJSONString(body), JSON.toJSONString(result));
-                return result;
-            }
+        HttpEntity<?> entity;
+        ResponseEntity<V> responseEntity;
+        if (this.baseRestTemplate == trueRestTemplate && !(body instanceof byte[] || body instanceof String || body instanceof MultiValueMap)) {
+            entity = new HttpEntity<>(JSON.toJSONString(body), headers);
+        } else {
+            entity = new HttpEntity<>(body, headers);
         }
-        HttpEntity<T> entity = new HttpEntity<>(body, headers);
-        V result = trueRestTemplate.exchange(uri, method, entity, res, uriVariables).getBody();
-        log.info("请求服务，接口[{}]请求方式[{}]\n路径参数[{}]\n请求头[{}]\n请求体[{}]\n返回值[{}]", uri,
-                method, uriVariables, headers, body instanceof byte[] ? "二进制" : JSON.toJSONString(body), JSON.toJSONString(result));
-        return result;
+        log.info("restHelper请求地址: {}\n请求方式: {}\n请求参数: {}\n请求头: {}\n请求体: {}", uri, method, uriVariables, headers, bodyLog(body));
+        responseEntity = trueRestTemplate.exchange(uri, method, entity, res, uriVariables);
+        log.info("调用返回status：{}，结果：{}", responseEntity.getStatusCode(), JSON.toJSONString(responseEntity.getBody()));
+        return responseEntity.getBody();
+    }
+
+    /**
+     * 日志输出
+     *
+     * @param body
+     * @return
+     */
+    private String bodyLog(Object body) {
+        if (body == null) {
+            return null;
+        }
+        if (body instanceof byte[]) {
+            return "二进制:" + ((byte[]) body).length;
+        }
+        if (body instanceof String) {
+            return (String) body;
+        }
+        if (body instanceof MultiValueMap) {
+            return "MultiValueMap:" + ((MultiValueMap<?, ?>) body).entrySet().stream().filter(e -> CollectionUtils.isNotEmpty(e.getValue())).map(e -> {
+                Object value = e.getValue().get(0);
+                if (value instanceof InputStreamSource) {
+                    return e.getKey() + ":" + value.getClass().toString();
+                }
+                if (value instanceof byte[]) {
+                    return e.getKey() + ":byte:" + ((byte[]) value).length;
+                }
+                return e.getKey() + ":" + e.getValue().stream().map(v -> {
+                    if (v instanceof String) {
+                        return (String) v;
+                    }
+                    return JSON.toJSONString(v);
+                }).collect(Collectors.joining(",", "[", "]"));
+            }).collect(Collectors.joining(",", "{", "}"));
+        }
+        return JSON.toJSONString(body);
     }
 }
