@@ -3,6 +3,7 @@ package com.nagisazz.base.autoconfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.nagisazz.base.config.cache.InitHolder;
 import com.nagisazz.base.config.cache.InitHolderRunner;
 import com.nagisazz.base.config.rest.RestErrorHandler;
 import com.nagisazz.base.property.*;
@@ -13,6 +14,7 @@ import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -132,6 +134,7 @@ public class BaseAutoConfiguration {
     }
 
     @Bean(initMethod = "init")
+    @ConditionalOnBean(InitHolder.class)
     @ConditionalOnMissingBean(name = "initHolderRunner")
     public InitHolderRunner initHolderRunner() {
         return new InitHolderRunner();

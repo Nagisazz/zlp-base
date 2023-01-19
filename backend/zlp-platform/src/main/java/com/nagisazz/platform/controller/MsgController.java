@@ -5,10 +5,7 @@ import com.nagisazz.base.pojo.OperationResult;
 import com.nagisazz.platform.pojo.dto.PushPlusCallbackParam;
 import com.nagisazz.platform.pojo.vo.PushPlusCallbackVo;
 import com.nagisazz.platform.service.MsgService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -34,8 +31,14 @@ public class MsgController {
         return OperationResult.buildSuccessResult("发送成功");
     }
 
+    /**
+     * PushPlus回调
+     *
+     * @param callbackParam
+     * @return
+     */
     @PostMapping("callback")
-    public PushPlusCallbackVo callback(@RequestBody PushPlusCallbackParam callbackParam){
+    public PushPlusCallbackVo callback(@RequestBody PushPlusCallbackParam callbackParam) {
         msgService.callback(callbackParam);
         return PushPlusCallbackVo.builder().code(200).msg("success").build();
     }

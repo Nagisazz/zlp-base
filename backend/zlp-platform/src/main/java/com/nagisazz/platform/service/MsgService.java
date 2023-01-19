@@ -67,7 +67,13 @@ public class MsgService {
                 .build());
     }
 
+    /**
+     * PushPlus回调
+     *
+     * @param callbackParam
+     */
     public void callback(PushPlusCallbackParam callbackParam) {
+        log.info("收到PushPlus回调：{}", JSONObject.toJSONString(callbackParam));
         try {
             msgSendLogExtendMapper.updateBySerialNumber(MsgSendLog.builder()
                     .serialNumber(callbackParam.getMessageInfo().getShortCode())
@@ -76,7 +82,7 @@ public class MsgService {
                     .updateTime(LocalDateTime.now())
                     .build());
         } catch (Exception e) {
-            log.error("pushplus回调失败：{}", JSONObject.toJSONString(callbackParam), e);
+            log.error("PushPlus回调失败：{}", JSONObject.toJSONString(callbackParam), e);
         }
     }
 }
