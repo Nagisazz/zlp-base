@@ -10,6 +10,9 @@ import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 定时任务自动配置
+ */
 @Slf4j
 @AutoConfiguration(after = BaseAutoConfiguration.class)
 @ConditionalOnProperty(name = "job.addresses")
@@ -24,7 +27,7 @@ public class JobAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(XxlJobSpringExecutor.class)
     public XxlJobSpringExecutor xxlJobExecutor(JobProperties jobProperties) {
-        log.info("job初始化");
+        log.info("Job初始化");
         XxlJobSpringExecutor xxlJobSpringExecutor = new XxlJobSpringExecutor();
         xxlJobSpringExecutor.setAdminAddresses(jobProperties.getAddresses());
         xxlJobSpringExecutor.setAccessToken(jobProperties.getAccessToken());

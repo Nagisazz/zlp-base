@@ -31,11 +31,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 基础自动配置
+ */
 @Slf4j
 @AutoConfiguration
 @ComponentScan({"com.nagisazz.base"})
 @EnableConfigurationProperties({ZlpProperties.class, RestTemplateProperties.class, LogbackProperties.class,
-        MinioProperties.class, JobProperties.class, MsgPushProperties.class})
+        MinioProperties.class, JobProperties.class, MsgPushProperties.class, WebSocketProperties.class})
 @ConditionalOnClass(SpringBeanUtil.class)
 public class BaseAutoConfiguration {
 

@@ -1,16 +1,17 @@
 package com.nagisazz.base.autoconfig;
 
+import com.nagisazz.base.config.interceptor.AuthorizationInterceptor;
+import com.nagisazz.base.property.ZlpProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.nagisazz.base.config.interceptor.AuthorizationInterceptor;
-import com.nagisazz.base.property.ZlpProperties;
-
-import lombok.extern.slf4j.Slf4j;
-
+/**
+ * 登录校验自动配置
+ */
 @Slf4j
 @AutoConfiguration(after = BaseAutoConfiguration.class)
 @ConditionalOnProperty(name = "zlp.login.enabled", havingValue = "true", matchIfMissing = true)

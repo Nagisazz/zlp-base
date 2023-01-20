@@ -11,6 +11,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 
+/**
+ * 消息推送自动配置
+ */
 @Slf4j
 @AutoConfiguration(after = BaseAutoConfiguration.class)
 @ConditionalOnProperty(name = "msg.url")
