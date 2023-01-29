@@ -1,8 +1,8 @@
 package com.nagisazz.base.entity;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Builder
 @Setter
@@ -49,6 +49,11 @@ public class LogRecord {
      * 请求ip
      */
     private String requestIp;
+
+    /**
+     * 返回结果内容
+     */
+    private String responseResult;
 
     /**
      * 日志内容
