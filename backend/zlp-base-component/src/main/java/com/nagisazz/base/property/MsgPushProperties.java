@@ -16,6 +16,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class MsgPushProperties {
 
     /**
+     * 是否开启消息推送，默认关闭
+     */
+    private Boolean enabled = false;
+
+    /**
      * url
      */
     private String url = "http://www.pushplus.plus/send";

@@ -16,7 +16,7 @@ import org.springframework.context.annotation.DependsOn;
  */
 @Slf4j
 @AutoConfiguration(after = BaseAutoConfiguration.class)
-@ConditionalOnProperty(name = "msg.url")
+@ConditionalOnProperty(name = "msg.enabled", havingValue = "true")
 public class MsgPushAutoConfiguration {
 
     /**
