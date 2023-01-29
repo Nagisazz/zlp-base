@@ -20,16 +20,19 @@
             - 定时任务：集成[xxl-job](https://www.xuxueli.com/xxl-job/)，提供配置项初始化
             - LogBack：添加*traceId*和*requestUrl*，便于日志跟踪
             - 异常封装拦截
+            - ...
         - 工具类
             - RestHelper：封装RestTemplate，提供多种配置项
             - MinioHelper：封装minio实现
             - MsgPushHelper：集成[PushPlus](https://www.pushplus.plus/)，封装消息推送逻辑
+            - ...
     - 通用平台提供基础功能，业务系统只需关注业务逻辑，提高生产力
         - 登录注册、用户信息更新
         - Token刷新
         - 文件上传、下载、缩略图预览、删除
         - 日志记录
         - 消息推送回调
+        - ...
 # 演示地址
 
 # 项目模块结构
