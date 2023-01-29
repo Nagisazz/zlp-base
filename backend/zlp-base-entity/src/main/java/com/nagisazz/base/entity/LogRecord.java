@@ -51,11 +51,6 @@ public class LogRecord {
     private String requestIp;
 
     /**
-     * 返回结果内容
-     */
-    private String responseResult;
-
-    /**
      * 日志内容
      */
     private String content;
@@ -74,4 +69,9 @@ public class LogRecord {
      * 更新时间
      */
     private LocalDateTime updateTime;
+
+    /**
+     * 返回结果内容
+     */
+    private String responseResult;
 }
