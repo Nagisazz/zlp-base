@@ -1,5 +1,6 @@
 package com.nagisazz.platform.service;
 
+import com.google.common.base.Preconditions;
 import com.nagisazz.base.dao.ZlpUserExtendMapper;
 import com.nagisazz.base.entity.ZlpUser;
 import com.nagisazz.base.pojo.OperationResult;
@@ -50,10 +51,24 @@ public class AccountService {
         zlpUser.setLastSystem(userParam.getSystemId());
         zlpUser.setUpdateTime(now);
         zlpUserExtendMapper.updateByPrimaryKeySelective(zlpUser);
-        // 封装userinfo
-        UserInfoVo userInfoVo = UserInfoVo.builder().build();
-        BeanUtils.copyProperties(CommonWebUtil.getUser(), userInfoVo);
-        return OperationResult.buildSuccessResult(userInfoVo);
+        // 返回新token
+        return refresh();
+    }
+
+    /**
+     * 更新用户密码
+     * @param userParam
+     * @return
+     */
+    public OperationResult updatePassword(UserParam userParam) {
+        Preconditions.checkArgument(CommonWebUtil.getUser().getPassword()
+                .equals(userParam.getOriPassword()),"原密码不正确");
+        zlpUserExtendMapper.updateByPrimaryKeySelective(ZlpUser.builder()
+                .id(CommonWebUtil.getUserId())
+                .password(userParam.getPassword())
+                .build());
+        // 返回新token
+        return refresh();
     }
 
     /**
@@ -62,7 +77,7 @@ public class AccountService {
      * @return
      */
     public OperationResult refresh() {
-        final ZlpUser user = CommonWebUtil.getUser();
+        final ZlpUser user = zlpUserExtendMapper.selectByPrimaryKey(CommonWebUtil.getUserId());
         UserInfoVo userInfoVo = UserInfoVo.builder()
                 .token(GenerateTokenUtil.genToken(user))
                 .refreshToken(GenerateTokenUtil.genRefreshToken(user))

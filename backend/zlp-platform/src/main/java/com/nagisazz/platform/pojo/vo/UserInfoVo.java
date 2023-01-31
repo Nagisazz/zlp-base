@@ -1,13 +1,8 @@
 package com.nagisazz.platform.pojo.vo;
 
-import java.time.LocalDateTime;
+import lombok.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.time.LocalDateTime;
 
 /**
  * UserInfoVo
@@ -24,9 +19,13 @@ public class UserInfoVo {
 
     private String refreshToken;
 
+    private String loginId;
+
     private String name;
 
     private String phone;
+
+    private String mail;
 
     private String avatarUrl;
 

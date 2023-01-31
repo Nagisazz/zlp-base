@@ -36,6 +36,17 @@ public class AccountInfoController {
     }
 
     /**
+     * 更新用户密码
+     *
+     * @param userParam
+     * @return
+     */
+    @PostMapping("updatePassword")
+    public OperationResult updatePassword(@RequestBody UserParam userParam) {
+        return accountService.updatePassword(userParam);
+    }
+
+    /**
      * 刷新Token
      *
      * @return
