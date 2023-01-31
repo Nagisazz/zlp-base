@@ -8,13 +8,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.springframework.util.CollectionUtils;
 
 import com.nagisazz.base.entity.LogRecord;
 import com.nagisazz.base.property.ZlpProperties;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * LogStorage
@@ -60,7 +60,7 @@ public class LogStorage {
                     List<List<LogRecord>> logSeparateAll = logSeparate();
                     // 发送给平台
                     queueAll.addAll(logSeparateAll);
-                    if (!CollectionUtils.isEmpty(queueAll)) {
+                    if (CollectionUtils.isNotEmpty(queueAll)) {
                         queueAll.forEach(logRecords -> {
                             log.info("jvm关闭时，开始发送线程中的集合，一共{}条数据", logRecords.size());
                             asyncSendLogHandler.sendLogs(logRecords);
@@ -74,7 +74,7 @@ public class LogStorage {
         public void run() {
             List<List<LogRecord>> logSeparateList = logSeparate();
             for (List<LogRecord> logRecordList : logSeparateList) {
-                if (!CollectionUtils.isEmpty(logRecordList)) {
+                if (CollectionUtils.isNotEmpty(logRecordList)) {
                     boolean flag = putLogs2Queue(logRecordList);
                     if (!flag) {
                         logList.addAll(logRecordList);

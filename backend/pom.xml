@@ -45,6 +45,7 @@
         <log4jdbc.version>1.2</log4jdbc.version>
         <mybatis.version>2.3.0</mybatis.version>
         <lang3.version>3.12.0</lang3.version>
+        <collections4.version>4.4</collections4.version>
         <io.version>2.11.0</io.version>
         <guava.version>31.1-jre</guava.version>
         <jwt.version>4.2.1</jwt.version>
@@ -118,6 +119,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${lang3.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>${collections4.version}</version>
         </dependency>
 
         <dependency>

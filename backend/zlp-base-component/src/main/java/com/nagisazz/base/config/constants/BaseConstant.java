@@ -13,6 +13,8 @@ public class BaseConstant {
 
     public final String SSO_URL = "/platform/sso";
 
+    public final String MSG_SEND_URL = "/platform/msg/send";
+
     public final String TOKEN_HEAD = "Authorization";
 
     public final String USER_ID_STR = "userId";

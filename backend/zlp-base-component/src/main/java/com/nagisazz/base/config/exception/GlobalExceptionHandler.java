@@ -1,14 +1,13 @@
 package com.nagisazz.base.config.exception;
 
+import com.nagisazz.base.enums.ResultEnum;
+import com.nagisazz.base.pojo.OperationResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import com.nagisazz.base.pojo.OperationResult;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 全局异常处理

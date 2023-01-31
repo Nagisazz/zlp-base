@@ -1,12 +1,5 @@
 package com.nagisazz.base.config.log;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import org.springframework.util.CollectionUtils;
-
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.nagisazz.base.config.constants.BaseConstant;
@@ -15,9 +8,14 @@ import com.nagisazz.base.enums.ResultEnum;
 import com.nagisazz.base.pojo.OperationResult;
 import com.nagisazz.base.property.ZlpProperties;
 import com.nagisazz.base.util.RestHelper;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * AsyncSendLogHandler
@@ -71,7 +69,7 @@ public class AsyncSendLogHandler {
                 }
             } catch (Exception e) {
                 log.error("日志发送出现异常", e);
-                if (!CollectionUtils.isEmpty(logRecords)) {
+                if (CollectionUtils.isNotEmpty(logRecords)) {
                     logRecords.clear();
                 }
             }
@@ -82,7 +80,7 @@ public class AsyncSendLogHandler {
                 @Override
                 public void run() {
                     log.info("JVM关闭时执行");
-                    if (!CollectionUtils.isEmpty(logRecords)) {
+                    if (CollectionUtils.isNotEmpty(logRecords)) {
                         log.info("jvm关闭时，开始发送线程中的集合，一共{}条数据", logRecords.size());
                         sendLogs(logRecords);
                     }

@@ -33,4 +33,6 @@ public class UserParam {
 
     private String avatarUrl;
 
+    private String oriPassword;
+
 }

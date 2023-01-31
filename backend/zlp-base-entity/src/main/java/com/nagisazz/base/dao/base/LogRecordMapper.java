@@ -14,6 +14,8 @@ public interface LogRecordMapper {
 
     int updateByPrimaryKeySelective(LogRecord logrecord);
 
+    int updateByPrimaryKeyWithBLOBs(LogRecord record);
+
     int updateByPrimaryKey(LogRecord logrecord);
 
     LogRecord selectOne(LogRecord logrecord);

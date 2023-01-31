@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.springframework.util.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +32,7 @@ public class LogController {
      */
     @PostMapping("record")
     public OperationResult record(@RequestBody List<LogRecord> recordList) {
-        Preconditions.checkArgument(!CollectionUtils.isEmpty(recordList), "参数为空");
+        Preconditions.checkArgument(CollectionUtils.isNotEmpty(recordList), "参数为空");
         logService.record(recordList);
         return OperationResult.buildSuccessResult("存储日志成功");
     }

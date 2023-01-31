@@ -1,12 +1,8 @@
 package com.nagisazz.base.entity;
 
-import java.time.LocalDateTime;
+import lombok.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.time.LocalDateTime;
 
 @Builder
 @Setter
@@ -73,4 +69,9 @@ public class LogRecord {
      * 更新时间
      */
     private LocalDateTime updateTime;
+
+    /**
+     * 返回结果内容
+     */
+    private String responseResult;
 }

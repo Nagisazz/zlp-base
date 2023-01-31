@@ -1,26 +1,23 @@
 package com.nagisazz.base.config.interceptor;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.nagisazz.base.config.constants.BaseConstant;
 import com.nagisazz.base.config.exception.CustomException;
 import com.nagisazz.base.enums.ResultEnum;
 import com.nagisazz.base.property.ZlpProperties;
 import com.nagisazz.base.util.JWTUtil;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * token验证
@@ -38,8 +35,6 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         if (!(object instanceof HandlerMethod)) {
             return true;
         }
-
-        log.info("接口调用：{}", servletRequest.getRequestURI());
 
         // 从http请求头中取出 token
         String token = servletRequest.getHeader(BaseConstant.TOKEN_HEAD);

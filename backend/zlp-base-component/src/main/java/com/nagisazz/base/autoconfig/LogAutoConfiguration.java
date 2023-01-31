@@ -1,5 +1,12 @@
 package com.nagisazz.base.autoconfig;
 
+import com.nagisazz.base.config.log.AsyncSendLogHandler;
+import com.nagisazz.base.config.log.LogQueue;
+import com.nagisazz.base.config.log.LogRecordFilter;
+import com.nagisazz.base.config.log.LogStorage;
+import com.nagisazz.base.property.ZlpProperties;
+import com.nagisazz.base.util.RestHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -8,15 +15,9 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 
-import com.nagisazz.base.config.log.AsyncSendLogHandler;
-import com.nagisazz.base.config.log.LogQueue;
-import com.nagisazz.base.config.log.LogRecordFilter;
-import com.nagisazz.base.config.log.LogStorage;
-import com.nagisazz.base.property.ZlpProperties;
-import com.nagisazz.base.util.RestHelper;
-
-import lombok.extern.slf4j.Slf4j;
-
+/**
+ * 日志自动配置
+ */
 @Slf4j
 @AutoConfiguration(after = BaseAutoConfiguration.class)
 @ConditionalOnProperty(name = "zlp.log.enabled", havingValue = "true", matchIfMissing = true)

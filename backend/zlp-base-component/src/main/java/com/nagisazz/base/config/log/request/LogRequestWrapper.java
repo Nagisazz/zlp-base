@@ -1,17 +1,12 @@
-package com.nagisazz.base.config.log;
+package com.nagisazz.base.config.log.request;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-
-import lombok.extern.slf4j.Slf4j;
+import java.io.*;
 
 /**
  * LogRequestWrapper
