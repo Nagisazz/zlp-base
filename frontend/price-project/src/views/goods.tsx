@@ -104,7 +104,7 @@ const Goods = () => {
 	};
 
     const toZp = () => {
-        window.open('http://zp.nagisazlp.cn/', "_blank");
+        // window.open('http://zp.nagisazlp.cn/', "_blank");
     }
 
     return (
@@ -126,7 +126,8 @@ const Goods = () => {
                         </ul>
                     </div>
                     <div className='zp-price-total' onClick={() => toZp()}>
-                        本站已收录{goodsTotal}件商品, <span style={{color: '#5c79ed'}}>创作者：ZZ&CC</span>
+                        本站已收录{goodsTotal}件商品
+                        {/* <span style={{color: '#5c79ed'}}>创作者：ZZ&CC</span> */}
                     </div>
                 </div>
                 <div className="zp-price-container">

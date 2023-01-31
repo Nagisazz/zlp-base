@@ -14,16 +14,16 @@
         },
         "contacts": [
           { "icon": "zp-youxiang", "zzId": "1", "zz": "597306107@qq.com", "ccId": "2", "cc": "2369092439@qq.com" },
-          { "icon": "zp-weibo", "zzId": "3", "zz": "18260059387", "ccId": "4", "cc": "18651905053" },
+          { "icon": "zp-weixin", "zzId": "3", "zz": "NagisaZC", "ccId": "4", "cc": "平儿" },
           { "icon": "zp-github", "zzId": "5", "zz": "https://github.com/Nagisazz", "ccId": "6", "cc": "https://github.com/chp-22" }
         ]
     },
     "works": [
-        { "id": "underover", "url": "http://1.15.87.105:11000/love/zp/home/logo.jpg", "title": "谁是卧底小程序" },
-        { "id": "merry", "url": "http://1.15.87.105:11000/love/zp/home/merry.png", "title": "婚礼请柬+时间轴" },
-        { "id": "price", "url": "http://1.15.87.105:11000/love/zp/home/price.png", "title": "双十一猜价活动攻略" },
-        { "id": "share-file", "url": "http://1.15.87.105:11000/love/zp/home/share-file.png", "title": "跨端文件共享" },
-        { "id": "fund", "url": "http://1.15.87.105:11000/love/zp/home/fund.png", "title": "预测基金投资金额" }
+        { "id": "underover", "url": "http://1.15.87.105:11000/love/zp/home/logo.jpg", "title": "谁是卧底小游戏", "desc": "" },
+        { "id": "merry", "url": "http://1.15.87.105:11000/love/zp/home/merry.png", "title": "婚礼请柬-回忆时间轴", "desc": "" },
+        { "id": "price", "url": "http://1.15.87.105:11000/love/zp/home/price.png", "title": "商品库价格计算", "desc": "" },
+        { "id": "share-file", "url": "http://1.15.87.105:11000/love/zp/home/share-file.png", "title": "享到-跨端文件共享及协作", "desc": "" },
+        { "id": "fund", "url": "http://1.15.87.105:11000/love/zp/home/fund.png", "title": "基金投资辅助决策", "desc": "" }
     ],
     "zzList": [
         { "id": "1", "title": "docker基于alpine基础镜像合集（java、python）集成chrome", "date": "2022-09-06", "read": "366", "author": "zz", "href": "https://blog.csdn.net/Nagisazz/article/details/126730339?spm=1001.2014.3001.5501" },

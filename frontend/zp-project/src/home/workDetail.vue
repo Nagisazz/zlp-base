@@ -40,12 +40,12 @@ export default class workDetail extends Vue {
         // 忽略ts校验
         if ((window as any).__POWERED_BY_QIANKUN__) {
             if (this.type === 'price') {
-                window.history.pushState(null, 'title', '/platform/price-sharefile/price'); // 子应用跳转主应用
+                window.history.pushState(null, 'title', '/platform/price'); // 子应用跳转主应用
                 // this.parentRouter.push({
-                //     path: '/platform/price-sharefile/price'
+                //     path: '/platform/price'
                 // });
             } else if (this.type === 'share-file') {
-                window.history.pushState(null, 'title', '/platform/price-sharefile/sharefile');
+                window.history.pushState(null, 'title', '/platform/file');
             }
         }
     }

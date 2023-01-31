@@ -110,7 +110,7 @@ const TextEditor = (props: any) => {
 
     return (
         <div className='textEditor'>
-            <div className='wang-editor' style={{ border: '1px solid #ccc', zIndex: 100}}>
+            <div className='wang-editor' style={{ border: '1px solid #ccc'}}>
                 <Toolbar
                     editor={editor}
                     defaultConfig={toolbarConfig}
@@ -122,7 +122,7 @@ const TextEditor = (props: any) => {
                     value={fileContent.content ? fileContent && fileContent.content : ''}
                     onCreated={setEditor}
                     mode="default"
-                    style={{ height: '300px', overflowY: 'auto' }}
+                    style={{ height: '300px', overflowY: 'auto', zIndex: 99999 }}
                 />
 
             </div>

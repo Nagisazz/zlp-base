@@ -9,7 +9,6 @@ import '@/statics/iconfont/iconfont.js';
 import '@/style/zp.less';
 import { Provider, connect } from 'react-redux';
 import store from './redux/store';
-import { setTokenInfo } from '@/redux/actions/platformData';
 import actions from '@/qiankun/action';
 
 function render(props) {
@@ -42,7 +41,6 @@ export async function mount(props) {
       console.log("我是子应用，我检测到数据了：", state);
       const ssKey = 'platform.login';
       const infoCache = JSON.parse(sessionStorage.getItem(ssKey));
-      console.log(infoCache, !infoCache || (infoCache.token !== state.token));
       setTimeout(() => {
         if (!infoCache || (infoCache.token !== state.token)) {
           setTokenInfo(state);
@@ -56,5 +54,4 @@ export async function mount(props) {
 export async function unmount(props) {
   const { container } = props;
   createRoot(container ? container.querySelector('#price') : document.querySelector('#price')).unmount();
-  // createRoot.unmount(container ? container.querySelector('#sharefile') : document.querySelector('#sharefile'));
 }

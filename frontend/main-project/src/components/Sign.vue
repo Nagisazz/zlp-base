@@ -3,8 +3,8 @@
         <el-dialog
             v-model="dialogVisible"
             :title="signType === 'in' ? '登录' : '注册'"
-            width="50%"
-            :before-close="handleClose">
+            width="500"
+            :before-close="onCancel">
             <div class="modal-content">
                 <div class="modal-item">
                     <span>账号：</span>
@@ -49,8 +49,8 @@ export default {
         console.log(store);
         return {
             saveAuthorizedUser,
+            openSignModal,
             store,
-            openSignModal
         }
 	},
 
@@ -81,20 +81,12 @@ export default {
             this.openSignModal({ showSign: true, signType: type });
         },
 
-        handleClose(done) {
-            console.log(done, '关闭弹框');
-            this.openVertify = false;
-            this.loginId = '';
-            this.password = '';
-            this.openSignModal({ showSign: false });
-        },
-
-        // 取消按钮
+        // 关闭弹框
         onCancel() {
             this.openVertify = false;
             this.loginId = '';
             this.password = '';
-            this.openSignModal({ showSign: false });
+            this.$emit('closeSignModal', false)
         },
 
         // 确认按钮
@@ -108,7 +100,8 @@ export default {
                     type: "1", // 1pc 2wx
                     systemId: "platform", // 系统标识
                     loginId: this.loginId,
-                    password: this.password
+                    password: this.password,
+                    name: this.loginId
                 };
                 registerApi(param).then((res) => {
                     console.log(res);

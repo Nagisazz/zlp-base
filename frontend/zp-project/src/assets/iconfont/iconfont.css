@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3141727 */
-  src: url('iconfont.woff2?t=1668155140664') format('woff2'),
-       url('iconfont.woff?t=1668155140664') format('woff'),
-       url('iconfont.ttf?t=1668155140664') format('truetype');
+  src: url('iconfont.woff2?t=1674743752135') format('woff2'),
+       url('iconfont.woff?t=1674743752135') format('woff'),
+       url('iconfont.ttf?t=1674743752135') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,146 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.zp-weixin:before {
+  content: "\e604";
+}
+
+.zp-plus:before {
+  content: "\e664";
+}
+
+.zp-weigouxuan1:before {
+  content: "\e61a";
+}
+
+.zp-weigouxuan:before {
+  content: "\e63e";
+}
+
+.zp-gouxuan1:before {
+  content: "\e65c";
+}
+
+.zp-check_bg_black:before {
+  content: "\e640";
+}
+
+.zp-biji:before {
+  content: "\e60d";
+}
+
+.zp-31shijian:before {
+  content: "\e603";
+}
+
+.zp-renwumingcheng:before {
+  content: "\e662";
+}
+
+.zp-shangchuanzhaopian:before {
+  content: "\e610";
+}
+
+.zp-shenglvehao:before {
+  content: "\e708";
+}
+
+.zp-jiahao:before {
+  content: "\e726";
+}
+
+.zp-sousuo:before {
+  content: "\e622";
+}
+
+.zp-paixu:before {
+  content: "\e618";
+}
+
+.zp-gouxuan:before {
+  content: "\e68a";
+}
+
+.zp-fuzhi:before {
+  content: "\ec7a";
+}
+
+.zp-yunjiexi:before {
+  content: "\e7e9";
+}
+
+.zp-ziyuan:before {
+  content: "\e659";
+}
+
+.zp-zhongmingming:before {
+  content: "\e64c";
+}
+
+.zp-zanwushuju:before {
+  content: "\e619";
+}
+
+.zp-dasuolvetuliebiao:before {
+  content: "\e601";
+}
+
+.zp-liebiao:before {
+  content: "\e602";
+}
+
+.zp-jiantouyou:before {
+  content: "\e62d";
+}
+
+.zp-fenxiang:before {
+  content: "\e739";
+}
+
+.zp-newdocument:before {
+  content: "\e793";
+}
+
+.zp-shangchuan:before {
+  content: "\e78a";
+}
+
+.zp-wendang:before {
+  content: "\e613";
+}
+
+.zp-wenjianjia:before {
+  content: "\e80c";
+}
+
+.zp-xinjianwenjianjia:before {
+  content: "\e6cd";
+}
+
+.zp-wenjianleixing-biaozhuntu-shipinwenjian:before {
+  content: "\e6a5";
+}
+
+.zp-heiban:before {
+  content: "\e614";
+}
+
+.zp-heiban1:before {
+  content: "\e639";
+}
+
+.zp-paixu1:before {
+  content: "\e63a";
+}
+
+.zp-delete:before {
+  content: "\e67e";
+}
+
+.zp-ku:before {
+  content: "\e617";
 }
 
 .zp-logout:before {

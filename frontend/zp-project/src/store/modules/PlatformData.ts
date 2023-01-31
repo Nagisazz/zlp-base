@@ -1,5 +1,5 @@
 /** 用于保存当前用户登录状态 */
-import {Commit,ActionContext} from 'vuex';
+import {ActionContext} from 'vuex';
 interface Info {
     /** 当前登录用户的token信息 */
     token: string | '';

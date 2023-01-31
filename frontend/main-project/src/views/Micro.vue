@@ -10,6 +10,7 @@ export default {
     name: 'Micro',
 
     mounted() {
+        console.log(window.qiankunStarted, 'window.qiankunStarted');
         if (!window.qiankunStarted) {
             window.qiankunStarted = true;
             start();
@@ -19,7 +20,9 @@ export default {
 </script>
 
 <style scoped>
-
+.micro1{
+    height: 100%;
+}
 
 </style>
 

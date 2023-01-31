@@ -1,10 +1,10 @@
 <template>
     <div class="home">
       <div class="applition">
-        <div class="menu" @click="onChangeRoute('/platform/zp')">子应用1-博客</div>
-        <div class="menu" @click="onChangeRoute('/platform/price')">子应用2--猜价</div>
-        <div class="menu" @click="onChangeRoute('/platform/file')">子应用3--共享文件</div>
-        <div class="menu" @click="onChangeRoute('/platform/fund')">子应用4--基金</div>
+        <div class="menu" @click="onChangeRoute('/platform/zp')">朱陈博客</div>
+        <div class="menu" @click="onChangeRoute('/platform/price')">商品库价格计算</div>
+        <div class="menu" @click="onChangeRoute('/platform/file/')">享到-跨端文件共享及协作</div>
+        <div class="menu" @click="onChangeRoute('/platform/fund')">基金投资辅助决策</div>
       </div>
     </div>
 </template>
@@ -33,22 +33,31 @@ export default {
 <style scoped lang="scss">
 .home{
   width: 100%;
-  
+  height: 100%;
 }
 .applition{
     width: 100%;
+    height: 100%;
     display: flex;
 }
   
 .menu{
   width: 20%;
-  height: 80px;
-  text-align: center;
-  line-height: 80px;
-  background: #2c3e50;
+  height: 24%;
+  background: #434e58;
+  border-radius: 20px;
   margin: 0 2.5%;
   color: #fff;
-  margin-top: 100px;
+  margin-top: 200px;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  justify-content: center;
+  cursor: pointer;
+}
+.menu:hover{
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
 }
 </style>
   

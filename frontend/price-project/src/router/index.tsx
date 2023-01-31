@@ -22,7 +22,7 @@ export const rootRouter: RouterConfig[] = [
             //     element: <Navigate to="/price" />
             // },
             {
-                path: '',
+                path: '/',
                 element: lazyLoad(React.lazy(() => import("@/pages/goods/price")))
             },
             {

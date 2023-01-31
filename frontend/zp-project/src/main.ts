@@ -22,15 +22,18 @@ Vue.use(ElementUI);
 let router: any = null;
 let instance: any = null;
 function render(props?: any) {
-  const { container, mainAppRouter } = props;
-  // Vue.prototype.parentRouter = mainAppRouter;
+  if (props) {
+    const { container, mainAppRouter } = props;
+    // Vue.prototype.parentRouter = mainAppRouter;
 
-  console.log(props, '主应用数据');
+    console.log(props, '主应用数据');
+    
+    props.onGlobalStateChange((state: any, prevState: any) => {
+      console.log("通信状态发生改变：", state, prevState);
+      store.commit("PlatformData/SETTOKENINFO", state);
+    });
+  }
   
-  props.onGlobalStateChange((state: any, prevState: any) => {
-    console.log("通信状态发生改变：", state, prevState);
-    store.commit("PlatformData/SETTOKENINFO", state);
-  });
 
   router = new VueRouter({
     base: (window as any).__POWERED_BY_QIANKUN__ ? '/platform/zp/' : '/',

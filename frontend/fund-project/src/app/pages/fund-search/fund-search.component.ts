@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpIndexService } from 'src/app/services/index.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-fund-search',
@@ -32,6 +34,8 @@ export class FundSearchComponent implements OnInit {
 
     constructor(
         private router: Router,
+        private httpIndexService: HttpIndexService,
+        private message: NzMessageService
     ) { }
 
     ngOnInit(): void {
@@ -42,37 +46,21 @@ export class FundSearchComponent implements OnInit {
     }
 
     onSearch(type: any) {
-        let urlData = '';
         if (type === 'search') {
             const inputs = ['code', 'time', 'pinglv', 'investMoney', 'asset', 'netValue', 'earnRatio', 'lineDay', 'zhenfuDay', 'type'];
-            urlData = 'http://1.15.87.105:12500/fund/invest' + "?data=" + this.formatData(inputs).join('$')
-        } else if (type === 'start') {
-            const inputs = ['code', 'asset', 'ownAssets', 'earnRatio', 'netValue', 'pinglv', 'investMoney', 'lineDay', 'zhenfuDay', 'type'];
-            urlData = 'http://1.15.87.105:12500/fund/start' + "?data=" + this.formatData(inputs).join('$')
-        }
-        const that = this;
-        
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', urlData, true);
-        xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-        xhr.send();
-        xhr.onreadystatechange = function() {
-            if(xhr.readyState === 4 && xhr.status ===200 && type === 'search'){
-                console.log(xhr.responseText);
-                alert('请求成功！');
-                const data = JSON.parse(xhr.responseText);
+            this.httpIndexService.investFund('data=' + this.formatData(inputs).join('$')).then((data: any) => {
                 const res = ['all', 'rate', 'price', 'mean', 'wave', 'lastYield'];
                 for (let m = 0; m < res.length; m++) {
-                    that.fundReault[res[m]] = data[res[m]];
+                    this.fundReault[res[m]] = data.data[res[m]];
                 }
-                
-            } else {
-                alert('请求失败！');
-            }
-        }
-        xhr.onerror = function (error) {
-            console.log(error);
-            // alert('接口调用失败！');
+            })
+        } else if (type === 'start') {
+            const inputs = ['code', 'asset', 'ownAssets', 'earnRatio', 'netValue', 'pinglv', 'investMoney', 'lineDay', 'zhenfuDay', 'type'];
+            this.httpIndexService.startFund('data=' + this.formatData(inputs).join('$')).then((data: any) => {
+                if (data.status === 200) {
+                    this.message.success('开始持续计算成功！');
+                }
+            })
         }
     }
 

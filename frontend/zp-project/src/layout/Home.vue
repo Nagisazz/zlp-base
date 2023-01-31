@@ -98,7 +98,7 @@ export default class Home extends Vue {
   containerHeight = 'calc(88vh - 74px)';
 
   created() {
-    console.log(this.$route.query, this.$store.state.PlatformData.loginInfo.token);
+    console.log(this.$route.query);
     getHomeData().then((res) => {
       console.log(res);
       this.originNavs = res.originNavs;

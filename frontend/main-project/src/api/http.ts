@@ -37,9 +37,9 @@ function toResult(url: string, type: string , httpResponseErr: any): any {
   let showTip = true;
   if (errInfo) {
     switch (errInfo.status) {
-      // case 400:
-      //   errMsg = '用户名或者密码错误';
-      //   break;
+      case 400:
+        errMsg = errInfo.message;
+        break;
       case 401:
         errMsg = '登录过期，请重新登录';
         showTip = false;
@@ -164,6 +164,36 @@ export default {
             }).catch((err) => toResult(url, 'error', err))
         })
     }
+  },
+
+  // 上传文件请求
+  postFile(url: string, method: string, param?: any): Promise<Result> {
+    return new Promise((resolve) => {
+      axios({ 
+        method,
+        url,
+        data: param,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+      }).then((res) => {
+        if (res.data.status === 200) {
+          resolve(res.data);
+        } else if (res.data.status === 412) { // 412请求过程中发现token失效
+          store.state.Security.authorizedUser.token = store.state.Security.authorizedUser.refreshToken;
+          freshToken().then((res: any) => { // 新token获取后重新调用原接口
+            if (res === 'success') {
+              this.postFile(url, method, param)
+            } else if (res === 'toLogin') {
+              // 如果2个token都过期则重新登录
+              store.commit("Security/SHOWSIGN", { showSign: true, signType: 'in' });
+            }
+          })
+        } else {
+          toResult(url, 'success', res.data);
+        }
+      }).catch((err) => toResult(url, 'error', err))
+    })
   }
 }
 
@@ -182,7 +212,7 @@ axios.interceptors.request.use((config: any) => {
     if (store.state.Security.authorizedUser && store.state.Security.authorizedUser.token) {
       token = store.state.Security.authorizedUser.token;
     }
-    if (config.url.indexOf(apiConstatns.URL.REGISTER) > -1 || config.url.indexOf(apiConstatns.URL.LOGIN) > -1) {
+    if (config.url.indexOf(apiConstatns.URL.register) > -1 || config.url.indexOf(apiConstatns.URL.login) > -1) {
       config.headers['Authorization'] = '';
     } else {
       config.headers['Authorization'] = token; // 重新设置请求头生效，想到绑定的值是响应式的，所以更新值即可

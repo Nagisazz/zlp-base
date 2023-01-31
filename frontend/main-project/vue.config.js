@@ -7,7 +7,7 @@ function resolve(dir) {
 const isDevelopment = process.env.NODE_ENV === 'development' // 判断是否是生产环境
 
 module.exports = {
-    publicPath: isDevelopment ? '/' :'/platform',
+    publicPath: isDevelopment ? '/' :'/',
     outputDir: 'platform',
     productionSourceMap: isDevelopment,
     devServer: {

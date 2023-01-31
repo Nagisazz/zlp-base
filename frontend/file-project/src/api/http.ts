@@ -173,7 +173,7 @@ export default {
               }
             }).catch((err) => {
               // toResult(url, 'error', err);
-              if (err.response.data.status === 412) { // 412请求过程中发现token失效
+              if (err.response && err.response.data.status === 412) { // 412请求过程中发现token失效
                 store.getState().loginInfo.token = store.getState().loginInfo.refreshToken;
                 if (url.indexOf('platform/account/refresh') === -1) {
                   this.freshToken().then((res: any) => { // 新token获取后重新调用原接口
@@ -199,7 +199,7 @@ export default {
         url,
         data: param,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
       }).then((res) => {
         if (res.data.status === 200) {
@@ -208,7 +208,10 @@ export default {
           store.getState().loginInfo.token = store.getState().loginInfo.refreshToken;
           this.freshToken().then((res: any) => { // 新token获取后重新调用原接口
             if (res === 'success') {
-              this.request(url, method, param)
+              this.postFile(url, method, param)
+            } else if (res === 'toLogin') {
+              // 如果2个token都过期则重新登录
+              actions.setGlobalState({ showSign: true });
             }
           })
         } else {

@@ -173,7 +173,7 @@ export default {
               }
             }).catch((err) => {
               // toResult(url, 'error', err);
-              if (err.response.data.status === 412) { // 412请求过程中发现token失效
+              if (err.response && err.response.data.status === 412) { // 412请求过程中发现token失效
                 store.getState().loginInfo.token = store.getState().loginInfo.refreshToken;
                 if (url.indexOf('platform/account/refresh') === -1) {
                   this.freshToken().then((res: any) => { // 新token获取后重新调用原接口

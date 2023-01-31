@@ -3,7 +3,7 @@
         <li class="work" v-for="(work, index) in works" :key="index"
             @mouseenter="mouseenter(work)"
             @mouseleave="mouseleave()">
-          <div class="more-modal" :style="{ display: currentWork.id === work.id ? 'block' : 'none' }"
+          <div class="more-modal" v-show="currentWork.id === work.id"
             @click="showMore()">
             <i class="iconfont zp-eye"></i>
           </div>
@@ -71,7 +71,7 @@ export default class work extends Vue {
   }
 }
 .work{
-  height: 200px;
+  height: 80%;
   animation: scaleUp 0.25s ease forwards;
   cursor: pointer;
   position: relative;
@@ -100,12 +100,12 @@ export default class work extends Vue {
   top: 0;
   left: 0;
   background: rgba(0, 0, 0, 0.7);
-  display: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .more-modal .iconfont{
-  vertical-align: middle;
   font-size: 24px;
-  line-height: 8;
 }
 
 </style>

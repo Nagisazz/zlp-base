@@ -22,6 +22,12 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { HttpserviceService } from './services/httpservice.service';
+import { InfoService } from './services/info.service';
+import { HttpIndexService } from './services/index.service';
+import { NZ_I18N } from 'ng-zorro-antd/i18n';
+import { zh_CN } from 'ng-zorro-antd/i18n';
 
 @NgModule({
   declarations: [
@@ -43,8 +49,15 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
     NzDividerModule,
     NzModalModule,
     NzInputNumberModule,
-    NzDatePickerModule
+    NzDatePickerModule,
+    NzMessageModule
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  providers: [
+    HttpserviceService,
+    InfoService,
+    HttpIndexService,
+    { provide: NZ_I18N, useValue: zh_CN }
+  ]
 })
 export class AppModule { }

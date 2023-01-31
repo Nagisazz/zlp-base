@@ -42,7 +42,6 @@ export async function mount(props) {
       console.log("我是子应用，我检测到数据了：", state);
       const ssKey = 'platform.login';
       const infoCache = JSON.parse(sessionStorage.getItem(ssKey));
-      console.log(infoCache, !infoCache || (infoCache.token !== state.token));
       setTimeout(() => {
         if (!infoCache || (infoCache.token !== state.token)) {
           setTokenInfo(state);

@@ -14,9 +14,13 @@ export const rootRouter: RouterConfig[] = [
         element: <ShareFile />
     },
     {
-        path: '/login',
-        element: <Login />
+        path: '/file',
+        element: <ShareFile />
     },
+    // {
+    //     path: '/login',
+    //     element: <Login />
+    // },
     {
         path: '*',
         element: <NotFound />

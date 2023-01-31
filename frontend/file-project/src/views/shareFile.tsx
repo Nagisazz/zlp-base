@@ -12,6 +12,12 @@ import { getFileList, createFolder, updateFolder, deleteFolder, singleShareCode,
 import actions from '@/qiankun/action';
 import { sizeTostr, dealFormate, dealTypeStr, dealUploadType } from '@/utils/sharefile';
 
+import '@wangeditor/editor/dist/css/style.css' // 引入 css
+
+import { Editor, Toolbar } from '@wangeditor/editor-for-react'
+import { IDomEditor, IEditorConfig, IToolbarConfig } from '@wangeditor/editor'
+import '@/components/textEditor.less';
+
 
 const { confirm } = Modal;
 const useClick = (callback: any, doubleCallback: any) => {
@@ -72,6 +78,17 @@ const ShareFile = (props: any) => {
 
     const [noteModalOpen, setNoteModalOpen] = useState(false); // 打开笔记开窗
 
+    // editor 实例
+    const [editor, setEditor] = useState<IDomEditor | null>(null)   // TS 语法
+    // 工具栏配置
+    const toolbarConfig: Partial<IToolbarConfig> = {
+    }  // TS 语法
+
+    // 编辑器配置
+    const editorConfig: Partial<IEditorConfig> = {    // TS 语法
+        readOnly: false,
+    }
+
 
     // 监听文件列表中的selected字段
     const isHaveSelect = useMemo(() => {
@@ -87,8 +104,8 @@ const ShareFile = (props: any) => {
     );
 
     useEffect(() => {
-        // 取消双击时文字选择功能
-        document.onselectstart = function(){return false;};
+        // 取消双击时文字选择功能  会影响富文本编辑器
+        // document.onselectstart = function(){return false;};
         getList();
     }, [])
 
@@ -420,9 +437,9 @@ const ShareFile = (props: any) => {
 
     // 新建笔记
     const addNote = () => {
-        if (!checkIsLogin()) {
-            return;
-        }
+        // if (!checkIsLogin()) {
+        //     return;
+        // }
         newCurrentFileData.current = {};
         setCurrentFileData(newCurrentFileData.current);
         setNoteModalOpen(true);
@@ -581,6 +598,7 @@ const ShareFile = (props: any) => {
 
     // 处理文件上传
     const handleChange = async(info: any) => {
+        console.log(info);
         if (info.file.status !== 'uploading') {
         }
         const fileDone = info.fileList.every((obj: any) => {
@@ -666,7 +684,7 @@ const ShareFile = (props: any) => {
                                     {/* key={Math.random()} 解决再次上次文件时清空上次缓存问题   */}
                                     <Upload className="btn" key={Math.random()}
                                         name='file'
-                                        action='http://192.168.0.111:7000/platform/file/upload?systemId=share'
+                                        action='http://1.15.87.105:11000/minio/love/'
                                         showUploadList={false}
                                         multiple={true}
                                         maxCount={6}
@@ -682,14 +700,14 @@ const ShareFile = (props: any) => {
                         </div>
                     </div>
                     <div className="operate-input">
-                        <Input placeholder="搜索我的文件" value={searchInfo} size="middle" 
+                        {/* <Input placeholder="搜索我的文件" value={searchInfo} size="middle" 
                             onChange={setSearchVal} onPressEnter={onEnter}/>
                         <span className="search-txt">
                             {
                                 searchInfo ? <i className="iconfont zp-fork" onClick={() => clearInfo()}></i> : ''
                             }
                             | 搜索
-                        </span> 
+                        </span>  */}
                     </div>
                 </div>
                 <div className="operate-line two-line">
@@ -719,7 +737,8 @@ const ShareFile = (props: any) => {
 
                 {
                     fileList.length === 0 ? 
-                    <div className="no-data">暂无数据，请先 <span onClick={() => addFolder()}>创建文件夹</span> </div> :
+                    <div className="no-data">暂无数据，请先 <span onClick={() => addFolder()}>创建文件夹</span> </div>
+                    :
                     <div className="file-box">
                         {
                         showType === 'thumbnail' ? 

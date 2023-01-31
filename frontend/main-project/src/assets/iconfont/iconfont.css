@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3141727 */
-  src: url('iconfont.woff2?t=1669714914712') format('woff2'),
-       url('iconfont.woff?t=1669714914712') format('woff'),
-       url('iconfont.ttf?t=1669714914712') format('truetype');
+  src: url('iconfont.woff2?t=1675149471417') format('woff2'),
+       url('iconfont.woff?t=1675149471417') format('woff'),
+       url('iconfont.ttf?t=1675149471417') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,66 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.zp-weixin:before {
+  content: "\e604";
+}
+
+.zp-plus:before {
+  content: "\e664";
+}
+
+.zp-weigouxuan1:before {
+  content: "\e61a";
+}
+
+.zp-weigouxuan:before {
+  content: "\e63e";
+}
+
+.zp-gouxuan1:before {
+  content: "\e65c";
+}
+
+.zp-check_bg_black:before {
+  content: "\e640";
+}
+
+.zp-biji:before {
+  content: "\e60d";
+}
+
+.zp-31shijian:before {
+  content: "\e603";
+}
+
+.zp-renwumingcheng:before {
+  content: "\e662";
+}
+
+.zp-shangchuanzhaopian:before {
+  content: "\e610";
+}
+
+.zp-shenglvehao:before {
+  content: "\e708";
+}
+
+.zp-jiahao:before {
+  content: "\e726";
+}
+
+.zp-sousuo:before {
+  content: "\e622";
+}
+
+.zp-paixu:before {
+  content: "\e618";
+}
+
+.zp-gouxuan:before {
+  content: "\e68a";
 }
 
 .zp-fuzhi:before {

@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import * as echarts from 'echarts';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { throwNzModalContentAlreadyAttachedError } from 'ng-zorro-antd/modal';
+import { HttpIndexService } from 'src/app/services/index.service';
+import { InfoService } from 'src/app/services/info.service';
 
 @Component({
   selector: 'app-fund-detail',
@@ -8,52 +11,51 @@ import { throwNzModalContentAlreadyAttachedError } from 'ng-zorro-antd/modal';
   styleUrls: ['./fund-detail.component.less']
 })
 export class FundDetailComponent implements OnInit {
-
     fundList: any = [
-        {
-            balance: 4746.2,
-            buyAmount: 5000,
-            code: "012414",
-            createTime: "2022-10-12T10:21:04",
-            frequence: 11,
-            id: 1,
-            investAmount: 500,
-            investMoney: 500,
-            investNum: 0,
-            lastInvestTime: "2022-10-06T00:00:00",
-            mean: 250,
-            name: "招商中证白酒指数(LOF)C",
-            profileAmount: -253.8,
-            saleAmount: 0,
-            type: '2',
-            updateTime: "2022-10-12T10:26:08",
-            valid: 1,
-            wave: 5,
-            worth: 0.9738,
-            yields: -0.0508,
-        },
-        {
-            id: 2,
-            name: '名称2',
-            code: 'www',
-            balance: '30000', // 账户资产
-            worth: '1.04211', // 净值
-            yields: '12%', // 收益率
-            profileAmount: '2013', // 总收益
-            buyAmount: '37000', // 总买入金额
-            saleAmount: '7000', // 总卖出金额
-            investAmount: '30000', // 总投资金额
-            investNum: '', // 定投次数
-            frequence: '2', // 定投频率
-            investMoney: '1090', // 定投基准金额
-            mean: '800', // 定投金额
-            wave: '8', // 定投比率
-            type: '2', // 策略类型
-            valid: 1, // 是否有效 1是0否
-            createTime: "2022-10-12T10:21:04", // 开始时间
-            updateTime: "2022-10-12T10:26:08", // 更新时间
-            lastInvestTime: "2022-10-06T00:00:00", // 上次定投日期
-        }
+        // {
+        //     balance: 4746.2,
+        //     buyAmount: 5000,
+        //     code: "012414",
+        //     createTime: "2022-10-12T10:21:04",
+        //     frequence: 11,
+        //     id: 1,
+        //     investAmount: 500,
+        //     investMoney: 500,
+        //     investNum: 0,
+        //     lastInvestTime: "2022-10-06T00:00:00",
+        //     mean: 250,
+        //     name: "招商中证白酒指数(LOF)C",
+        //     profileAmount: -253.8,
+        //     saleAmount: 0,
+        //     type: '2',
+        //     updateTime: "2022-10-12T10:26:08",
+        //     valid: 1,
+        //     wave: 5,
+        //     worth: 0.9738,
+        //     yields: -0.0508,
+        // },
+        // {
+        //     id: 2,
+        //     name: '名称2',
+        //     code: 'www',
+        //     balance: '30000', // 账户资产
+        //     worth: '1.04211', // 净值
+        //     yields: '12%', // 收益率
+        //     profileAmount: '2013', // 总收益
+        //     buyAmount: '37000', // 总买入金额
+        //     saleAmount: '7000', // 总卖出金额
+        //     investAmount: '30000', // 总投资金额
+        //     investNum: '', // 定投次数
+        //     frequence: '2', // 定投频率
+        //     investMoney: '1090', // 定投基准金额
+        //     mean: '800', // 定投金额
+        //     wave: '8', // 定投比率
+        //     type: '2', // 策略类型
+        //     valid: 1, // 是否有效 1是0否
+        //     createTime: "2022-10-12T10:21:04", // 开始时间
+        //     updateTime: "2022-10-12T10:26:08", // 更新时间
+        //     lastInvestTime: "2022-10-06T00:00:00", // 上次定投日期
+        // }
     ];
     moreModal: any = false; // 显示更多开窗
     detailModal: any = false; // 查看详情开窗
@@ -61,26 +63,26 @@ export class FundDetailComponent implements OnInit {
     moreEdit: any = false; // 显示更多中--是否可编辑
     noEchartData: any = false; // 无图表数据
 
-    constructor() { }
+    constructor(
+        private httpIndexService: HttpIndexService,
+        private infoService: InfoService,
+        private message: NzMessageService
+    ) { }
 
     ngOnInit(): void {
         this.getInitList();
     }
 
     getInitList() {
-        const that = this;
-        let urlData = 'http://1.15.87.105:12500/fund/list';
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', urlData, true);
-        xhr.setRequestHeader('X-Requested-With','XMLHttpRequest')
-        xhr.send();
-        xhr.onreadystatechange = function() {
-        if(xhr.readyState === 4 && xhr.status ===200){
-            that.fundList = JSON.parse(xhr.responseText).data;
-        }
-        }
-        xhr.onerror = function (error) {
-        }
+        this.httpIndexService.fundList({}).then((data: any) => {
+            if (data.status === 200) {
+                this.fundList = data.data;
+                this.fundList.map((obj: any) => {
+                    obj.type = String(obj.type);
+                })
+            }
+            
+        })
     }
 
     handleCancel(type: string): void {
@@ -136,41 +138,14 @@ export class FundDetailComponent implements OnInit {
     }
 
     onSave() {
-        let urlData = '';
-        let that = this;
-
-        urlData = 'http://1.15.87.105:12500/fund/update' + "?data=" + this.fundInfo.id + '$' + this.formatData().join('$');
-        console.log(urlData);
-                
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', urlData, true);
-        xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-        xhr.send();
-        xhr.onreadystatechange = function() {
-            if(xhr.readyState === 4 && xhr.status ===200){
-                alert('编辑成功！');
-                that.moreModal = false;
+        this.httpIndexService.fundUpdate('data=' + this.fundInfo.id + '$' + this.formatData().join('$')).then((data: any) => {
+            if (data.status === 200) {
+                this.moreModal = false;
+                this.message.success('更新成功！');
+            } else {
+                this.message.info('更新失败！');
             }
-        }
-        xhr.onerror = function (error) {
-            // alert('接口调用失败！');
-        }
-                // $.ajax({
-                //     url: urlData,//请求的地址
-                //     type: 'get',//请求的方式
-                //     data: '',//携带到后端的参数
-                //     dataType: 'json',// 期望后端返回的数据类型
-                //     headers:{'Content-Type':'application/x-www-form-urlencoded;charset=utf8'},
-                //     beforeSend:function (request) {
-                //         console.log('加载中。。。');
-                //     },
-                //     success: function (res) {
-                //         alert('编辑成功！');
-                //         that.hiddenEdit('update');
-                //     },//成功的回调函数 res就是后端响应回来的数据
-                //     error: function (res) {
-                //     },
-                // })
+        })
     }
 
     formatData() {
@@ -178,7 +153,7 @@ export class FundDetailComponent implements OnInit {
         let requestValue = [];
         for (let i = 0; i < inputs.length; i++) {
             if (inputs[i] === 'lastInvestTime') {
-                requestValue.push(this.getDateFormat(this.fundInfo.lastInvestTime, 'yyyyMMdd'));
+                requestValue.push(this.getDateFormat(new Date(this.fundInfo.lastInvestTime), 'yyyyMMdd'));
             } else {
                 requestValue.push(this.fundInfo[inputs[i]]);
             }
@@ -198,52 +173,39 @@ export class FundDetailComponent implements OnInit {
     }
 
     onStop(data: any) {
-        let that = this;
-        let urlData = 'http://1.15.87.105:12500/fund/stop' + "?fundId=" + data.id
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', urlData, true);
-        xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-        xhr.send();
-        xhr.onreadystatechange = function() {
-            if(xhr.readyState === 4 && xhr.status ===200){
-                console.log('改定投停止执行');
-                that.getInitList();
+        this.httpIndexService.fundStop('fundId=' + data.id).then((data: any) => {
+            if (data.status === 200) {
+                this.getInitList();
+                this.message.success('停止执行成功！');
+            } else {
+                this.message.info('停止执行失败！');
             }
-        }
-        xhr.onerror = function (error) {
-            console.log(error)
-        }
+        })
     }
 
     toDetail(data: any) {
         this.detailModal = true;
-        let urlData = 'http://1.15.87.105:12500/fund/info' + "?fundId=" + data.id
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', urlData, true);
-        xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-        xhr.send();
-        const that = this;
-        xhr.onreadystatechange = function() {
-            if(xhr.readyState === 4 && xhr.status === 200){
-                const data = JSON.parse(xhr.responseText);
+        this.httpIndexService.fundInfo('fundId=' + data.id).then((data: any) => {
+            if (data.status === 200) {
                 const x: any = [];
                 const worth: any = [];
                 const balance: any = [];
                 const investAmount: any = [];
                 if (data.data && data.data.length > 0) {
-                    that.noEchartData = true;
+                    this.noEchartData = true;
                     data.data.map((obj: any) => {
-                        x.push(that.tranformShowTime(obj.createTime));
+                        x.push(this.tranformShowTime(obj.createTime));
                         worth.push(obj.worth);
                         balance.push(obj.balance);
                         investAmount.push(obj.investAmount);
                     })
-                    that.setEcharts(x, worth, balance, investAmount);
+                    setTimeout(() => {
+                        this.setEcharts(x, worth, balance, investAmount);
+                    }, 2000);
+                    
                 }
             }
-        }
-        xhr.onerror = function (error) {
-        }
+        })
     }
 
     setEcharts(x: any, worth: any, balance: any, investAmount: any) {
@@ -252,7 +214,7 @@ export class FundDetailComponent implements OnInit {
         option = {
             grid: {
                 bottom: 80,
-                top: 30
+                top: 60
             },
             toolbox: {
                 feature: {

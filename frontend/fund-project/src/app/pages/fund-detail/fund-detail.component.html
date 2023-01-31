@@ -33,7 +33,7 @@
 
     <nz-modal [(nzVisible)]="moreModal" nzWidth="900px" nzTitle="显示更多" (nzOnCancel)="handleCancel('more')">
         <ng-container *nzModalContent>
-            <div class="modal-container">
+            <div class="modal-container" style="height: 500px">
                 <div class="btns">
                     <div class="edit-btn" (click)="onEdit()">
                         <img src="http://1.15.87.105:11000/file/edit.png" alt="">
@@ -116,7 +116,7 @@
                         <div *ngIf="!moreEdit && fundInfo.type == 1">按照定投金额卖</div>
                         <div *ngIf="!moreEdit && fundInfo.type == 2">按照总资产卖</div>
                         <div *ngIf="!moreEdit && fundInfo.type == 3">简单定投</div>
-                        <div *ngIf="moreEdit">
+                        <div [hidden]="!moreEdit">
                             <nz-select [(ngModel)]="fundInfo.type">
                                 <nz-option nzValue="1" nzLabel="按照定投金额卖"></nz-option>
                                 <nz-option nzValue="2" nzLabel="按照总资产卖"></nz-option>
@@ -148,7 +148,7 @@
     </nz-modal>
 
     
-    <nz-modal [(nzVisible)]="detailModal" nzTitle="详情" nzWidth="900px" (nzOnCancel)="handleCancel('detail')">
+    <nz-modal [(nzVisible)]="detailModal" nzTitle="详情" nzWidth="1400px" (nzOnCancel)="handleCancel('detail')">
         <ng-container *nzModalContent>
           <div class="modal-container" id="fundEcharts" *ngIf="noEchartData"></div>
           <div class="modal-container no-data" *ngIf="!noEchartData">暂无数据</div>
