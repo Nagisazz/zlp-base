@@ -27,7 +27,7 @@ public class UserInfoVo {
 
     private String mail;
 
-    private String avatarUrl;
+    private String avatarurl;
 
     private Integer valid;
 
