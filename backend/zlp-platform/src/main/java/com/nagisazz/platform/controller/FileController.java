@@ -99,6 +99,7 @@ public class FileController {
         Preconditions.checkArgument(StringUtils.isNotBlank(systemId), "系统标识为空");
         Preconditions.checkArgument(!Objects.isNull(fileId), "文件为空");
         FileInfo fileInfo = fileService.getFileInfo(systemId, fileId);
+        Preconditions.checkArgument(!Objects.isNull(fileInfo), "文件为空");
         try (InputStream inputStream = fileService.get(systemId, fileInfo.getPath());
              OutputStream outputStream = response.getOutputStream()) {
             Thumbnails.of(inputStream).scale(0.25).toOutputStream(outputStream);

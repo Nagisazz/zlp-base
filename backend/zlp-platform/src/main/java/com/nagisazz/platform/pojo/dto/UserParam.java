@@ -31,7 +31,7 @@ public class UserParam {
 
     private String mail;
 
-    private String avatarUrl;
+    private String avatarurl;
 
     private String oriPassword;
 
