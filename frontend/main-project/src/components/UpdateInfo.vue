@@ -7,7 +7,8 @@
             :before-close="onCancel">
             <div class="modal-content">
                 <div class="info-item">
-                    <img class="default-img" src="http://1.15.87.105:11000/love/defaultImg.webp" />
+                    <img class="default-img" v-if="!haveUserInfo.avatarurl" src="http://1.15.87.105:11000/love/base/defaultImg.webp" />
+                    <img class="default-img" v-if="haveUserInfo.avatarurl" :src="getPreviewImg()" />
                     <el-upload
                         style="display: inline-block;"
                         v-if="isEdit"
@@ -89,7 +90,7 @@
   
 <script>
 import {useStore} from 'vuex';
-import { getUserInfoApi, updateUserInfoApi, updateUserPassword, uploadFile } from '@/api/index';
+import { getUserInfoApi, updateUserInfoApi, updateUserPassword, uploadFile, getPreviewFile } from '@/api/index';
 import { ElMessage } from 'element-plus';
 import { initGlobalState } from 'qiankun';
 
@@ -113,7 +114,7 @@ export default {
         return {
             updateDialog: true,
             haveUserInfo: {
-                imgId: '',
+                avatarurl: '',
                 name: '',
                 password: '',
                 newPassword: '',
@@ -188,9 +189,14 @@ export default {
             formData.append('file', file.raw);
             uploadFile(formData, 'systemId=platform&name=' + file.name).then((res) => {
                 if (res.status === 200) {
-                    this.haveUserInfo.imgId = res.data.id;
+                    this.haveUserInfo.avatarurl = res.data.id;
                 }
             });
+        },
+
+        // 预览头像图片
+        getPreviewImg() {
+            return getPreviewFile('systemId=platform&fileId=' + this.haveUserInfo.avatarurl);
         },
 
         // 取消按钮
@@ -204,7 +210,7 @@ export default {
                 name: this.haveUserInfo.name,
                 phone: this.haveUserInfo.phone,
                 mail: this.haveUserInfo.mail,
-                avatarUrl: this.haveUserInfo.imgId
+                avatarurl: this.haveUserInfo.avatarurl
             };
             updateUserInfoApi(param).then((res) => {
                 if (res.status === 200) {

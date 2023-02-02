@@ -14,7 +14,8 @@ const IsShowHead = {
   mutations: {
     CHANGEROUTEPATH(state: any, path: String) {
         state.routerPath = path;
-        if (path.indexOf('/zp') > -1) { // 博客不需要头部
+        console.log(path);
+        if (path.indexOf('/zp') > -1 || path.indexOf('platform') === -1) { // base以及博客不需要头部
             state.isShowHead = false;
         } else {
             state.isShowHead = true;
