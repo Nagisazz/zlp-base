@@ -36,7 +36,7 @@ function render(props?: any) {
   
 
   router = new VueRouter({
-    base: (window as any).__POWERED_BY_QIANKUN__ ? '/platform/zp/' : '/',
+    base: (window as any).__POWERED_BY_QIANKUN__ ? '/platform/zp' : '/zp',
     mode: 'history',
     routes,
   });

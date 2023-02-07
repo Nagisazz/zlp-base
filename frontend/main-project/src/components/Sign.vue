@@ -82,11 +82,11 @@ export default {
         },
 
         // 关闭弹框
-        onCancel() {
+        onCancel(data) {
             this.openVertify = false;
             this.loginId = '';
             this.password = '';
-            this.$emit('closeSignModal', false)
+            this.$emit('closeSignModal', data ? data : {isInfo: false})
         },
 
         // 确认按钮
@@ -111,7 +111,7 @@ export default {
                             token: res.data.token,
                             refreshToken: res.data.refreshToken,
                         }); // 通知所有微应用去同步登录状态
-                        this.onCancel();
+                        this.onCancel({isInfo: true});
                     } else {
                         ElMessage({
                             message: res.message,
@@ -133,7 +133,7 @@ export default {
                             token: res.data.token,
                             refreshToken: res.data.refreshToken,
                         });
-                        this.onCancel();
+                        this.onCancel({isInfo: true});
                     } else {
                         ElMessage({
                             message: res.message,

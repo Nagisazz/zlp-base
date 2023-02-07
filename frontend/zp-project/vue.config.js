@@ -13,7 +13,7 @@ module.exports = {
     // 当在非本地环境时，这里以项目test-daily为例，即打包后的h5项目部署服务器的test-daily目录下
     // 那么这里就要把publicPath设置为/test-daily/，表示所有的静态资源都在/test-daily/里
     // 打包部署后，会发现index.html引用的静态资源都添加了路径/test-daily/
-    publicPath: isDevelopment ? './' : `/platform/zp/${name}/`,
+    publicPath: isDevelopment ? '/' : `/${name}/`,
     outputDir: 'zp',
     productionSourceMap: isDevelopment,
     devServer: {

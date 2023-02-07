@@ -26,6 +26,10 @@ export const rootRouter: RouterConfig[] = [
                 element: lazyLoad(React.lazy(() => import("@/pages/goods/price")))
             },
             {
+                path: '/price',
+                element: lazyLoad(React.lazy(() => import("@/pages/goods/price")))
+            },
+            {
                 path: '/phone',
                 element: lazyLoad(React.lazy(() => import("@/pages/goods/phone")))
             },

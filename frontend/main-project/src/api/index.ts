@@ -37,6 +37,11 @@ export function uploadFile(param: any, query: any): Promise<Result> {
   return http.postFile(apiConstatns.URL.uploadFile + '?' + query, 'post', param);
 }
 
+// 获取缩略图文件流   img直接访问地址获取缩略图
+export function getPreviewFile(param: any): any {
+  return apiConstatns.URL.getPreviewFile + '?' + param;
+}
+
 
 
 

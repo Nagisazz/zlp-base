@@ -7,16 +7,12 @@ const routes: any = [{
     name: 'Layout',
     component: () => import('../views/Layout.vue'),
     children: [
-        // {
-        //     path: '/',
-        //     redirect: '/home'
-        // },
         {
             path: '/',
             name: 'Home',
             component: () => import('../components/Home.vue'),
             meta: {
-                title: '首页'
+                title: '首页',
             }
         },
         {
@@ -33,13 +29,12 @@ const router = createRouter({
 
 // 页面进入之后
 router.afterEach(() => {
+    // 注释这边的start(),部署上去就会不加载子应用
     if (!(window as any).qiankunStarted) {
         (window as any).qiankunStarted = true;
         start();
     }
-    // start();
     store.commit("IsShowHead/CHANGEROUTEPATH", window.location.href);
-    console.log('router---index.js进入路由画面了', window);
 })
 
 export default router;

@@ -4,12 +4,15 @@ function resolve(dir) {
     return path.join(__dirname, dir);
 }
 
-const isDevelopment = process.env.NODE_ENV === 'development' // 判断是否是生产环境
+const isDevelopment = process.env.NODE_ENV === 'development'; // 判断是否是生产环境
+const AutoImport = require('unplugin-auto-import/webpack');
+const Components = require('unplugin-vue-components/webpack');
+const { ElementPlusResolver } = require('unplugin-vue-components/resolvers');
 
 module.exports = {
-    publicPath: isDevelopment ? '/' :'/',
+    publicPath: '/',
     outputDir: 'platform',
-    productionSourceMap: isDevelopment,
+    productionSourceMap: !isDevelopment,
     devServer: {
         open: true,
         port: 7000,
@@ -20,32 +23,20 @@ module.exports = {
 
     configureWebpack: {
         name: '朱平测试子应用项目',
+        plugins: [
+            AutoImport({
+                resolvers: [ElementPlusResolver()]
+            }),
+            Components({
+                resolvers: [ElementPlusResolver()]
+            })
+        ],
         resolve: {
             extensions: ['.js', '.vue', '.json'],
             alias: {
                 '@': resolve('src'), // 配置别名
             }
-        },
-        plugins: [],
-        // module: {
-        //     rules: [
-        //         {
-        //             test: /\.scss$/i,
-        //             loader: 'sass-loader',
-        //             options: {
-        //                 additionalData: `@import "@/src/styles/element/index.scss";`,
-        //             },
-        //         },
-        //         {
-        //             test: /\.css$/i,
-        //             loader: 'sass-loader',
-        //             options: {
-        //                 additionalData: `@import "@/src/styles/element/index.scss";`,
-        //             },
-        //         },
-        //     ],
-        // },
-
+        }
     },
 
     css: {
@@ -67,6 +58,22 @@ module.exports = {
     },
 
 
-    chainWebpack: () => {}
+    // 修改文件默认打包入口
+    chainWebpack: config => {
+        // 发布模式
+        config.when(process.env.NODE_ENV === 'production', config => {
+
+            config.plugins.delete('prefetch');//默认开启prefetch(预先加载模块)，提前获取用户未来可能会访问的内容 在首屏会把这十几个路由文件，都一口气下载了 所以我们要关闭这个功能模块
+            if (process.env.NODE_ENV !== 'development') {
+                // // 对超过10kb的文件gzip压缩
+                // config.plugin('compressionPlugin').use(
+                //     new CompressionPlugin({
+                //         test: /\.(js|css|html)$/,// 匹配文件名
+                //         threshold: 10240,
+                //     })
+                // );
+            }
+        });
+    }
 
 }

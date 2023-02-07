@@ -10,6 +10,7 @@ import '@/style/zp.less';
 import { Provider, connect } from 'react-redux';
 import store from './redux/store';
 import actions from '@/qiankun/action';
+import { setTokenInfo } from '@/redux/actions/platformData';
 
 function render(props) {
   const { container } = props;

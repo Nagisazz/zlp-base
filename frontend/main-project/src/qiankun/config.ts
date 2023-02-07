@@ -1,4 +1,4 @@
-import { registerMicroApps, initGlobalState, start } from 'qiankun';
+import { registerMicroApps, initGlobalState, start, setDefaultMountApp } from 'qiankun';
 import router from '@/router/index';
 import store from '@/store/index';
 
@@ -30,28 +30,29 @@ actions.setGlobalState(state);
 registerMicroApps([
   {
     name: 'zp', // 子应用package.json中的name
-    entry: process.env.NODE_ENV === 'development' ? '//localhost:7001' : 'http://localhost:8091/platform/zp/',
+    entry: 'http://temp.zlpnet.cn:1000/zp/',
     container: '#micro', // 插到主应用的div容器
     activeRule: '/platform/zp', // 和子应用设置的路由history--platform属性一致
     props: { actions, router }, // 传给微应用的数据
   },
   {
     name: 'price',
-    entry: process.env.NODE_ENV === 'development' ? '//localhost:7002' : 'http://localhost:8091/platform/price/',
+    entry: 'http://temp.zlpnet.cn:1000/price/',
     container: '#micro',
     activeRule: '/platform/price',
     props: { actions }, // 传给微应用的数据
   },
   {
     name: 'file',
-    entry: process.env.NODE_ENV === 'development' ? '//localhost:7003' : 'http://localhost:8091/platform/file/',
+    // entry: 'http://localhost:8091/file/',
+    entry: 'http://temp.zlpnet.cn:1000/file/',
     container: '#micro',
     activeRule: '/platform/file',
     props: { actions }, // 传给微应用的数据
   },
   {
       name: 'fund',
-      entry: process.env.NODE_ENV === 'development' ? '//localhost:7004' : 'http://localhost:8091/platform/fund/',
+      entry: 'http://temp.zlpnet.cn:1000/fund/',
       container: '#micro',
       activeRule: '/platform/fund',
       props: { actions }, // 传给微应用的数据
