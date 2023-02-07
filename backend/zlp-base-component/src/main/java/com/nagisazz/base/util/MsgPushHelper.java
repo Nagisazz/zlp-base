@@ -22,6 +22,20 @@ public class MsgPushHelper {
     private final ZlpProperties.SystemProperties systemProperties;
 
     /**
+     * 以默认参数发送给自己
+     *
+     * @param title
+     * @param content
+     */
+    public void sendOwnMsg(String title, String content) {
+        final MsgPushVo msgPushVo = buildCommon(title, content);
+        msgPushVo.setTo(null);
+        msgPushVo.setTopic(null);
+        msgPushVo.setMsgType(msgPushProperties.getMsgType());
+        sendMsg(msgPushVo);
+    }
+
+    /**
      * 以默认参数发送群组消息
      *
      * @param title
