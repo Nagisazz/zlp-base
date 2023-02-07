@@ -107,6 +107,7 @@ const ShareFile = (props: any) => {
         // 取消双击时文字选择功能  会影响富文本编辑器
         // document.onselectstart = function(){return false;};
         getList();
+        console.log('file加载11111111111111111111111');
     }, [])
 
     // 获取文件列表

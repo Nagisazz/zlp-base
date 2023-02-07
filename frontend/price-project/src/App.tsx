@@ -24,7 +24,7 @@ function App() {
       5、检测过时的 context API */
     /* <React.StrictMode> 注释StrictMode的话useEffect就不会调用两次了 */
   return <div> 
-    <BrowserRouter basename={(window as any).__POWERED_BY_QIANKUN__ ? '/platform/price' : '/platform/price'}>
+    <BrowserRouter basename={(window as any).__POWERED_BY_QIANKUN__ ? '/platform/price' : '/price'}>
         <Router/> 
     </BrowserRouter>
   </div>;

@@ -3,7 +3,7 @@
         <div class="header" :class="{'header-home': from === 'home'}">
             <div class="head-title">ZP NETWORK</div>
             <div class="head-info" v-if="store.state.Security.authorizedUser && store.state.Security.authorizedUser.token">
-                <span class="sign-btn login" v-if="!this.$route.name" @click="onChangeRoute('/')">To Home</span>
+                <span class="sign-btn login" v-if="!this.$route.name" @click="toHome()">To Home</span>
                 <img v-if="!haveUserInfo.avatarurl" src="http://1.15.87.105:11000/love/base/defaultImg.webp" />
                 <img v-if="haveUserInfo.avatarurl" :src="getPreviewImg()" />
                 <el-dropdown>
@@ -19,14 +19,14 @@
                 </el-dropdown>
             </div>
             
-            <div class="head-info" v-if="store.state.Security.authorizedUser && !store.state.Security.authorizedUser.token">
-                <span class="sign-btn login" v-if="!this.$route.name" @click="onChangeRoute('/')">To Home</span>
+            <div class="head-info" v-if="!store.state.Security.authorizedUser">
+                <span class="sign-btn login" v-if="!this.$route.name" @click="toHome()">To Home</span>
                 <span class="sign-btn login" @click="onLogin()">sign In</span>
                 <span class="sign-btn register" @click="onRegister()">sign Up</span>
             </div>
         </div>
         <UpdateInfo v-if="updateDialog" @closeDialog="closeDialog"></UpdateInfo>
-        <Sign v-if="store.state.Security.showSign" @closeSignModal="closeSignModal"></Sign>
+        <Sign v-if="store.state.Security.showSign" @closeSignModal="closeSignModal($event)"></Sign>
     </div>
 </template>
 
@@ -77,7 +77,14 @@ export default {
     },
 
     created() {
-        this.getUserInfoApi();
+        if (this.store.state.Security.authorizedUser) {
+            if (this.store.state.Security.authorizedUser && this.store.state.Security.authorizedUser.name) {
+                this.haveUserInfo = this.store.state.Security.authorizedUser;
+                
+            } else {
+                this.getUserInfoApi();
+            }
+        }
     },
 
     mounted() {
@@ -94,8 +101,12 @@ export default {
         },
 
         // 关闭注册/登录弹框
-        closeSignModal() {
-            this.getUserInfoApi();
+        closeSignModal(data) {
+            if (data.isInfo) {
+                this.getUserInfoApi();
+            } else {
+                this.onChangeRoute('/');
+            }
             this.openSignModal({ showSign: false });
         },
 
@@ -126,6 +137,13 @@ export default {
             this.openSignModal({ showSign: true, signType: 'up' });
         },
 
+        toHome() {
+            this.onChangeRoute('/');
+            setTimeout(() => {
+                window.location.reload();
+            }, 100);
+        },
+
         // 退出登录
         goOut() {
             this.haveUserInfo.name = '';
@@ -134,6 +152,7 @@ export default {
                 token: '',
                 refreshToken: '',
             });
+            this.toHome();
         }
     }
 

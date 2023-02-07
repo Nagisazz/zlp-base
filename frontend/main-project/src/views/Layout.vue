@@ -1,9 +1,12 @@
 <template>
     <div class="layout">
-      <Header v-if="store.state.IsShowHead.isShowHead"></Header>
+      <keep-alive>
+        <Header v-if="store.state.IsShowHead.isShowHead"></Header>
+      </keep-alive>
 
-      <div class="container" :style="containerH">
+      <div class="container" :style="store.state.IsShowHead.containerH">
         <div v-show="!$route.name" id="micro"></div>
+        
         <div v-show="$route.name" class="other">
           <router-view />
         </div>
@@ -41,7 +44,6 @@ export default {
 
   data() {
     return {
-      containerH: 'height: calc(100vh - 60px)',
     }
   },
 
@@ -50,10 +52,7 @@ export default {
   },
 
   mounted() {
-    console.log(this.$route, this.store.state.IsShowHead.isShowHead);
-    if (!this.store.state.IsShowHead.isShowHead) {
-      this.containerH = 'height: 100vh';
-    }
+    
   },
 
   methods: {

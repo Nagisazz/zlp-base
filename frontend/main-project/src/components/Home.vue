@@ -2,7 +2,9 @@
     <div class="home">
       <div class="applition">
         <div class="head">
-          <Header :from="'home'"></Header>
+          <keep-alive>
+            <Header :from="'home'"></Header>
+          </keep-alive>
         </div>
         
         <div class="title" ref="title"></div>
@@ -19,7 +21,7 @@
             </div>
             <div class="app-name">商品库价格计算</div> 
           </div>
-          <div class="menu-item"  @click="onChangeRoute('/platform/file/')">
+          <div class="menu-item"  @click="onChangeRoute('/platform/file')">
             <div class="menu">
               <img src="http://1.15.87.105:11000/love/base/file.png" alt="" />
             </div>

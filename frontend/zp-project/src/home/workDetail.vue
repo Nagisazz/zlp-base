@@ -46,6 +46,8 @@ export default class workDetail extends Vue {
                 // });
             } else if (this.type === 'share-file') {
                 window.history.pushState(null, 'title', '/platform/file');
+            } else if (this.type === 'fund') {
+                window.history.pushState(null, 'title', '/platform/fund');
             }
         }
     }
