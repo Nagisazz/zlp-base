@@ -1,31 +1,24 @@
 <template>
     <div class="sign-modal">
-        <el-dialog
-            v-model="dialogVisible"
-            :title="signType === 'in' ? '登录' : '注册'"
-            width="500"
-            :before-close="onCancel">
-            <div class="modal-content">
-                <div class="modal-item">
-                    <span>账号：</span>
-                    <el-input v-model="loginId" placeholder="请输入账号" />
+        <Dialog :title="signType === 'in' ? '登录' : '注册'" @closeDialog="onCancel()" @onConfirm="onConfirm()">
+            <template v-slot:modalContent>
+                <div class="modal-content">
+                    <div class="modal-item">
+                        <span>账号：</span>
+                        <input type="text" v-model="loginId" placeholder="请输入账号" />
+                    </div>
+                    <div class="required" v-if="openVertify && !loginId">账号必填</div>
+                    <div class="modal-item" style="margin-top: 20px">
+                        <span>密码：</span>
+                        <input type="text" v-model="password" placeholder="请输入密码" />
+                    </div>
+                    <div class="required" v-if="openVertify && !password">密码必填</div>
+                    <div class="tip" v-if="signType === 'in'" @click="changeType('up')">首次使用？<span>点我注册</span></div>
+                    <div class="tip" v-if="signType === 'up'" @click="changeType('in')">已有账号？<span>点我登录</span></div>
                 </div>
-                <div class="required" v-if="openVertify && !loginId">账号必填</div>
-                <div class="modal-item" style="margin-top: 20px">
-                    <span>密码：</span>
-                    <el-input v-model="password" placeholder="请输入密码" />
-                </div>
-                <div class="required" v-if="openVertify && !password">密码必填</div>
-                <div class="tip" v-if="signType === 'in'" @click="changeType('up')">首次使用？<span>点我注册</span></div>
-                <div class="tip" v-if="signType === 'up'" @click="changeType('in')">已有账号？<span>点我登陆</span></div>
-            </div>
-            <template #footer>
-                <span class="dialog-footer">
-                    <el-button @click="onCancel()">取消</el-button>
-                    <el-button type="primary" @click="onConfirm()">确定</el-button>
-                </span>
             </template>
-        </el-dialog>
+
+        </Dialog>
     </div>
 </template>
 
@@ -33,10 +26,11 @@
 import { registerApi, loginApi } from '@/api/index.ts';
 import {useStore} from 'vuex';
 import { initGlobalState } from 'qiankun';
-import { ElMessage } from 'element-plus';
+import Dialog from '@/components/Dialog';
 
 export default {
     name: 'Sign',
+    components: { Dialog },
 
     setup(){
 		const store = useStore();
@@ -112,11 +106,6 @@ export default {
                             refreshToken: res.data.refreshToken,
                         }); // 通知所有微应用去同步登录状态
                         this.onCancel({isInfo: true});
-                    } else {
-                        ElMessage({
-                            message: res.message,
-                            type: 'warning',
-                        })
                     }
                 })
             } else { // 登录
@@ -134,11 +123,6 @@ export default {
                             refreshToken: res.data.refreshToken,
                         });
                         this.onCancel({isInfo: true});
-                    } else {
-                        ElMessage({
-                            message: res.message,
-                            type: 'warning',
-                        })
                     }
                 })
             }
@@ -150,6 +134,7 @@ export default {
 
 <style scoped lang="scss">
 .modal-content{
+    font-size: 16px;
   .modal-item{
     display: flex;
     align-items: center;
@@ -157,6 +142,9 @@ export default {
     box-sizing: border-box;
     span{
       flex: 0 0 50px;
+    }
+    input{
+        width: 80%;
     }
   }
   .required{
@@ -167,7 +155,9 @@ export default {
 
   .tip{
     display: inline-block;
-    transform: translateY(65px);
+    font-size: 12px;
+    margin-top: 20px;
+    margin-left: 40px;
     span{
         color: #00adeb;
         cursor: pointer;

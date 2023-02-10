@@ -1,7 +1,7 @@
 <template>
-  <el-config-provider namespace="elplus">
+  <!-- <el-config-provider namespace="elplus"> -->
       <router-view></router-view>
-  </el-config-provider>
+  <!-- </el-config-provider> -->
 </template>
 
 <script>
@@ -32,4 +32,5 @@ body{
   padding: 0;
   margin: 0;
 }
+
 </style>

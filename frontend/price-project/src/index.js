@@ -42,17 +42,21 @@ export async function mount(props) {
       console.log("我是子应用，我检测到数据了：", state);
       const ssKey = 'platform.login';
       const infoCache = JSON.parse(sessionStorage.getItem(ssKey));
+      if (!infoCache) { // 阻止一开始未登录进入时会出现两次登录弹框和刷新
+        setTokenInfo(state);
+      }
       setTimeout(() => {
-        if (!infoCache || (infoCache.token !== state.token)) {
+        if (infoCache || (infoCache.token !== state.token)) {
           setTokenInfo(state);
           window.location.reload();
         }
-      }, 1000)
+      }, 500)
   }, true);
   render(props);
 }
 
 export async function unmount(props) {
   const { container } = props;
-  createRoot(container ? container.querySelector('#price') : document.querySelector('#price')).unmount();
+  const dom = container ? container.querySelector('#price') : document.querySelector('#price');
+  createRoot(dom).unmount();
 }

@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { Result } from '@/domain/http';
 import { updateTokenApi } from '@/api/index';
-import { Action, ElMessage, ElMessageBox } from 'element-plus';
 import store from '@/store/index';
 import apiConstatns from './constants';
+import { app } from "@/main";
 
 // 刷新token值
 function freshToken(): any {
@@ -43,15 +43,15 @@ function toResult(url: string, type: string , httpResponseErr: any): any {
       case 401:
         errMsg = '登录过期，请重新登录';
         showTip = false;
-        ElMessageBox.alert('您尚未登录或登录时间过长,请重新登录!', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          callback: (action: Action) => {
+        app.config.globalProperties.$MessageBox.show({
+          content: '您尚未登录或登录时间过长,请重新登录!',
+          type: 'confirm',
+          callback: (action: any) => {
             if (action === 'confirm') {
               store.commit("Security/SHOWSIGN", { showSign: true, signType: 'in' });
             }
           },
-        })
+        });
         break;
       case 403:
         errMsg = '拒绝访问'
@@ -90,10 +90,7 @@ function toResult(url: string, type: string , httpResponseErr: any): any {
     errMsg = '连接到服务器失败'
   }
   if (showTip) {
-    ElMessage({
-      message: errMsg,
-      type: 'warning',
-    })
+    app.config.globalProperties.$Message.show({content: errMsg, type: 'warning'});
   }
 }
 

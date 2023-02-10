@@ -3,10 +3,6 @@ node_modules
 /dist
 /platform/
 /micros/
-/micros/file/
-/micros/price/
-/micros/fund/
-/micros/zp/
 
 # local env files
 .env.local

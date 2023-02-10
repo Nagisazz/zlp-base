@@ -6,20 +6,16 @@
                 <span class="sign-btn login" v-if="!this.$route.name" @click="toHome()">To Home</span>
                 <img v-if="!haveUserInfo.avatarurl" src="http://1.15.87.105:11000/love/base/defaultImg.webp" />
                 <img v-if="haveUserInfo.avatarurl" :src="getPreviewImg()" />
-                <el-dropdown>
-                    <span class="el-dropdown-link head-info-name">
+                <div class="head-info-name">
                     {{haveUserInfo.name}}
-                    </span>
-                    <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item @click="onUpdateInfo()">更新信息</el-dropdown-item>
-                        <el-dropdown-item @click="goOut()">退出登录</el-dropdown-item>
-                    </el-dropdown-menu>
-                    </template>
-                </el-dropdown>
+                    <div class="dropdown">
+                        <div @click="onUpdateInfo()">更新信息</div>
+                        <div @click="goOut()">退出登录</div>
+                    </div>
+                </div>
             </div>
             
-            <div class="head-info" v-if="!store.state.Security.authorizedUser">
+            <div class="head-info" v-if="!store.state.Security.authorizedUser || !store.state.Security.authorizedUser.token">
                 <span class="sign-btn login" v-if="!this.$route.name" @click="toHome()">To Home</span>
                 <span class="sign-btn login" @click="onLogin()">sign In</span>
                 <span class="sign-btn register" @click="onRegister()">sign Up</span>
@@ -139,9 +135,7 @@ export default {
 
         toHome() {
             this.onChangeRoute('/');
-            setTimeout(() => {
-                window.location.reload();
-            }, 100);
+            // window.location.reload();
         },
 
         // 退出登录
@@ -188,7 +182,6 @@ export default {
 }
 .head-info{
     cursor: pointer;
-    color: #fff;
     height: 100%;
     display: flex;
     align-items: center;
@@ -204,6 +197,35 @@ export default {
         vertical-align: middle;
     }
 
+    .head-info-name{
+        position: relative;
+    }
+    .dropdown{
+        display: none;
+        position: absolute;
+        top: 30px;
+        left: 0px;
+        padding: 10px;
+        background: #fff;
+        border-radius: 4px;
+        width: 80px;
+        text-align: center;
+        font-size: 14px;
+        div{
+            margin-bottom: 4px;
+        }
+    }
+    .dropdown::after{
+        content: '';
+        width: 0;
+        height: 0;
+        border: 8px solid transparent;/*以下四个样式对应四种三角形，任选其一即可实现*/
+        border-bottom-color:#fff;
+        position: absolute;
+        top: -16px;
+        left: 6px;
+    }
+
     .sign-btn{
       display: inline-block;
       padding: 6px 15px;
@@ -213,6 +235,11 @@ export default {
       border-radius: 8px;
       margin: 0 10px;
       font-weight: bold;
+    }
+}
+.head-info:hover{
+    .dropdown{
+        display: block;
     }
 }
 </style>

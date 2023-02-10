@@ -26,7 +26,6 @@ if (!(window as any).__POWERED_BY_QIANKUN__) {
 
 export async function bootstrap(props: Object) {
   console.log('bootstrap  angular');
-  console.log(props);
 }
 
 export async function mount(props: Object) {
@@ -38,18 +37,21 @@ export async function mount(props: Object) {
       console.log("我是子应用angular，我检测到数据了：", state);
       const ssKey = 'platform.login';
       const infoCache = sessionStorage.getItem(ssKey) ? JSON.parse(sessionStorage.getItem(ssKey) as string) : null;
+      if (!infoCache) {
+        infoService.changeInfo(state);
+      }
       setTimeout(() => {
-        if (!infoCache || (infoCache.token !== state.token)) {
+        if (infoCache && (infoCache.token !== state.token)) {
           infoService.changeInfo(state);
           window.location.reload();
         }
-      }, 1000)
+      }, 500)
   }, true);
   render();
 }
 
 export async function unmount(props: Object) {
-  console.log(props);
+  console.log('angular  unmount');
   // @ts-ignore
   app.destroy();
 }

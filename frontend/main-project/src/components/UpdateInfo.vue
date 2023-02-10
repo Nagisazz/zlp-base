@@ -1,102 +1,93 @@
 <template>
     <div class="updateInfo">
-        <el-dialog
-            v-model="updateDialog"
-            title="更新用户信息"
-            width="700"
-            :before-close="onCancel">
-            <div class="modal-content">
-                <div class="info-item">
-                    <img class="default-img" v-if="!haveUserInfo.avatarurl" src="http://1.15.87.105:11000/love/base/defaultImg.webp" />
-                    <img class="default-img" v-if="haveUserInfo.avatarurl" :src="getPreviewImg()" />
-                    <el-upload
-                        style="display: inline-block;"
-                        v-if="isEdit"
-                        ref="upload"
-                        action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-                        :show-file-list="false"
-                        :limit="1"
-                        :on-change="changeFile"
-                        :auto-upload="false"
-                    >
-                        <i class="iconfont zp-shangchuanzhaopian"  title="点击更换头像"></i>
-                    </el-upload>
-                </div>
-                <div class="info-item">
-                    <span class="info-title">账号：</span>
-                    <div class="info-content">{{haveUserInfo.loginId}}</div>
-                </div>
-                <div class="info-item">
-                    <span class="info-title">昵称：</span>
-                    <div class="info-content" v-if="!isEdit">{{haveUserInfo.name}}</div>
-                    <div class="info-content" v-if="isEdit">
-                        <el-input v-model="haveUserInfo.name" />
+        <Dialog title="更新用户信息" @closeDialog="onCancel()">
+            <template v-slot:modalContent>
+                <div class="modal-content">
+                    <div class="info-item">
+                        <img class="default-img" v-if="!haveUserInfo.avatarurl" src="http://1.15.87.105:11000/love/base/defaultImg.webp" />
+                        <img class="default-img" v-if="haveUserInfo.avatarurl" :src="getPreviewImg()" />
+                        <Upload @onSuccess="changeFile" v-if="isEdit" style="display: inline-block;">
+                            <i class="iconfont zp-shangchuanzhaopian"  title="点击更换头像"></i>
+                        </Upload>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-title">账号：</span>
+                        <div class="info-content">{{haveUserInfo.loginId}}</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-title">昵称：</span>
+                        <div class="info-content" v-if="!isEdit">{{haveUserInfo.name}}</div>
+                        <div class="info-content" v-if="isEdit">
+                            <input type="text" v-model="haveUserInfo.name" />
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-title">密码：</span>
+                        <div class="info-content">
+                            <span v-if="!isEditPassword"> ******  <i class="iconfont zp-edit" @click="onEditPassword()"></i> </span>
+                            <span v-if="isEditPassword"> 
+                                <input type="text" v-model="haveUserInfo.password" placeholder="请输入原密码"/>
+                            </span>
+                        </div>
+                        <div v-if="isEditPassword" class="info-content newpass">
+                            <input type="text" v-model="haveUserInfo.newPassword" placeholder="请输入新密码"/>
+                        </div>
+                        <div v-if="isEditPassword" class="info-content newpass">
+                            <div class="zp-btn" @click="onCancelPassword()">取消</div>
+                            <div class="zp-btn zp-primary" @click="onSavePassword()">保存</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-title">手机号：</span>
+                        <div class="info-content" v-if="!isEdit">{{haveUserInfo.phone || '-'}}</div>
+                        <div class="info-content" v-if="isEdit">
+                            <input type="text" v-model="haveUserInfo.phone" />
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-title">邮箱：</span>
+                        <div class="info-content" v-if="!isEdit">{{haveUserInfo.mail || '-'}}</div>
+                        <div class="info-content" v-if="isEdit">
+                            <input type="text" v-model="haveUserInfo.mail" />
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-title">最后登录系统：</span>
+                        <div class="info-content" >{{handleSystem(haveUserInfo.lastSystem)}}</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-title">最后登录时间：</span>
+                        <div class="info-content" >{{handleTime(haveUserInfo.lastLoginTime)}}</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-title">最后登录IP：</span>
+                        <div class="info-content" >{{haveUserInfo.lastIp || '-'}}</div>
                     </div>
                 </div>
-                <div class="info-item">
-                    <span class="info-title">密码：</span>
-                    <div class="info-content">
-                        <span v-if="!isEditPassword"> ******  <i class="iconfont zp-edit" @click="onEditPassword()"></i> </span>
-                        <span v-if="isEditPassword"> 
-                            <el-input v-model="haveUserInfo.password" placeholder="请输入原密码"/>
-                        </span>
-                    </div>
-                    <div v-if="isEditPassword" class="info-content newpass">
-                        <el-input v-model="haveUserInfo.newPassword" placeholder="请输入新密码"/>
-                    </div>
-                    <div v-if="isEditPassword" class="info-content newpass">
-                        <el-button @click="onCancelPassword()">取消</el-button>
-                        <el-button type="primary" @click="onSavePassword()">保存</el-button>
-                    </div>
-                </div>
-                <div class="info-item">
-                    <span class="info-title">手机号：</span>
-                    <div class="info-content" v-if="!isEdit">{{haveUserInfo.phone || '-'}}</div>
-                    <div class="info-content" v-if="isEdit">
-                        <el-input v-model="haveUserInfo.phone" />
-                    </div>
-                </div>
-                <div class="info-item">
-                    <span class="info-title">邮箱：</span>
-                    <div class="info-content" v-if="!isEdit">{{haveUserInfo.mail || '-'}}</div>
-                    <div class="info-content" v-if="isEdit">
-                        <el-input v-model="haveUserInfo.mail" />
-                    </div>
-                </div>
-                <div class="info-item">
-                    <span class="info-title">最后登录系统：</span>
-                    <div class="info-content" >{{handleSystem(haveUserInfo.lastSystem)}}</div>
-                </div>
-                <div class="info-item">
-                    <span class="info-title">最后登录时间：</span>
-                    <div class="info-content" >{{handleTime(haveUserInfo.lastLoginTime)}}</div>
-                </div>
-                <div class="info-item">
-                    <span class="info-title">最后登录IP：</span>
-                    <div class="info-content" >{{haveUserInfo.lastIp || '-'}}</div>
-                </div>
-            </div>
-            <template #footer>
+            </template>
+
+            <template #modalFooter>
                 <span class="dialog-footer">
-                    <el-button @click="onCancel()">取消</el-button>
-                    <el-button type="primary" v-if="!isEdit" @click="onIsEdit()">编辑</el-button>
-                    <el-button type="primary" v-if="isEdit" @click="onConfirm()">确定</el-button>
+                    <div class="zp-btn" @click="onCancel()">取消</div>
+                    <div class="zp-btn zp-primary" v-if="!isEdit" @click="onIsEdit()">编辑</div>
+                    <div class="zp-btn zp-primary" v-if="isEdit" @click="onConfirm()">确定</div>
                 </span>
             </template>
-            
-        </el-dialog>
+        </Dialog>
     </div>
 </template>
   
 <script>
 import {useStore} from 'vuex';
 import { getUserInfoApi, updateUserInfoApi, updateUserPassword, uploadFile, getPreviewFile } from '@/api/index';
-import { ElMessage } from 'element-plus';
 import { initGlobalState } from 'qiankun';
+import Dialog from '@/components/Dialog';
+import Upload from '@/components/Upload';
+import { app } from "@/main";
 
 export default {
     name: 'UpdateInfo',
-    components: {},
+    components: { Dialog, Upload },
 
     setup() {
         const store = useStore();
@@ -130,14 +121,15 @@ export default {
     },
 
     created() {
+
+    },
+
+    mounted() {
         getUserInfoApi({}).then((res) => {
             if (res.status === 200) {
                 this.haveUserInfo = Object.assign(this.haveUserInfo, res.data);
             }
         });
-    },
-
-    mounted() {
     },
 
     methods: {
@@ -170,23 +162,18 @@ export default {
                         token: res.data.token,
                         refreshToken: res.data.refreshToken,
                     }); // 通知所有微应用去同步登录状态
-                    ElMessage({
-                        message: '密码更新成功',
-                        type: 'success',
-                    })
+                    app.config.globalProperties.$Message.show({content: '密码更新成功', type: 'success'});
                 } else {
-                    ElMessage({
-                        message: '密码更新失败',
-                        type: 'error',
-                    })
+                    app.config.globalProperties.$Message.show({content: '密码更新失败', type: 'error'});
                 }
             });
         },
 
         // 上传文件
         changeFile(file) {
+            console.log(file);
             const formData = new FormData();
-            formData.append('file', file.raw);
+            formData.append('file', file[0]);
             uploadFile(formData, 'systemId=platform&name=' + file.name).then((res) => {
                 if (res.status === 200) {
                     this.haveUserInfo.avatarurl = res.data.id;
@@ -220,15 +207,9 @@ export default {
                         token: res.data.token,
                         refreshToken: res.data.refreshToken,
                     }); // 通知所有微应用去同步登录状态
-                    ElMessage({
-                        message: '更新成功',
-                        type: 'success',
-                    })
+                    app.config.globalProperties.$Message.show({content: '更新成功', type: 'success'});
                 } else {
-                    ElMessage({
-                        message: '更新失败',
-                        type: 'error',
-                    })
+                    app.config.globalProperties.$Message.show({content: '更新失败', type: 'error'});
                 }
             });
         },

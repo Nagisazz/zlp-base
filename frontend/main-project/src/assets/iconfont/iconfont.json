@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "4765746",
+      "name": "warning-circle",
+      "font_class": "warning-circle",
+      "unicode": "e785",
+      "unicode_decimal": 59269
+    },
+    {
+      "icon_id": "15838473",
+      "name": "error",
+      "font_class": "error",
+      "unicode": "e66f",
+      "unicode_decimal": 58991
+    },
+    {
+      "icon_id": "15838532",
+      "name": "success",
+      "font_class": "success",
+      "unicode": "e67f",
+      "unicode_decimal": 59007
+    },
+    {
       "icon_id": "77156",
       "name": "微信",
       "font_class": "weixin",
@@ -214,13 +235,6 @@
       "font_class": "wenjianleixing-biaozhuntu-shipinwenjian",
       "unicode": "e6a5",
       "unicode_decimal": 59045
-    },
-    {
-      "icon_id": "3739984",
-      "name": "黑板",
-      "font_class": "heiban",
-      "unicode": "e614",
-      "unicode_decimal": 58900
     },
     {
       "icon_id": "11391524",

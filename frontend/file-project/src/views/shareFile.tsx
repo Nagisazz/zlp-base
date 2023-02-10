@@ -1,7 +1,6 @@
 import TextEditor from "@/components/textEditor";
 import '@/views/shareFile.less';
 import { Button, Checkbox, Input, Modal, message, Upload } from "antd";
-import type { UploadProps } from 'antd';
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import {connect} from 'react-redux';
@@ -11,12 +10,6 @@ import { getFileList, createFolder, updateFolder, deleteFolder, singleShareCode,
 } from '@/api/index';
 import actions from '@/qiankun/action';
 import { sizeTostr, dealFormate, dealTypeStr, dealUploadType } from '@/utils/sharefile';
-
-import '@wangeditor/editor/dist/css/style.css' // 引入 css
-
-import { Editor, Toolbar } from '@wangeditor/editor-for-react'
-import { IDomEditor, IEditorConfig, IToolbarConfig } from '@wangeditor/editor'
-import '@/components/textEditor.less';
 
 
 const { confirm } = Modal;
@@ -78,18 +71,6 @@ const ShareFile = (props: any) => {
 
     const [noteModalOpen, setNoteModalOpen] = useState(false); // 打开笔记开窗
 
-    // editor 实例
-    const [editor, setEditor] = useState<IDomEditor | null>(null)   // TS 语法
-    // 工具栏配置
-    const toolbarConfig: Partial<IToolbarConfig> = {
-    }  // TS 语法
-
-    // 编辑器配置
-    const editorConfig: Partial<IEditorConfig> = {    // TS 语法
-        readOnly: false,
-    }
-
-
     // 监听文件列表中的selected字段
     const isHaveSelect = useMemo(() => {
             if (newFileList && newFileList.current && newFileList.current.length > 0) {
@@ -106,12 +87,16 @@ const ShareFile = (props: any) => {
     useEffect(() => {
         // 取消双击时文字选择功能  会影响富文本编辑器
         // document.onselectstart = function(){return false;};
-        getList();
-        console.log('file加载11111111111111111111111');
+
+        if (sessionStorage.getItem('haveInit') === 'N') {
+            getList();
+        }
+        console.log('file加载11111111111111111111111', sessionStorage.getItem('haveInit'));
     }, [])
 
     // 获取文件列表
     const getList = async (type?: string) => {
+        sessionStorage.setItem('haveInit', 'Y');
         let parentId = newFileCatalogueList.current[newFileCatalogueList.current.length - 1].id; // 顶层目录传0
         if (type === 'analysis') {
             parentId = newAnalysisCatalogueList.current[newAnalysisCatalogueList.current.length - 1].id;

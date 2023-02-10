@@ -1,0 +1,69 @@
+input[type=email],
+input[type=text],
+input[type=number],
+textarea {
+    border: 1px solid #d9d9d9;
+    height: 32px;
+    line-height: 30px;
+    padding-left: 4px;
+    border-radius: 4px;
+}
+input[type=email]:focus,
+input[type=text]:focus,
+input[type=number]:focus,
+textarea:focus {
+  outline: 1px solid #2491eb;
+}
+
+.zp-dialog-modal{
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.zp-dialog{
+    width: 500px;
+    height: auto;
+    padding: 15px;
+    box-sizing: border-box;
+    background: #fff;
+    border-radius: 8px;
+}
+.zp-dialog-head{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    cursor: pointer;
+    .dialog-title{
+        font-size: 20px;
+    }
+}
+.zp-dialog-footer{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.zp-btn{
+    width: 60px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: #333;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+}
+.zp-primary{
+    background: #409EFF;
+    color: #fff;
+    border-color: #409EFF;
+    margin-left: 20px;
+}

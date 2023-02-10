@@ -5,9 +5,6 @@ function resolve(dir) {
 }
 
 const isDevelopment = process.env.NODE_ENV === 'development'; // 判断是否是生产环境
-const AutoImport = require('unplugin-auto-import/webpack');
-const Components = require('unplugin-vue-components/webpack');
-const { ElementPlusResolver } = require('unplugin-vue-components/resolvers');
 
 module.exports = {
     publicPath: '/',
@@ -22,15 +19,7 @@ module.exports = {
     },
 
     configureWebpack: {
-        name: '朱平测试子应用项目',
-        plugins: [
-            AutoImport({
-                resolvers: [ElementPlusResolver()]
-            }),
-            Components({
-                resolvers: [ElementPlusResolver()]
-            })
-        ],
+        name: '主应用',
         resolve: {
             extensions: ['.js', '.vue', '.json'],
             alias: {

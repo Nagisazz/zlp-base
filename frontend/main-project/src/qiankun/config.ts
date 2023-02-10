@@ -1,4 +1,4 @@
-import { registerMicroApps, initGlobalState, start, setDefaultMountApp } from 'qiankun';
+import { registerMicroApps, initGlobalState, start } from 'qiankun';
 import router from '@/router/index';
 import store from '@/store/index';
 
@@ -12,8 +12,6 @@ const state = {
 const actions = initGlobalState(state);
 
 // 监听全局状态，子应用更新主应用数据后触发
-
-// onGlobalStateChange
 actions.onGlobalStateChange((state, prevState) => {
   console.log("主应用变更前：", prevState);
   console.log("主应用变更后：", state);
@@ -44,8 +42,9 @@ registerMicroApps([
   },
   {
     name: 'file',
+    entry: 'http://localhost:7003/file/',
     // entry: 'http://localhost:8091/file/',
-    entry: 'http://temp.zlpnet.cn:1000/file/',
+    // entry: 'http://temp.zlpnet.cn:1000/file/',
     container: '#micro',
     activeRule: '/platform/file',
     props: { actions }, // 传给微应用的数据

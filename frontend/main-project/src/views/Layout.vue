@@ -4,6 +4,9 @@
         <Header v-if="store.state.IsShowHead.isShowHead"></Header>
       </keep-alive>
 
+      <!-- zp博客时的返回首页 -->
+      <div class="sign-btn" v-if="!store.state.IsShowHead.isShowHead && !this.$route.name" @click="toHome()">To Home</div>
+
       <div class="container" :style="store.state.IsShowHead.containerH">
         <div v-show="!$route.name" id="micro"></div>
         
@@ -17,7 +20,8 @@
 </template>
 
 <script>
-import {useStore} from 'vuex';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 import Header from '@/components/Header';
 
 export default {
@@ -25,6 +29,10 @@ export default {
   components: { Header },
 
   setup() {
+    const router = useRouter()
+    const onChangeRoute = (route) => {
+        router.replace(route);
+    }
 
     const store  = useStore();
     const saveAuthorizedUser = (res) => {
@@ -36,6 +44,7 @@ export default {
     }
 
     return {
+      onChangeRoute,
       saveAuthorizedUser,
       openSignModal,
       store,
@@ -56,7 +65,12 @@ export default {
   },
 
   methods: {
-    
+    toHome() {
+      this.onChangeRoute('/');
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 100);
+    },
   }
 
   
@@ -80,6 +94,22 @@ export default {
 
 #micro, .other{
   height: 100%;
+}
+
+.sign-btn{
+  display: inline-block;
+  padding: 6px 15px;
+  box-sizing: border-box;
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 8px;
+  margin: 0 10px;
+  font-weight: bold;
+  position: fixed;
+  right: 30px;
+  top: 20px;
+  z-index: 999;
+  cursor: pointer;
 }
 </style>
 
