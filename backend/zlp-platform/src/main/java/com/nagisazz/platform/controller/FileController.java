@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
@@ -42,7 +41,7 @@ public class FileController {
     @PostMapping("upload")
     @ResponseBody
     public OperationResult upload(@RequestParam("systemId") String systemId, @RequestParam("name") String name,
-                                  @RequestParam("file") MultipartFile file) throws IOException {
+                                  @RequestParam("file") MultipartFile file) {
         Preconditions.checkArgument(StringUtils.isNotBlank(systemId), "系统标识为空");
         Preconditions.checkArgument(StringUtils.isNotBlank(name), "文件名称为空");
         Preconditions.checkArgument(!Objects.isNull(file), "文件为空");

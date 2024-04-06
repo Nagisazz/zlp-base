@@ -1,17 +1,16 @@
 package com.nagisazz.platform.service;
 
-import com.alibaba.fastjson.JSON;
 import com.nagisazz.base.dao.FileInfoExtendMapper;
 import com.nagisazz.base.entity.FileInfo;
 import com.nagisazz.base.entity.SystemRegister;
 import com.nagisazz.base.entity.ZlpUser;
 import com.nagisazz.base.enums.ValidEnum;
 import com.nagisazz.base.util.CommonWebUtil;
-import com.nagisazz.platform.util.FileMetaUtil;
 import com.nagisazz.base.util.MinioHelper;
 import com.nagisazz.base.util.RequestUtil;
 import com.nagisazz.platform.cache.SystemRegisterCache;
 import com.nagisazz.platform.pojo.dto.FileParam;
+import com.nagisazz.platform.util.FileMetaUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,7 +45,7 @@ public class FileService {
      * @param file
      * @return
      */
-    public FileInfo upload(String systemId, String name, MultipartFile file) throws IOException {
+    public FileInfo upload(String systemId, String name, MultipartFile file) {
         SystemRegister systemRegister = systemRegisterCache.get(systemId);
         final ZlpUser user = CommonWebUtil.getUser();
         String path;
@@ -67,7 +65,7 @@ public class FileService {
                 .ownerId(Objects.isNull(user) ? null : user.getId())
                 .uploaderIp(RequestUtil.getIp())
                 .systemId(systemId)
-                .ext(JSON.toJSONString(FileMetaUtil.getMeta(file.getResource().getFile(), FileMetaUtil.getFileType(file.getContentType()))))
+                .ext(FileMetaUtil.getMeta(file))
                 .valid(ValidEnum.VALID.getCode())
                 .createTime(now)
                 .updateTime(now)

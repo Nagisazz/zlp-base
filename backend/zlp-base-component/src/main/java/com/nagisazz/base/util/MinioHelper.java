@@ -1,23 +1,16 @@
 package com.nagisazz.base.util;
 
-import java.io.InputStream;
-import java.util.Calendar;
-import java.util.List;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import com.google.common.collect.Lists;
-
-import io.minio.GetObjectArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.RemoveObjectArgs;
-import io.minio.RemoveObjectsArgs;
-import io.minio.Result;
+import io.minio.*;
 import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.InputStream;
+import java.util.Calendar;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -41,7 +34,7 @@ public class MinioHelper {
                     .contentType("application/octet-stream")
                     .build());
         } catch (Exception e) {
-            log.error("minio上传文件失败，bucketName：{}，objectPath：{}", bucketName, objectPath);
+            log.error("minio上传文件失败，bucketName：{}，objectPath：{}", bucketName, objectPath, e);
         }
     }
 
@@ -58,7 +51,7 @@ public class MinioHelper {
         try {
             upload(bucketName, path, file.getInputStream());
         } catch (Exception e) {
-            log.error("minio上传文件失败，bucketName：{}，objectPath：{}", bucketName, path);
+            log.error("minio上传文件失败，bucketName：{}，objectPath：{}", bucketName, path, e);
         }
         return path;
     }
@@ -77,7 +70,7 @@ public class MinioHelper {
                     .object(objectPath)
                     .build());
         } catch (Exception e) {
-            log.error("minio下载文件失败，bucketName：{}，objectPath：{}", bucketName, objectPath);
+            log.error("minio下载文件失败，bucketName：{}，objectPath：{}", bucketName, objectPath, e);
         }
         return null;
     }
@@ -95,7 +88,7 @@ public class MinioHelper {
                     .object(objectPath)
                     .build());
         } catch (Exception e) {
-            log.error("minio删除文件失败，bucketName：{}，objectPath：{}", bucketName, objectPath);
+            log.error("minio删除文件失败，bucketName：{}，objectPath：{}", bucketName, objectPath, e);
         }
     }
 
@@ -117,7 +110,7 @@ public class MinioHelper {
                 log.error("minio批量删除文件失败，bucketName：{}，DeleteError：{}", bucketName, error);
             }
         } catch (Exception e) {
-            log.error("minio批量删除文件失败，bucketName：{}，objectPath：{}", bucketName, objectPath);
+            log.error("minio批量删除文件失败，bucketName：{}，objectPath：{}", bucketName, objectPath, e);
         }
     }
 

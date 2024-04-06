@@ -1,5 +1,6 @@
 package com.nagisazz.platform.util;
 
+import com.alibaba.fastjson.JSON;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.mp3.Mp3MetadataReader;
 import com.drew.imaging.mp4.Mp4MetadataReader;
@@ -10,9 +11,12 @@ import com.drew.metadata.file.FileSystemDirectory;
 import com.drew.metadata.file.FileTypeDirectory;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +25,52 @@ import java.util.Objects;
 @Slf4j
 public class FileMetaUtil {
 
-    public static Integer getFileType(String fileMimeType) {
+    /**
+     * 获取文件信息
+     *
+     * @param file
+     * @return
+     */
+    public static String getMeta(MultipartFile file) {
+        try {
+            Map<String, Object> meta = getMeta(transferToFile(file), getFileType(file.getContentType()));
+            if (MapUtils.isNotEmpty(meta)) {
+                return JSON.toJSONString(meta);
+            }
+        } catch (IOException e) {
+            log.error("获取文件信息失败", e);
+        }
+        return null;
+    }
+
+    /**
+     * 转换文件
+     *
+     * @param multipartFile
+     * @return
+     * @throws IOException
+     */
+    private static File transferToFile(MultipartFile multipartFile) throws IOException {
+        File file = null;
+        try {
+            String originalFilename = multipartFile.getOriginalFilename();
+            String[] filename = originalFilename.split("\\.");
+            file = File.createTempFile(filename[0], filename[1] + ".");
+            multipartFile.transferTo(file);
+            file.deleteOnExit();
+        } catch (IOException e) {
+            throw e;
+        }
+        return file;
+    }
+
+    /**
+     * 获取文件类型
+     *
+     * @param fileMimeType
+     * @return
+     */
+    private static Integer getFileType(String fileMimeType) {
         if (StringUtils.isBlank(fileMimeType)) {
             return 0;
         }
@@ -42,7 +91,7 @@ public class FileMetaUtil {
      * @param fileType 1:图片，2视频，3音频
      * @return
      */
-    public static Map<String, Object> getMeta(File file, Integer fileType) {
+    private static Map<String, Object> getMeta(File file, Integer fileType) {
         Map<String, Object> meta = new HashMap<>();
         Metadata metadata = null;
         try {
