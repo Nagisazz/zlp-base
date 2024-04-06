@@ -173,6 +173,13 @@
             <version>${httpclient.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor -->
+        <dependency>
+            <groupId>com.drewnoakes</groupId>
+            <artifactId>metadata-extractor</artifactId>
+            <version>2.19.0</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
