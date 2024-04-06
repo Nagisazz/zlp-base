@@ -44,18 +44,18 @@ public class FileMetaUtil {
      */
     public static Map<String, Object> getMeta(File file, Integer fileType) {
         Map<String, Object> meta = new HashMap<>();
-        // 不支持的文件类型
-        if (fileType == 0) {
-            return meta;
-        }
-        Metadata metadata;
+        Metadata metadata = null;
         try {
             if (fileType == 1) {
                 metadata = ImageMetadataReader.readMetadata(file);
             } else if (fileType == 2) {
                 metadata = Mp4MetadataReader.readMetadata(file);
-            } else {
+            } else if (fileType == 3) {
                 metadata = Mp3MetadataReader.readMetadata(file);
+            }
+            // 不支持的文件类型
+            if (Objects.isNull(metadata)) {
+                return null;
             }
             List<Tag> tags = Lists.newArrayList();
             if (!Objects.isNull(metadata.getFirstDirectoryOfType(FileSystemDirectory.class))) {
