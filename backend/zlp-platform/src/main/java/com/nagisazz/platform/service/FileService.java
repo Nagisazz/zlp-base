@@ -62,6 +62,7 @@ public class FileService {
                 .path(path)
                 .size(file.getSize())
                 .suffix(file.getContentType())
+                .type(FileMetaUtil.getFileType(file.getContentType()))
                 .ownerId(Objects.isNull(user) ? null : user.getId())
                 .uploaderIp(RequestUtil.getIp())
                 .systemId(systemId)

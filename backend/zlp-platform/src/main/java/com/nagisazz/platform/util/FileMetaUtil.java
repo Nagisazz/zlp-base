@@ -2,21 +2,15 @@ package com.nagisazz.platform.util;
 
 import com.alibaba.fastjson.JSON;
 import com.drew.imaging.ImageMetadataReader;
-import com.drew.imaging.mp3.Mp3MetadataReader;
-import com.drew.imaging.mp4.Mp4MetadataReader;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
-import com.drew.metadata.exif.ExifSubIFDDirectory;
-import com.drew.metadata.file.FileSystemDirectory;
-import com.drew.metadata.file.FileTypeDirectory;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +18,29 @@ import java.util.Objects;
 
 @Slf4j
 public class FileMetaUtil {
+
+    private static final List<String> DOC_TYPES = Lists.newArrayList();
+
+    static {
+        DOC_TYPES.add("application/pdf");
+        DOC_TYPES.add("application/xml");
+        DOC_TYPES.add("application/rss+xml");
+        DOC_TYPES.add("application/atom+xml");
+        DOC_TYPES.add("application/msword");
+        DOC_TYPES.add("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        DOC_TYPES.add("application/vnd.ms-word.template.macroenabled.12");
+        DOC_TYPES.add("application/vnd.ms-word.document.macroenabled.12");
+        DOC_TYPES.add("application/vnd.openxmlformats-officedocument.wordprocessingml.template");
+        DOC_TYPES.add("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        DOC_TYPES.add("application/vnd.openxmlformats-officedocument.spreadsheetml.template");
+        DOC_TYPES.add("application/vnd.openxmlformats-officedocument.presentationml.presentation");
+        DOC_TYPES.add("application/vnd.openxmlformats-officedocument.presentationml.slideshow");
+        DOC_TYPES.add("application/vnd.openxmlformats-officedocument.presentationml.slide");
+        DOC_TYPES.add("application/vnd.openxmlformats-officedocument.presentationml.template");
+        DOC_TYPES.add("application/vnd.ms-works");
+        DOC_TYPES.add("application/vnd.ms-wpl");
+        DOC_TYPES.add("application/vnd.ms-xpsdocument");
+    }
 
     /**
      * 获取文件信息
@@ -33,7 +50,12 @@ public class FileMetaUtil {
      */
     public static String getMeta(MultipartFile file) {
         try {
-            Map<String, Object> meta = getMeta(transferToFile(file), getFileType(file.getContentType()));
+            int fileType = getFileType(file.getContentType());
+            // 文档和其他类型不做处理
+            if (fileType == 2 || fileType == 6) {
+                return null;
+            }
+            Map<String, Object> meta = getMeta(file.getInputStream());
             if (MapUtils.isNotEmpty(meta)) {
                 return JSON.toJSONString(meta);
             }
@@ -44,78 +66,44 @@ public class FileMetaUtil {
     }
 
     /**
-     * 转换文件
-     *
-     * @param multipartFile
-     * @return
-     * @throws IOException
-     */
-    private static File transferToFile(MultipartFile multipartFile) throws IOException {
-        File file = null;
-        try {
-            String originalFilename = multipartFile.getOriginalFilename();
-            String[] filename = originalFilename.split("\\.");
-            file = File.createTempFile(filename[0], filename[1] + ".");
-            multipartFile.transferTo(file);
-            file.deleteOnExit();
-        } catch (IOException e) {
-            throw e;
-        }
-        return file;
-    }
-
-    /**
-     * 获取文件类型
+     * 获取文件类型，2：文档，3：图片，4：视频，5：音频，6：其他
      *
      * @param fileMimeType
      * @return
      */
-    private static Integer getFileType(String fileMimeType) {
-        if (StringUtils.isBlank(fileMimeType)) {
-            return 0;
-        }
-        if (fileMimeType.startsWith("image")) {
-            return 1;
-        } else if (fileMimeType.startsWith("video")) {
+    public static Integer getFileType(String fileMimeType) {
+        if (DOC_TYPES.contains(fileMimeType)) {
             return 2;
-        } else if (fileMimeType.startsWith("audio")) {
+        } else if (fileMimeType.startsWith("image")) {
             return 3;
+        } else if (fileMimeType.startsWith("video")) {
+            return 4;
+        } else if (fileMimeType.startsWith("audio")) {
+            return 5;
+        } else {
+            return 6;
         }
-        return 0;
     }
 
     /**
      * 获取文件信息
      *
      * @param file
-     * @param fileType 1:图片，2视频，3音频
      * @return
      */
-    private static Map<String, Object> getMeta(File file, Integer fileType) {
+    private static Map<String, Object> getMeta(InputStream file) {
         Map<String, Object> meta = new HashMap<>();
         Metadata metadata = null;
         try {
-            if (fileType == 1) {
-                metadata = ImageMetadataReader.readMetadata(file);
-            } else if (fileType == 2) {
-                metadata = Mp4MetadataReader.readMetadata(file);
-            } else if (fileType == 3) {
-                metadata = Mp3MetadataReader.readMetadata(file);
-            }
+            metadata = ImageMetadataReader.readMetadata(file);
             // 不支持的文件类型
             if (Objects.isNull(metadata)) {
                 return null;
             }
             List<Tag> tags = Lists.newArrayList();
-            if (!Objects.isNull(metadata.getFirstDirectoryOfType(FileSystemDirectory.class))) {
-                tags.addAll(metadata.getFirstDirectoryOfType(FileSystemDirectory.class).getTags());
-            }
-            if (!Objects.isNull(metadata.getFirstDirectoryOfType(FileTypeDirectory.class))) {
-                tags.addAll(metadata.getFirstDirectoryOfType(FileTypeDirectory.class).getTags());
-            }
-            if (!Objects.isNull(metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class))) {
-                tags.addAll(metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class).getTags());
-            }
+            metadata.getDirectories().forEach(directory -> {
+                tags.addAll(directory.getTags());
+            });
             tags.forEach(tag -> meta.put(tag.getTagName(), tag.getDescription()));
         } catch (Exception e) {
             log.error("获取文件信息失败", e);

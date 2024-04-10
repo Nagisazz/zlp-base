@@ -1,8 +1,8 @@
 package com.nagisazz.base.entity;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Builder
 @Setter
@@ -31,9 +31,14 @@ public class FileInfo {
     private Long size;
 
     /**
-     * 文件后缀
+     * 文件原始类型
      */
     private String suffix;
+
+    /**
+     * 类型（1：文本，2：文档，3：图片，4：视频，5：音频，6：其他）
+     */
+    private Integer type;
 
     /**
      * 所有者id，zlp_user表主键，此列无值说明是访客用户上传
@@ -56,11 +61,6 @@ public class FileInfo {
     private Integer valid;
 
     /**
-     * 扩展字段
-     */
-    private String ext;
-
-    /**
      * 创建时间
      */
     private LocalDateTime createTime;
@@ -69,4 +69,9 @@ public class FileInfo {
      * 更新时间
      */
     private LocalDateTime updateTime;
+
+    /**
+     * 扩展字段
+     */
+    private String ext;
 }

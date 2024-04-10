@@ -14,6 +14,8 @@ public interface FileInfoMapper {
 
     int updateByPrimaryKeySelective(FileInfo fileinfo);
 
+    int updateByPrimaryKeyWithBLOBs(FileInfo record);
+
     int updateByPrimaryKey(FileInfo fileinfo);
 
     FileInfo selectOne(FileInfo fileinfo);
