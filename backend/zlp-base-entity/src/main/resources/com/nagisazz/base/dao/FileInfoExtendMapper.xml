@@ -19,6 +19,9 @@
       <if test="suffix != null">
         c_suffix,
       </if>
+      <if test="type != null">
+        n_type,
+      </if>
       <if test="ownerId != null">
         n_owner_id,
       </if>
@@ -31,14 +34,14 @@
       <if test="valid != null">
         n_valid,
       </if>
-      <if test="ext != null">
-        c_ext,
-      </if>
       <if test="createTime != null">
         dt_create_time,
       </if>
       <if test="updateTime != null">
         dt_update_time,
+      </if>
+      <if test="ext != null">
+        c_ext,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -57,6 +60,9 @@
       <if test="suffix != null">
         #{suffix,jdbcType=VARCHAR},
       </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
       <if test="ownerId != null">
         #{ownerId,jdbcType=BIGINT},
       </if>
@@ -69,14 +75,14 @@
       <if test="valid != null">
         #{valid,jdbcType=INTEGER},
       </if>
-      <if test="ext != null">
-        #{ext,jdbcType=VARCHAR},
-      </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ext != null">
+        #{ext,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>

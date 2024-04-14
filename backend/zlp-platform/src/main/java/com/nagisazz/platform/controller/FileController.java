@@ -6,7 +6,6 @@ import com.nagisazz.base.pojo.OperationResult;
 import com.nagisazz.platform.pojo.dto.FileParam;
 import com.nagisazz.platform.service.FileService;
 import lombok.extern.slf4j.Slf4j;
-import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -75,7 +74,7 @@ public class FileController {
         Preconditions.checkArgument(StringUtils.isNotBlank(systemId), "系统标识为空");
         Preconditions.checkArgument(!Objects.isNull(fileId), "文件为空");
         FileInfo fileInfo = fileService.getFileInfo(systemId, fileId);
-        try (InputStream inputStream = fileService.get(systemId, fileInfo.getPath());
+        try (InputStream inputStream = fileService.getFileStream(systemId, fileInfo.getPath());
              OutputStream outputStream = response.getOutputStream()) {
             response.addHeader("Content-Disposition", "attachment;filename=" +
                     URLEncoder.encode(fileInfo.getName(), StandardCharsets.UTF_8.name()));
@@ -100,9 +99,11 @@ public class FileController {
         Preconditions.checkArgument(!Objects.isNull(fileId), "文件为空");
         FileInfo fileInfo = fileService.getFileInfo(systemId, fileId);
         Preconditions.checkArgument(!Objects.isNull(fileInfo), "文件为空");
-        try (InputStream inputStream = fileService.get(systemId, fileInfo.getPath());
+        String path = fileInfo.getPath();
+        String previewPath = path.replace(path.substring(path.lastIndexOf(".")), "_preview") + path.substring(path.lastIndexOf("."));
+        try (InputStream inputStream = fileService.getFileStream(systemId, previewPath);
              OutputStream outputStream = response.getOutputStream()) {
-            Thumbnails.of(inputStream).scale(0.25).toOutputStream(outputStream);
+            IOUtils.copy(inputStream, outputStream);
             response.setContentType("image/jpeg");
             outputStream.flush();
         } catch (Exception e) {

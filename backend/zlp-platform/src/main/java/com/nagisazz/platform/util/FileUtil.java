@@ -5,19 +5,26 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
 import com.google.common.collect.Lists;
+import com.nagisazz.platform.enums.FileTypeEnum;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
+import ws.schild.jave.MultimediaObject;
+import ws.schild.jave.ScreenExtractor;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
-public class FileMetaUtil {
+public class FileUtil {
 
     private static final List<String> DOC_TYPES = Lists.newArrayList();
 
@@ -50,9 +57,9 @@ public class FileMetaUtil {
      */
     public static String getMeta(MultipartFile file) {
         try {
-            int fileType = getFileType(file.getContentType());
+            FileTypeEnum fileType = getFileType(file.getContentType());
             // 文档和其他类型不做处理
-            if (fileType == 2 || fileType == 6) {
+            if (fileType == FileTypeEnum.DOC || fileType == FileTypeEnum.OTHER) {
                 return null;
             }
             Map<String, Object> meta = getMeta(file.getInputStream());
@@ -71,18 +78,94 @@ public class FileMetaUtil {
      * @param fileMimeType
      * @return
      */
-    public static Integer getFileType(String fileMimeType) {
+    public static FileTypeEnum getFileType(String fileMimeType) {
         if (DOC_TYPES.contains(fileMimeType)) {
-            return 2;
+            return FileTypeEnum.DOC;
         } else if (fileMimeType.startsWith("image")) {
-            return 3;
+            return FileTypeEnum.IMAGE;
         } else if (fileMimeType.startsWith("video")) {
-            return 4;
+            return FileTypeEnum.VIDEO;
         } else if (fileMimeType.startsWith("audio")) {
-            return 5;
+            return FileTypeEnum.AUDIO;
         } else {
-            return 6;
+            return FileTypeEnum.OTHER;
         }
+    }
+
+    /**
+     * 生成缩略图文件名
+     *
+     * @param fileName
+     * @return
+     */
+    public static String getPreviewName(String fileName) {
+        String[] filename = fileName.split("\\.");
+        return filename[0] + "_preview.jpg";
+    }
+
+    /**
+     * 生成图片缩略图
+     *
+     * @param multipartFile
+     * @return
+     */
+    public static InputStream genPreviewImage(MultipartFile multipartFile) {
+        File file = null;
+        InputStream res = null;
+        try {
+            String originalFilename = FilenameUtils.getName(multipartFile.getOriginalFilename());
+            String[] filename = originalFilename.split("\\.");
+            file = File.createTempFile(filename[0], ".jpg");
+            // 生成缩略图
+            Thumbnails.of(multipartFile.getInputStream()).scale(0.25).toFile(file);
+            res = Files.newInputStream(file.toPath());
+        } catch (Exception e) {
+            log.error("生成图片缩略图失败", e);
+        } finally {
+            if (file != null) {
+                file.delete();
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 生成视频缩略图
+     *
+     * @param file
+     * @return
+     */
+    public static InputStream genPreviewVideo(MultipartFile file) {
+        File fileOrigin = null;
+        File target = null;
+        InputStream res = null;
+        try {
+            String originalFilename = FilenameUtils.getName(file.getOriginalFilename());
+            String[] filename = originalFilename.split("\\.");
+            fileOrigin = File.createTempFile(filename[0], filename[1]);
+            target = File.createTempFile(filename[0], ".jpg");
+            file.transferTo(fileOrigin);
+
+            MultimediaObject multimediaObject = new MultimediaObject(fileOrigin);
+            ScreenExtractor screenExtractor = new ScreenExtractor();
+            int width = -1;
+            int height = -1;
+            // 视频第1s的截图
+            long millis = 1000;
+            int quality = 10;
+            screenExtractor.renderOneImage(multimediaObject, width, height, millis, target, quality);
+            res = Files.newInputStream(target.toPath());
+        } catch (Exception e) {
+            log.error("生成视频缩略图失败", e);
+        } finally {
+            if (fileOrigin != null) {
+                fileOrigin.delete();
+            }
+            if (target != null) {
+                target.delete();
+            }
+        }
+        return res;
     }
 
     /**

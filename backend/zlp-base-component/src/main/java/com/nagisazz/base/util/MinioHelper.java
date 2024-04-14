@@ -6,6 +6,7 @@ import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
@@ -22,20 +23,18 @@ public class MinioHelper {
      * 上传文件
      *
      * @param bucketName
-     * @param objectPath
+     * @param userLoginId
      * @param inputStream
+     * @return
      */
-    public void upload(String bucketName, String objectPath, InputStream inputStream) {
+    public String upload(String bucketName, String userLoginId, String fileName, InputStream inputStream) {
+        String path = getNowPath(userLoginId) + fileName;
         try {
-            minioClient.putObject(PutObjectArgs.builder()
-                    .bucket(bucketName)
-                    .object(objectPath)
-                    .stream(inputStream, inputStream.available(), -1)
-                    .contentType("application/octet-stream")
-                    .build());
+            upload(bucketName, path, inputStream);
         } catch (Exception e) {
-            log.error("minio上传文件失败，bucketName：{}，objectPath：{}", bucketName, objectPath, e);
+            log.error("minio上传文件失败，bucketName：{}，objectPath：{}", bucketName, path, e);
         }
+        return path;
     }
 
     /**
@@ -47,13 +46,33 @@ public class MinioHelper {
      * @return
      */
     public String upload(String bucketName, String userLoginId, MultipartFile file) {
-        String path = getNowPath(userLoginId) + file.getOriginalFilename();
+        String path = getNowPath(userLoginId) + FilenameUtils.getName(file.getOriginalFilename());
         try {
             upload(bucketName, path, file.getInputStream());
         } catch (Exception e) {
             log.error("minio上传文件失败，bucketName：{}，objectPath：{}", bucketName, path, e);
         }
         return path;
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param bucketName
+     * @param objectPath
+     * @param inputStream
+     */
+    private void upload(String bucketName, String objectPath, InputStream inputStream) {
+        try {
+            minioClient.putObject(PutObjectArgs.builder()
+                    .bucket(bucketName)
+                    .object(objectPath)
+                    .stream(inputStream, inputStream.available(), -1)
+                    .contentType("application/octet-stream")
+                    .build());
+        } catch (Exception e) {
+            log.error("minio上传文件失败，bucketName：{}，objectPath：{}", bucketName, objectPath, e);
+        }
     }
 
     /**

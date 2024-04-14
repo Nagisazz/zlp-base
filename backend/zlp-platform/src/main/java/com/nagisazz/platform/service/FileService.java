@@ -9,9 +9,12 @@ import com.nagisazz.base.util.CommonWebUtil;
 import com.nagisazz.base.util.MinioHelper;
 import com.nagisazz.base.util.RequestUtil;
 import com.nagisazz.platform.cache.SystemRegisterCache;
+import com.nagisazz.platform.component.AsyncComponent;
+import com.nagisazz.platform.enums.FileTypeEnum;
 import com.nagisazz.platform.pojo.dto.FileParam;
-import com.nagisazz.platform.util.FileMetaUtil;
+import com.nagisazz.platform.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +40,9 @@ public class FileService {
     @Resource
     private SystemRegisterCache systemRegisterCache;
 
+    @Resource
+    private AsyncComponent asyncComponent;
+
     /**
      * 上传文件
      *
@@ -48,25 +54,23 @@ public class FileService {
     public FileInfo upload(String systemId, String name, MultipartFile file) {
         SystemRegister systemRegister = systemRegisterCache.get(systemId);
         final ZlpUser user = CommonWebUtil.getUser();
-        String path;
-        if (Objects.isNull(user)) {
-            path = minioHelper.upload(systemRegister.getMinioBucket(), "zlp", file);
-        } else {
-            path = minioHelper.upload(systemRegister.getMinioBucket(), user.getLoginId(), file);
-        }
+        String userLoginId = Objects.isNull(user) ? "zlp" : user.getLoginId();
+        String path = minioHelper.upload(systemRegister.getMinioBucket(), userLoginId, file);
+        FileTypeEnum type = FileUtil.getFileType(file.getContentType());
+        asyncComponent.uploadPreview(file, systemRegister, userLoginId, type);
 
         // 插入file数据
         LocalDateTime now = LocalDateTime.now();
         final FileInfo fileInfo = FileInfo.builder()
-                .name(StringUtils.isNoneBlank(name) ? name : file.getOriginalFilename())
+                .name(StringUtils.isNotBlank(name) ? name : FilenameUtils.getName(file.getOriginalFilename()))
                 .path(path)
                 .size(file.getSize())
                 .suffix(file.getContentType())
-                .type(FileMetaUtil.getFileType(file.getContentType()))
+                .type(type.getCode())
                 .ownerId(Objects.isNull(user) ? null : user.getId())
                 .uploaderIp(RequestUtil.getIp())
                 .systemId(systemId)
-                .ext(FileMetaUtil.getMeta(file))
+                .ext(FileUtil.getMeta(file))
                 .valid(ValidEnum.VALID.getCode())
                 .createTime(now)
                 .updateTime(now)
@@ -93,7 +97,7 @@ public class FileService {
      * @param filePath
      * @return
      */
-    public InputStream get(String systemId, String filePath) {
+    public InputStream getFileStream(String systemId, String filePath) {
         SystemRegister systemRegister = systemRegisterCache.get(systemId);
         return minioHelper.getStream(systemRegister.getMinioBucket(), filePath);
     }
