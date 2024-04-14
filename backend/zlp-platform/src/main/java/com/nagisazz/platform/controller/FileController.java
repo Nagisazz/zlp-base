@@ -3,9 +3,11 @@ package com.nagisazz.platform.controller;
 import com.google.common.base.Preconditions;
 import com.nagisazz.base.entity.FileInfo;
 import com.nagisazz.base.pojo.OperationResult;
+import com.nagisazz.platform.enums.FileTypeEnum;
 import com.nagisazz.platform.pojo.dto.FileParam;
 import com.nagisazz.platform.service.FileService;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -103,7 +105,16 @@ public class FileController {
         String previewPath = path.replace(path.substring(path.lastIndexOf(".")), "_preview") + path.substring(path.lastIndexOf("."));
         try (InputStream inputStream = fileService.getFileStream(systemId, previewPath);
              OutputStream outputStream = response.getOutputStream()) {
-            IOUtils.copy(inputStream, outputStream);
+            // 容错，当缩略图还未生成时临时生成
+            if (Objects.isNull(inputStream)) {
+                // 仅图片类型进行处理
+                if (fileInfo.getType().equals(FileTypeEnum.IMAGE.getCode())) {
+                    Thumbnails.of(fileService.getFileStream(systemId, fileInfo.getPath()))
+                            .scale(0.25).toOutputStream(outputStream);
+                }
+            } else {
+                IOUtils.copy(inputStream, outputStream);
+            }
             response.setContentType("image/jpeg");
             outputStream.flush();
         } catch (Exception e) {

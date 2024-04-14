@@ -4,6 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
+import com.drew.metadata.exif.ExifSubIFDDirectory;
+import com.drew.metadata.file.FileSystemDirectory;
+import com.drew.metadata.file.FileTypeDirectory;
+import com.drew.metadata.mp3.Mp3Directory;
+import com.drew.metadata.mp4.Mp4Directory;
 import com.google.common.collect.Lists;
 import com.nagisazz.platform.enums.FileTypeEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -184,9 +189,21 @@ public class FileUtil {
                 return null;
             }
             List<Tag> tags = Lists.newArrayList();
-            metadata.getDirectories().forEach(directory -> {
-                tags.addAll(directory.getTags());
-            });
+            if (!Objects.isNull(metadata.getFirstDirectoryOfType(FileSystemDirectory.class))) {
+                tags.addAll(metadata.getFirstDirectoryOfType(FileSystemDirectory.class).getTags());
+            }
+            if (!Objects.isNull(metadata.getFirstDirectoryOfType(FileTypeDirectory.class))) {
+                tags.addAll(metadata.getFirstDirectoryOfType(FileTypeDirectory.class).getTags());
+            }
+            if (!Objects.isNull(metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class))) {
+                tags.addAll(metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class).getTags());
+            }
+            if (!Objects.isNull(metadata.getFirstDirectoryOfType(Mp4Directory.class))) {
+                tags.addAll(metadata.getFirstDirectoryOfType(Mp4Directory.class).getTags());
+            }
+            if (!Objects.isNull(metadata.getFirstDirectoryOfType(Mp3Directory.class))) {
+                tags.addAll(metadata.getFirstDirectoryOfType(Mp3Directory.class).getTags());
+            }
             tags.forEach(tag -> meta.put(tag.getTagName(), tag.getDescription()));
         } catch (Exception e) {
             log.error("获取文件信息失败", e);
