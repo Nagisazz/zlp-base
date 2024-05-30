@@ -35,7 +35,7 @@ public class OperationResult {
     }
 
     public static OperationResult buildSuccessResult(String message, Object data) {
-        return buildSuccessResult(200, message, data);
+        return buildSuccessResult(ResultEnum.SUCCESS.getCode(), message, data);
     }
 
     public static OperationResult buildSuccessResult(Object data) {
@@ -43,7 +43,7 @@ public class OperationResult {
     }
 
     public static OperationResult buildFailureResult(String message) {
-        return new OperationResult(400, message, null);
+        return new OperationResult(ResultEnum.PARAM_FAIL.getCode(), message, null);
     }
 
     public static OperationResult buildFailureResult(Integer status, String message) {
@@ -51,11 +51,11 @@ public class OperationResult {
     }
 
     public static OperationResult buildInfoResult(String message, Object data) {
-        return new OperationResult(201, message, data);
+        return new OperationResult(ResultEnum.INFO.getCode(), message, data);
     }
 
     public static OperationResult buildInfoResult(String message) {
-        return new OperationResult(201, message, null);
+        return new OperationResult(ResultEnum.INFO.getCode(), message, null);
     }
 
 }

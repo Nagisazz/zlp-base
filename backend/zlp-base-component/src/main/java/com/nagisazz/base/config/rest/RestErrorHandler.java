@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class RestErrorHandler implements ResponseErrorHandler {
+
     @Override
     public boolean hasError(ClientHttpResponse response) throws IOException {
         int rawStatusCode = response.getRawStatusCode();
